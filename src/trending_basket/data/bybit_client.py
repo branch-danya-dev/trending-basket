@@ -1,9 +1,7 @@
 """Public Bybit REST API v5 client: server time, klines, funding, instruments.
 
 Only public (unauthenticated) endpoints are used; no API keys involved.
-Field names and pagination behavior were verified against training-time
-knowledge of the Bybit v5 docs, not the live docs site (see the T001 task
-report for details and open questions this environment could not check).
+Recorded API responses and their provenance live in tests/fixtures/bybit/.
 """
 
 from __future__ import annotations
@@ -110,6 +108,12 @@ class BybitPublicClient:
         self, symbol: str, interval: Interval, start_ms: int, end_ms: int
     ) -> list[Candle]:
         """Fetch one page of klines, ascending, unclosed candle dropped."""
+        rows = self._fetch_kline_rows(symbol, interval, start_ms, end_ms)
+        return self._parse_closed_klines(symbol, interval, rows)
+
+    def _fetch_kline_rows(
+        self, symbol: str, interval: Interval, start_ms: int, end_ms: int
+    ) -> list[list[str]]:
         payload = self._request(
             "/v5/market/kline",
             {
@@ -121,9 +125,15 @@ class BybitPublicClient:
                 "limit": self._kline_page_limit,
             },
         )
+        rows: list[list[str]] = payload["result"]["list"]
+        return rows
+
+    def _parse_closed_klines(
+        self, symbol: str, interval: Interval, rows: list[list[str]]
+    ) -> list[Candle]:
         server_now_ms = self.server_time_ms()
         candles = []
-        for row in payload["result"]["list"]:
+        for row in rows:
             open_time_ms = int(row[0])
             if open_time_ms + interval.duration_ms > server_now_ms:
                 continue
@@ -151,14 +161,16 @@ class BybitPublicClient:
         page_end_ms = end_ms
 
         while True:
-            page = self.fetch_klines(symbol, interval, start_ms, page_end_ms)
-            if not page:
+            rows = self._fetch_kline_rows(symbol, interval, start_ms, page_end_ms)
+            if not rows:
                 break
+            page = self._parse_closed_klines(symbol, interval, rows)
             for candle in page:
                 by_open_time[candle.open_time_ms] = candle
 
-            earliest_ms = min(c.open_time_ms for c in page)
-            if earliest_ms <= start_ms or len(page) < self._kline_page_limit:
+            # A full page can become shorter (or empty) after dropping unclosed candles.
+            earliest_ms = min(int(row[0]) for row in rows)
+            if earliest_ms <= start_ms or len(rows) < self._kline_page_limit:
                 break
             page_end_ms = earliest_ms - 1
 
@@ -172,7 +184,7 @@ class BybitPublicClient:
 
         while True:
             payload = self._request(
-                "/v5/market/funding-history",
+                "/v5/market/funding/history",
                 {
                     "category": "linear",
                     "symbol": symbol,

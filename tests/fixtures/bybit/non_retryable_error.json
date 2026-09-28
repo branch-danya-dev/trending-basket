@@ -1,7 +1,10 @@
 {
   "retCode": 10001,
-  "retMsg": "params error: symbol invalid",
-  "result": {},
+  "retMsg": "params error: Time Is Invalid",
+  "result": {
+    "category": "",
+    "list": []
+  },
   "retExtInfo": {},
-  "time": 1704499200000
+  "time": 1790634509187
 }

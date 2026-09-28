@@ -22,7 +22,9 @@ def load_fixture(name: str) -> dict[str, Any]:
     return json.loads((_FIXTURES_DIR / name).read_text(encoding="utf-8"))  # type: ignore[no-any-return]
 
 
-def route_transport(routes: dict[str, list[RouteItem]]) -> httpx.MockTransport:
+def route_transport(
+    routes: dict[str, list[RouteItem]], *, requests: list[httpx.Request] | None = None
+) -> httpx.MockTransport:
     """MockTransport routing by URL path.
 
     A route with exactly one queued item repeats it forever (handy for
@@ -32,6 +34,8 @@ def route_transport(routes: dict[str, list[RouteItem]]) -> httpx.MockTransport:
     queues = {path: list(items) for path, items in routes.items()}
 
     def handler(request: httpx.Request) -> httpx.Response:
+        if requests is not None:
+            requests.append(request)
         path = request.url.path
         queue = queues.get(path)
         if not queue:
@@ -97,7 +101,7 @@ class FakeBybitClient:
     def fetch_funding_history(self, symbol: str, start_ms: int, end_ms: int) -> list[FundingRate]:
         if symbol in self.fail_symbols:
             raise BybitAPIError(
-                -1, "simulated failure", "/v5/market/funding-history", {"symbol": symbol}
+                -1, "simulated failure", "/v5/market/funding/history", {"symbol": symbol}
             )
         self.range_calls.append((start_ms, end_ms))
         return [
