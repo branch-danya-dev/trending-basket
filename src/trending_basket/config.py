@@ -24,6 +24,10 @@ class Settings(BaseSettings):
     log_level: Literal["DEBUG", "INFO", "WARNING", "ERROR"] = "INFO"
     bybit_api_key: SecretStr | None = None
     bybit_api_secret: SecretStr | None = None
+    bybit_rest_url: str = "https://api.bybit.com"
+    rest_timeout_s: float = 10.0
+    rest_min_interval_s: float = 0.2
+    rest_max_retries: int = 6
 
 
 def _known_env_keys() -> set[str]:
@@ -84,5 +88,9 @@ def format_settings(settings: Settings) -> str:
         f"log_level={settings.log_level}",
         f"bybit_api_key={mask(settings.bybit_api_key)}",
         f"bybit_api_secret={mask(settings.bybit_api_secret)}",
+        f"bybit_rest_url={settings.bybit_rest_url}",
+        f"rest_timeout_s={settings.rest_timeout_s}",
+        f"rest_min_interval_s={settings.rest_min_interval_s}",
+        f"rest_max_retries={settings.rest_max_retries}",
     ]
     return "\n".join(lines)

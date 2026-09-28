@@ -7,6 +7,9 @@ dependencies = [
     "pydantic>=2",
     "pydantic-settings>=2",
     "typer",
+    "httpx",
+    "pandas",
+    "pyarrow",
 ]
 
 [project.scripts]
@@ -22,6 +25,7 @@ packages = ["src/trending_basket"]
 [dependency-groups]
 dev = [
     "mypy",
+    "pandas-stubs",
     "pytest",
     "ruff",
 ]
