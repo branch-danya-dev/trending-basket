@@ -10,11 +10,13 @@ import typer
 from trending_basket import __version__
 from trending_basket.config import format_settings, load_settings
 from trending_basket.data.cli import data_app
+from trending_basket.universe.cli import universe_app
 
 app = typer.Typer(help="trending-basket: background trend-following bot for Bybit.")
 config_app = typer.Typer(help="Inspect configuration.")
 app.add_typer(config_app, name="config")
 app.add_typer(data_app, name="data")
+app.add_typer(universe_app, name="universe")
 
 
 @app.command()

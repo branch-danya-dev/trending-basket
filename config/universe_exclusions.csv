@@ -1,0 +1,20 @@
+symbol_or_base,reason
+USDT,USD stablecoin
+USDC,USD stablecoin
+USDE,USD stablecoin
+USD1,USD stablecoin
+RLUSD,USD stablecoin
+DAI,USD stablecoin
+TUSD,USD stablecoin
+FDUSD,USD stablecoin
+BUSD,USD stablecoin
+USDD,USD stablecoin
+FRAX,USD stablecoin
+GUSD,USD stablecoin
+PYUSD,USD stablecoin
+USDP,USD stablecoin
+USTC,Former USD stablecoin; excluded despite broken peg
+EURC,EUR stablecoin
+EURCV,EUR stablecoin
+PAXG,Tokenized gold; non-crypto underlying
+XAUT,Tokenized gold; non-crypto underlying

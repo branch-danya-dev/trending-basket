@@ -255,6 +255,9 @@ def test_fetch_instruments_paginates_via_cursor(monkeypatch: pytest.MonkeyPatch)
     assert instruments[0].min_order_qty == Decimal("0.001")
     assert instruments[0].funding_interval_ms == 480 * 60_000
     assert instruments[0].min_notional_value == Decimal("5")
+    assert instruments[0].symbol_type == ""
+    assert instruments[0].market_region == ""
+    assert instruments[0].underlying_ticker == ""
     assert [dict(r.url.params) for r in requests] == [
         {"category": "linear", "limit": "500"},
         {

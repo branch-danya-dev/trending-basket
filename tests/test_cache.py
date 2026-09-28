@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import hashlib
+from dataclasses import replace
 from datetime import date
 from decimal import Decimal
 from pathlib import Path
@@ -213,6 +214,24 @@ def test_sync_instruments_does_not_overwrite_older_snapshots(tmp_path: Path) -> 
 
     assert _file_hash(day1_path) == day1_hash
     assert instruments_path(tmp_path, date(2024, 1, 2)).is_file()
+
+
+def test_sync_instruments_preserves_asset_classification(tmp_path: Path) -> None:
+    stock = replace(
+        _make_instrument("AAPLUSDT"),
+        base_coin="AAPL",
+        symbol_type="stock",
+        market_region="US",
+        underlying_ticker="AAPL",
+    )
+    client = FakeBybitClient(server_now_ms=BASE_MS, all_instruments=[stock])
+    sync_instruments(data_dir=tmp_path, client=client, clock=ManualClock(BASE_MS))
+    frame = pd.read_parquet(instruments_path(tmp_path, date(2024, 1, 1)))
+    assert frame.loc[0, ["symbol_type", "market_region", "underlying_ticker"]].tolist() == [
+        "stock",
+        "US",
+        "AAPL",
+    ]
 
 
 # --- find_gaps --------------------------------------------------------------
