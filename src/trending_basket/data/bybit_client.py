@@ -132,6 +132,8 @@ class BybitPublicClient:
     def _parse_closed_klines(
         self, symbol: str, interval: Interval, rows: list[list[str]]
     ) -> list[Candle]:
+        if not rows:
+            return []
         server_now_ms = self.server_time_ms()
         candles = []
         for row in rows:
@@ -161,19 +163,20 @@ class BybitPublicClient:
         by_open_time: dict[int, Candle] = {}
         page_end_ms = end_ms
 
-        while True:
-            rows = self._fetch_kline_rows(symbol, interval, start_ms, page_end_ms)
-            if not rows:
-                break
+        while page_end_ms >= start_ms:
+            # Bybit can return a short/empty page for a delisted symbol even though
+            # older candles exist. Traverse bounded time windows, not row counts.
+            window_start_ms = max(
+                start_ms,
+                (page_end_ms // interval.duration_ms - self._kline_page_limit + 1)
+                * interval.duration_ms,
+            )
+            rows = self._fetch_kline_rows(symbol, interval, window_start_ms, page_end_ms)
             page = self._parse_closed_klines(symbol, interval, rows)
             for candle in page:
                 by_open_time[candle.open_time_ms] = candle
 
-            # A full page can become shorter (or empty) after dropping unclosed candles.
-            earliest_ms = min(int(row[0]) for row in rows)
-            if earliest_ms <= start_ms or len(rows) < self._kline_page_limit:
-                break
-            page_end_ms = earliest_ms - 1
+            page_end_ms = window_start_ms - 1
 
         for open_time_ms in sorted(by_open_time):
             yield by_open_time[open_time_ms]

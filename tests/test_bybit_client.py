@@ -116,11 +116,11 @@ def test_iter_klines_paginates_without_dupes_or_gaps() -> None:
             "category": "linear",
             "symbol": "BTCUSDT",
             "interval": "D",
-            "start": "1704067200000",
+            "start": str(start),
             "end": str(end),
             "limit": "3",
         }
-        for end in (1704499199999, 1704239999999)
+        for start, end in ((1704240000000, 1704499199999), (1704067200000, 1704239999999))
     ]
 
 
@@ -159,15 +159,54 @@ def test_iter_klines_continues_after_dropping_unclosed_candle(page_limit: int) -
         assert int(request.url.params["end"]) == int(previous["result"]["list"][-1][0]) - 1
 
 
-def test_iter_klines_stops_on_empty_response() -> None:
+def test_iter_klines_empty_requested_window() -> None:
     empty = load_fixture("kline_1d_page1_recent.json")
     empty["result"]["list"] = []
     requests: list[httpx.Request] = []
-    transport = route_transport({"/v5/market/kline": [empty]}, requests=requests)
+    transport = route_transport(
+        {"/v5/market/kline": [empty], "/v5/market/time": [load_fixture("server_time.json")]},
+        requests=requests,
+    )
     client, _, _ = _make_client(transport)
 
     assert list(client.iter_klines("BTCUSDT", Interval.D1, 0, 1)) == []
-    assert len(requests) == 1
+    assert len([r for r in requests if r.url.path == "/v5/market/kline"]) == 1
+
+
+@pytest.mark.parametrize(
+    "recent_rows", [[], [["1704412800000", "100", "101", "99", "100", "1", "100"]]]
+)
+def test_iter_klines_continues_after_empty_or_short_delisted_window(
+    recent_rows: list[list[str]],
+) -> None:
+    start_ms = 1704067200000
+    day_ms = Interval.D1.duration_ms
+    requests: list[httpx.Request] = []
+    older_rows = [
+        [str(start_ms + i * day_ms), "100", "101", "99", "100", "1", "100"] for i in [1, 0]
+    ]
+    client, _, _ = _make_client(
+        route_transport(
+            {
+                "/v5/market/time": [load_fixture("server_time.json")],
+                "/v5/market/kline": [
+                    {"retCode": 0, "result": {"list": recent_rows}},
+                    {"retCode": 0, "result": {"list": older_rows}},
+                ],
+            },
+            requests=requests,
+        ),
+        kline_page_limit=3,
+    )
+    candles = list(client.iter_klines("OLDUSDT", Interval.D1, start_ms, start_ms + 5 * day_ms - 1))
+    assert [c.open_time_ms for c in candles] == [start_ms, start_ms + day_ms] + (
+        [1704412800000] if recent_rows else []
+    )
+    calls = [r for r in requests if r.url.path == "/v5/market/kline"]
+    assert [(int(r.url.params["start"]), int(r.url.params["end"])) for r in calls] == [
+        (start_ms + 2 * day_ms, start_ms + 5 * day_ms - 1),
+        (start_ms, start_ms + 2 * day_ms - 1),
+    ]
 
 
 def test_iter_klines_full_1000_row_page_preserves_boundary_and_coverage() -> None:
@@ -198,6 +237,27 @@ def test_iter_klines_full_1000_row_page_preserves_boundary_and_coverage() -> Non
     assert len(kline_requests) == 2
     assert all(r.url.params["limit"] == "1000" for r in kline_requests)
     assert int(kline_requests[1].url.params["end"]) == int(rows[999][0]) - 1
+
+
+def test_delisted_ftt_real_empty_recent_window_does_not_hide_older_history() -> None:
+    recent = load_fixture("kline_ftt_closed_empty_recent.json")
+    older = load_fixture("kline_ftt_closed_older.json")
+    requests: list[httpx.Request] = []
+    client, _, _ = _make_client(
+        route_transport(
+            {
+                "/v5/market/kline": [recent, older, recent],
+                "/v5/market/time": [load_fixture("server_time.json")],
+            },
+            requests=requests,
+        )
+    )
+    actual = list(client.iter_klines("FTTUSDT", Interval.D1, 1609459200000, 1790639999999))
+    assert [c.open_time_ms for c in actual] == sorted(int(r[0]) for r in older["result"]["list"])
+    assert len(actual) == 5
+    calls = [r for r in requests if r.url.path == "/v5/market/kline"]
+    assert len(calls) == 3
+    assert int(calls[-1].url.params["start"]) == 1609459200000
 
 
 def test_fetch_funding_history_paginates_backward() -> None:

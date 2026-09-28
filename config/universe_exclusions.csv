@@ -14,6 +14,7 @@ GUSD,USD stablecoin
 PYUSD,USD stablecoin
 USDP,USD stablecoin
 USTC,Former USD stablecoin; excluded despite broken peg
+UST,Former USD stablecoin; historical TerraUSD ticker
 EURC,EUR stablecoin
 EURCV,EUR stablecoin
 PAXG,Tokenized gold; non-crypto underlying

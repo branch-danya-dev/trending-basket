@@ -1,0 +1,11 @@
+{
+  "retCode": 0,
+  "retMsg": "OK",
+  "result": {
+    "symbol": "FTTUSDT",
+    "category": "linear",
+    "list": []
+  },
+  "retExtInfo": {},
+  "time": 1790638190861
+}

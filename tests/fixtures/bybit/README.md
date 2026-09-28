@@ -50,9 +50,11 @@ was observed in this capture.
 
 - Funding uses **`GET /v5/market/funding/history`**. Supplying only
   `startTime` returned `10001` (`params error: Time Is Invalid`).
-- Klines and funding arrive newest first; the next page uses the oldest
-  raw timestamp minus one millisecond. Count raw rows before discarding
-  an unclosed candle, otherwise a full page can appear incomplete.
+- Klines and funding arrive newest first. Funding uses the oldest timestamp
+  minus one millisecond. Since T002a, klines traverse consecutive time windows
+  of at most `limit` candle slots, including empty windows. Neither a short
+  nor an empty page proves that older history is absent for a delisted symbol.
+  Dropping an unclosed candle also must not stop pagination.
 - Instrument responses include `lotSizeFilter.minNotionalValue` as a
   string (possibly empty for historical instruments) and `fundingInterval`
   as an integer number of minutes. An empty notional is stored as null.
@@ -86,3 +88,17 @@ PendingOpen, while the PendingOpen query itself was empty. Tests exercise
 pagination per status and the empty `minNotionalValue` in 1000000VINUUSDT.
 Overlap/conflict and repeated-cursor cases are synthetic modifications of
 recorded rows in tests, explicitly separate from the saved fixtures.
+
+## T002a delisted kline windows
+
+Captured on Windows on 2026-09-28 around 23:29 UTC, mainnet, no credentials.
+Both requests use `/v5/market/kline`, `category=linear&symbol=FTTUSDT&interval=D&limit=1000`.
+
+| Fixture | start | end | Kept rows |
+|---|---:|---:|---|
+| `kline_ftt_closed_empty_recent.json` | 1704240000000 | 1790639999999 | Complete empty response, retCode=0 |
+| `kline_ftt_closed_older.json` | 1617840000000 | 1704239999999 | Newest 3 and oldest 2 of 398 rows |
+
+The second window returned 2021-10-12 through 2022-11-13 despite the first
+window being empty. The regression test reuses the empty envelope for the
+earliest window before listing. Candle values and envelope fields are unchanged.
