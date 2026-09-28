@@ -4,7 +4,7 @@ Captured on Windows from **https://api.bybit.com**, without API keys,
 on **2026-09-28 at 22:28:25–22:28:30 UTC** (2026-09-29, Europe/Moscow).
 The additional T002a instrument fixtures below were captured separately.
 All JSON files except `rate_limit_10006.json` are real HTTP 200 responses.
-Only JSON formatting and the instrument list lengths were changed;
+Only JSON formatting and the list lengths explicitly described below were changed;
 field names, types, values, timestamps and cursor tokens are preserved.
 
 ## Requests and trimming
