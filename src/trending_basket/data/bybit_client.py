@@ -241,6 +241,9 @@ class BybitPublicClient:
                         max_order_qty=Decimal(lot_size_filter["maxOrderQty"]),
                         qty_step=Decimal(lot_size_filter["qtyStep"]),
                         min_notional_value=Decimal(lot_size_filter["minNotionalValue"]),
+                        symbol_type=row.get("symbolType"),
+                        market_region=row.get("marketRegion"),
+                        underlying_ticker=row.get("underlyingTicker"),
                     )
                 )
 

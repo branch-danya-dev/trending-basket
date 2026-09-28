@@ -11,7 +11,7 @@ import ast
 from collections.abc import Iterable
 from pathlib import Path
 
-_CHECKED_PACKAGES = ("domain", "strategies", "portfolio", "backtest")
+_CHECKED_PACKAGES = ("domain", "strategies", "portfolio", "backtest", "universe")
 
 _FORBIDDEN_CALLS = frozenset(
     {

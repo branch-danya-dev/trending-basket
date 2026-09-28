@@ -86,6 +86,9 @@ class InstrumentInfo:
     max_order_qty: Decimal
     qty_step: Decimal
     min_notional_value: Decimal
+    symbol_type: str | None = None
+    market_region: str | None = None
+    underlying_ticker: str | None = None
 
 
 @dataclass(frozen=True, slots=True)
