@@ -170,6 +170,36 @@ def test_iter_klines_stops_on_empty_response() -> None:
     assert len(requests) == 1
 
 
+def test_iter_klines_full_1000_row_page_preserves_boundary_and_coverage() -> None:
+    start_ms = 1704067200000
+    day_ms = Interval.D1.duration_ms
+    now_ms = start_ms + 1002 * day_ms + 3_600_000
+    rows = [
+        [str(start_ms + i * day_ms), "100", "101", "99", "100", "1", "100"]
+        for i in reversed(range(1003))
+    ]
+    requests: list[httpx.Request] = []
+    transport = route_transport(
+        {
+            "/v5/market/time": [{"retCode": 0, "result": {"timeSecond": str(now_ms // 1000)}}],
+            "/v5/market/kline": [
+                {"retCode": 0, "result": {"list": rows[:1000]}},
+                {"retCode": 0, "result": {"list": rows[1000:]}},
+            ],
+        },
+        requests=requests,
+    )
+    client, _, _ = _make_client(transport)
+
+    candles = list(client.iter_klines("BTCUSDT", Interval.D1, start_ms, now_ms))
+
+    assert [c.open_time_ms for c in candles] == [start_ms + i * day_ms for i in range(1002)]
+    kline_requests = [r for r in requests if r.url.path == "/v5/market/kline"]
+    assert len(kline_requests) == 2
+    assert all(r.url.params["limit"] == "1000" for r in kline_requests)
+    assert int(kline_requests[1].url.params["end"]) == int(rows[999][0]) - 1
+
+
 def test_fetch_funding_history_paginates_backward() -> None:
     requests: list[httpx.Request] = []
     transport = route_transport(
