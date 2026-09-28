@@ -1,0 +1,46 @@
+{
+  "retCode": 0,
+  "retMsg": "OK",
+  "result": {
+    "category": "linear",
+    "list": [
+      {
+        "symbol": "BTCUSDT",
+        "contractType": "LinearPerpetual",
+        "status": "Trading",
+        "baseCoin": "BTC",
+        "quoteCoin": "USDT",
+        "launchTime": "1585526400000",
+        "deliveryTime": "0",
+        "fundingInterval": 480,
+        "priceFilter": {"minPrice": "0.10", "maxPrice": "1999999.80", "tickSize": "0.10"},
+        "lotSizeFilter": {
+          "maxOrderQty": "1190.000",
+          "minOrderQty": "0.001",
+          "qtyStep": "0.001",
+          "minNotionalValue": "5"
+        }
+      },
+      {
+        "symbol": "ETHUSDT",
+        "contractType": "LinearPerpetual",
+        "status": "Trading",
+        "baseCoin": "ETH",
+        "quoteCoin": "USDT",
+        "launchTime": "1533081600000",
+        "deliveryTime": "0",
+        "fundingInterval": 480,
+        "priceFilter": {"minPrice": "0.01", "maxPrice": "199999.98", "tickSize": "0.01"},
+        "lotSizeFilter": {
+          "maxOrderQty": "13000.00",
+          "minOrderQty": "0.01",
+          "qtyStep": "0.01",
+          "minNotionalValue": "5"
+        }
+      }
+    ],
+    "nextPageCursor": "eyJwYWdlIjoyfQ=="
+  },
+  "retExtInfo": {},
+  "time": 1704499200000
+}
