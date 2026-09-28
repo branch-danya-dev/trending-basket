@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from decimal import Decimal
 from enum import StrEnum
 
 
@@ -66,6 +67,25 @@ class FundingRate:
     symbol: str
     funding_time_ms: int
     rate_frac: float
+
+
+@dataclass(frozen=True, slots=True)
+class InstrumentInfo:
+    """Trading rules and metadata for one linear USDT-perpetual instrument."""
+
+    symbol: str
+    contract_type: str
+    status: str
+    base_coin: str
+    quote_coin: str
+    launch_time_ms: int
+    delivery_time_ms: int
+    funding_interval_ms: int
+    tick_size: Decimal
+    min_order_qty: Decimal
+    max_order_qty: Decimal
+    qty_step: Decimal
+    min_notional_value: Decimal
 
 
 @dataclass(frozen=True, slots=True)

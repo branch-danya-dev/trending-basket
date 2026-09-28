@@ -1,0 +1,29 @@
+{
+  "retCode": 0,
+  "retMsg": "OK",
+  "result": {
+    "category": "linear",
+    "list": [
+      {
+        "symbol": "SOLUSDT",
+        "contractType": "LinearPerpetual",
+        "status": "Trading",
+        "baseCoin": "SOL",
+        "quoteCoin": "USDT",
+        "launchTime": "1630588800000",
+        "deliveryTime": "0",
+        "fundingInterval": 480,
+        "priceFilter": {"minPrice": "0.001", "maxPrice": "9999.999", "tickSize": "0.001"},
+        "lotSizeFilter": {
+          "maxOrderQty": "79770.0",
+          "minOrderQty": "0.1",
+          "qtyStep": "0.1",
+          "minNotionalValue": "5"
+        }
+      }
+    ],
+    "nextPageCursor": ""
+  },
+  "retExtInfo": {},
+  "time": 1704499200000
+}
