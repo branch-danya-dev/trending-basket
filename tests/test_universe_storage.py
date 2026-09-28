@@ -50,7 +50,8 @@ def test_build_metadata_query_boundaries_and_idempotent_parquet(
     assert meta["instrument_snapshot"] == "2024-06-01.parquet"
     assert meta["input_candles"]["BTCUSDT"]["rows"] == 120
     assert meta["input_candles"]["BTCUSDT"]["last_open_time_ms"] == MAY_MS - 86_400_000
-    assert meta["survivorship_bias"] is True
+    assert meta["survivorship_bias"]["delisted_included"] == 0
+    assert meta["survivorship_bias"]["delisted_without_history"] == 0
     assert meta["snapshot_contains_closed"] is False
     assert meta["missing_caches"] == ["MISSINGUSDT"]
     assert meta["underfilled_months_ms"] == [MAY_MS, JUNE_MS]
@@ -134,3 +135,11 @@ def test_all_missing_caches_still_write_empty_months(tmp_path: Path) -> None:
 def test_unsafe_names_are_rejected(tmp_path: Path, name: str) -> None:
     with pytest.raises(ValueError):
         universe_paths(tmp_path, name)
+
+
+def test_old_universe_requires_rebuild_for_trading_bounds(tmp_path: Path) -> None:
+    _, meta = universe_paths(tmp_path, "old")
+    meta.parent.mkdir(parents=True)
+    meta.write_text(json.dumps({"schema_version": 1}), encoding="utf-8")
+    with pytest.raises(ValueError, match="rebuild"):
+        load_universe(tmp_path, "old")

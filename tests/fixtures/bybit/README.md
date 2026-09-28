@@ -2,6 +2,7 @@
 
 Captured on Windows from **https://api.bybit.com**, without API keys,
 on **2026-09-28 at 22:28:25–22:28:30 UTC** (2026-09-29, Europe/Moscow).
+The additional T002a instrument fixtures below were captured separately.
 All JSON files except `rate_limit_10006.json` are real HTTP 200 responses.
 Only JSON formatting and the instrument list lengths were changed;
 field names, types, values, timestamps and cursor tokens are preserved.
@@ -53,7 +54,8 @@ was observed in this capture.
   raw timestamp minus one millisecond. Count raw rows before discarding
   an unclosed candle, otherwise a full page can appear incomplete.
 - Instrument responses include `lotSizeFilter.minNotionalValue` as a
-  string and `fundingInterval` as an integer number of minutes.
+  string (possibly empty for historical instruments) and `fundingInterval`
+  as an integer number of minutes. An empty notional is stored as null.
 - Test execution is offline; fixture capture is a separate manual step.
 
 Official references: [funding history](https://bybit-exchange.github.io/docs/v5/market/history-fund-rate),
@@ -63,3 +65,24 @@ Official references: [funding history](https://bybit-exchange.github.io/docs/v5/
 
 Windows command results and limitations are recorded in
 [`T001a-bybit-live-validation.md`](../../../docs/tasks/T001a-bybit-live-validation.md).
+
+## T002a status fixtures
+
+Captured from the same public mainnet on Windows, 2026-09-28 around 23:13 UTC.
+Query parameters: `category=linear&limit=1000`, plus the status below.
+All envelopes, field values and cursors are unchanged; only lists are trimmed.
+
+| Fixture | Status query | Kept rows |
+|---|---|---|
+| `instruments_closed_page1.json` | Closed | 10000000AIDOGEUSDT, 1000000VINUUSDT and all 5 PendingOpen, from 1000 |
+| `instruments_closed_page2.json` | Closed, cursor from page 1 | Complete final response: ZRCUSDT |
+| `instruments_prelaunch_page1.json` | PreLaunch | First of 6 |
+| `instruments_pendingopen_page1.json` | PendingOpen | Complete empty response |
+| `instruments_delivering_page1.json` | Delivering | Complete empty response |
+
+The Closed cursor is `first%3D10000000AIDOGEUSDT%26last%3DZKJUSDT`.
+The actual row status must be preserved: the Closed query also returned
+PendingOpen, while the PendingOpen query itself was empty. Tests exercise
+pagination per status and the empty `minNotionalValue` in 1000000VINUUSDT.
+Overlap/conflict and repeated-cursor cases are synthetic modifications of
+recorded rows in tests, explicitly separate from the saved fixtures.

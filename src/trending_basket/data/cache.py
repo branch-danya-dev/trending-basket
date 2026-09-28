@@ -294,7 +294,10 @@ def _instruments_to_frame(instruments: list[InstrumentInfo]) -> pd.DataFrame:
             "min_order_qty": [str(i.min_order_qty) for i in instruments],
             "max_order_qty": [str(i.max_order_qty) for i in instruments],
             "qty_step": [str(i.qty_step) for i in instruments],
-            "min_notional_value": [str(i.min_notional_value) for i in instruments],
+            "min_notional_value": [
+                str(i.min_notional_value) if i.min_notional_value is not None else None
+                for i in instruments
+            ],
             "symbol_type": [i.symbol_type for i in instruments],
             "market_region": [i.market_region for i in instruments],
             "underlying_ticker": [i.underlying_ticker for i in instruments],

@@ -1,0 +1,60 @@
+{
+  "retCode": 0,
+  "retMsg": "OK",
+  "result": {
+    "category": "linear",
+    "list": [
+      {
+        "symbol": "ZRCUSDT",
+        "contractType": "LinearPerpetual",
+        "status": "Closed",
+        "baseCoin": "ZRC",
+        "quoteCoin": "USDT",
+        "launchTime": "1732529489000",
+        "deliveryTime": "1763715600000",
+        "deliveryFeeRate": "",
+        "priceScale": "5",
+        "leverageFilter": {
+          "minLeverage": "1",
+          "maxLeverage": "20.00",
+          "leverageStep": "0.01"
+        },
+        "priceFilter": {
+          "minPrice": "0.00001",
+          "maxPrice": "199.99998",
+          "tickSize": "0.00001"
+        },
+        "lotSizeFilter": {
+          "maxOrderQty": "750000",
+          "minOrderQty": "1",
+          "qtyStep": "1",
+          "postOnlyMaxOrderQty": "750000",
+          "maxMktOrderQty": "150000",
+          "minNotionalValue": "5"
+        },
+        "unifiedMarginTrade": true,
+        "fundingInterval": 60,
+        "settleCoin": "USDT",
+        "copyTrading": "both",
+        "upperFundingRate": "0.025",
+        "lowerFundingRate": "-0.025",
+        "isPreListing": false,
+        "preListingInfo": null,
+        "riskParameters": {
+          "priceLimitRatioX": "0.2",
+          "priceLimitRatioY": "0.4"
+        },
+        "displayName": "ZRCUSDT",
+        "symbolType": "",
+        "forbidUplWithdrawal": false,
+        "symbolId": 670,
+        "fullName": "zircuit",
+        "marketRegion": "",
+        "underlyingTicker": ""
+      }
+    ],
+    "nextPageCursor": ""
+  },
+  "retExtInfo": {},
+  "time": 1790637226324
+}

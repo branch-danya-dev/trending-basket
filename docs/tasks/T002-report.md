@@ -131,8 +131,10 @@ uv run tb universe show core15 --at 2024-03-01
 снимков, торговая стратегия, бэктест и спотовые данные. Сохранилась текущая
 модель одной записи вселенной за раз; параллельный build одного имени не поддерживается.
 T002 опубликован в [PR #4](https://github.com/branch-danya-dev/trending-basket/pull/4),
-ещё не смержен. [CI для 08a6914](https://github.com/branch-danya-dev/trending-basket/actions/runs/36495813179)
-успешен на Ubuntu и Windows.
+смёржен коммитом `c75e07d3b3c46793133797448ff9595f6599bb65` после разрешения владельца.
+[CI для финального 717962d](https://github.com/branch-danya-dev/trending-basket/actions/runs/36496014098)
+успешен на Ubuntu и Windows. Этот отчёт сохраняет исходные результаты T002;
+изменения после включения Closed описываются отдельно в T002a.
 
 ## Новые зависимости
 

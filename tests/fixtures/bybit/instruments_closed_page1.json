@@ -1,0 +1,348 @@
+{
+  "retCode": 0,
+  "retMsg": "OK",
+  "result": {
+    "category": "linear",
+    "list": [
+      {
+        "symbol": "10000000AIDOGEUSDT",
+        "contractType": "LinearPerpetual",
+        "status": "Closed",
+        "baseCoin": "10000000AIDOGE",
+        "quoteCoin": "USDT",
+        "launchTime": "1709542899000",
+        "deliveryTime": "1745809200000",
+        "deliveryFeeRate": "",
+        "priceScale": "7",
+        "leverageFilter": {
+          "minLeverage": "1",
+          "maxLeverage": "12.50",
+          "leverageStep": "0.01"
+        },
+        "priceFilter": {
+          "minPrice": "0.0000001",
+          "maxPrice": "1.9999998",
+          "tickSize": "0.0000001"
+        },
+        "lotSizeFilter": {
+          "maxOrderQty": "15000000",
+          "minOrderQty": "100",
+          "qtyStep": "100",
+          "postOnlyMaxOrderQty": "15000000",
+          "maxMktOrderQty": "3000000",
+          "minNotionalValue": "5"
+        },
+        "unifiedMarginTrade": true,
+        "fundingInterval": 480,
+        "settleCoin": "USDT",
+        "copyTrading": "none",
+        "upperFundingRate": "0.04",
+        "lowerFundingRate": "-0.04",
+        "isPreListing": false,
+        "preListingInfo": null,
+        "riskParameters": {
+          "priceLimitRatioX": "0.5",
+          "priceLimitRatioY": "0.9"
+        },
+        "displayName": "10000000AIDOGEUSDT",
+        "symbolType": "",
+        "forbidUplWithdrawal": false,
+        "symbolId": 443,
+        "fullName": "",
+        "marketRegion": "",
+        "underlyingTicker": ""
+      },
+      {
+        "symbol": "1000000VINUUSDT",
+        "contractType": "LinearPerpetual",
+        "status": "Closed",
+        "baseCoin": "1000000VINU",
+        "quoteCoin": "USDT",
+        "launchTime": "1701155354000",
+        "deliveryTime": "1707213600000",
+        "deliveryFeeRate": "",
+        "priceScale": "6",
+        "leverageFilter": {
+          "minLeverage": "1",
+          "maxLeverage": "25.00",
+          "leverageStep": "0.01"
+        },
+        "priceFilter": {
+          "minPrice": "0.000001",
+          "maxPrice": "1.999998",
+          "tickSize": "0.000001"
+        },
+        "lotSizeFilter": {
+          "maxOrderQty": "1000000",
+          "minOrderQty": "100",
+          "qtyStep": "100",
+          "postOnlyMaxOrderQty": "1000000",
+          "maxMktOrderQty": "0",
+          "minNotionalValue": ""
+        },
+        "unifiedMarginTrade": true,
+        "fundingInterval": 480,
+        "settleCoin": "USDT",
+        "copyTrading": "both",
+        "upperFundingRate": "0.03",
+        "lowerFundingRate": "-0.03",
+        "isPreListing": false,
+        "preListingInfo": null,
+        "riskParameters": {
+          "priceLimitRatioX": "0.05",
+          "priceLimitRatioY": ""
+        },
+        "displayName": "1000000VINUUSDT",
+        "symbolType": "",
+        "forbidUplWithdrawal": false,
+        "symbolId": 399,
+        "fullName": "",
+        "marketRegion": "",
+        "underlyingTicker": ""
+      },
+      {
+        "symbol": "BTC-24MAR23",
+        "contractType": "LinearFutures",
+        "status": "PendingOpen",
+        "baseCoin": "BTC",
+        "quoteCoin": "USDC",
+        "launchTime": "1679299200000",
+        "deliveryTime": "1679644800000",
+        "deliveryFeeRate": "",
+        "priceScale": "2",
+        "leverageFilter": {
+          "minLeverage": "1",
+          "maxLeverage": "50.00",
+          "leverageStep": "0.01"
+        },
+        "priceFilter": {
+          "minPrice": "0.50",
+          "maxPrice": "999999.00",
+          "tickSize": "0.50"
+        },
+        "lotSizeFilter": {
+          "maxOrderQty": "10.000",
+          "minOrderQty": "0.001",
+          "qtyStep": "0.001",
+          "postOnlyMaxOrderQty": "10.000",
+          "maxMktOrderQty": "0.000",
+          "minNotionalValue": ""
+        },
+        "unifiedMarginTrade": true,
+        "fundingInterval": 0,
+        "settleCoin": "USDC",
+        "copyTrading": "none",
+        "upperFundingRate": "0",
+        "lowerFundingRate": "0",
+        "isPreListing": false,
+        "preListingInfo": null,
+        "riskParameters": {
+          "priceLimitRatioX": "0.05",
+          "priceLimitRatioY": ""
+        },
+        "displayName": "BTCUSDC-24MAR23",
+        "symbolType": "",
+        "forbidUplWithdrawal": false,
+        "symbolId": 282,
+        "fullName": "Bitcoin",
+        "marketRegion": "",
+        "underlyingTicker": ""
+      },
+      {
+        "symbol": "DATAOLD01USDT",
+        "contractType": "LinearPerpetual",
+        "status": "PendingOpen",
+        "baseCoin": "DATAOLD01",
+        "quoteCoin": "USDT",
+        "launchTime": "1781607686000",
+        "deliveryTime": "1781610000000",
+        "deliveryFeeRate": "",
+        "priceScale": "5",
+        "leverageFilter": {
+          "minLeverage": "1",
+          "maxLeverage": "10.00",
+          "leverageStep": "0.01"
+        },
+        "priceFilter": {
+          "minPrice": "0.00001",
+          "maxPrice": "199.99998",
+          "tickSize": "0.00001"
+        },
+        "lotSizeFilter": {
+          "maxOrderQty": "256650",
+          "minOrderQty": "1",
+          "qtyStep": "1",
+          "postOnlyMaxOrderQty": "256650",
+          "maxMktOrderQty": "51330",
+          "minNotionalValue": "5"
+        },
+        "unifiedMarginTrade": true,
+        "fundingInterval": 240,
+        "settleCoin": "USDT",
+        "copyTrading": "none",
+        "upperFundingRate": "0.025",
+        "lowerFundingRate": "-0.025",
+        "isPreListing": false,
+        "preListingInfo": null,
+        "riskParameters": {
+          "priceLimitRatioX": "0.05",
+          "priceLimitRatioY": "0.1"
+        },
+        "displayName": "DATAOLD01USDT",
+        "symbolType": "",
+        "forbidUplWithdrawal": false,
+        "symbolId": 2711,
+        "fullName": "Streamr1",
+        "marketRegion": "",
+        "underlyingTicker": ""
+      },
+      {
+        "symbol": "ETH-24MAR23",
+        "contractType": "LinearFutures",
+        "status": "PendingOpen",
+        "baseCoin": "ETH",
+        "quoteCoin": "USDC",
+        "launchTime": "1679299200000",
+        "deliveryTime": "1679644800000",
+        "deliveryFeeRate": "",
+        "priceScale": "2",
+        "leverageFilter": {
+          "minLeverage": "1",
+          "maxLeverage": "50.00",
+          "leverageStep": "0.01"
+        },
+        "priceFilter": {
+          "minPrice": "0.05",
+          "maxPrice": "99999.90",
+          "tickSize": "0.05"
+        },
+        "lotSizeFilter": {
+          "maxOrderQty": "150.00",
+          "minOrderQty": "0.01",
+          "qtyStep": "0.01",
+          "postOnlyMaxOrderQty": "150.00",
+          "maxMktOrderQty": "0.00",
+          "minNotionalValue": ""
+        },
+        "unifiedMarginTrade": true,
+        "fundingInterval": 0,
+        "settleCoin": "USDC",
+        "copyTrading": "none",
+        "upperFundingRate": "0",
+        "lowerFundingRate": "0",
+        "isPreListing": false,
+        "preListingInfo": null,
+        "riskParameters": {
+          "priceLimitRatioX": "0.05",
+          "priceLimitRatioY": ""
+        },
+        "displayName": "ETHUSDC-24MAR23",
+        "symbolType": "",
+        "forbidUplWithdrawal": false,
+        "symbolId": 287,
+        "fullName": "Ethereum",
+        "marketRegion": "",
+        "underlyingTicker": ""
+      },
+      {
+        "symbol": "LITENTRYUSDT",
+        "contractType": "LinearPerpetual",
+        "status": "PendingOpen",
+        "baseCoin": "LITENTRY",
+        "quoteCoin": "USDT",
+        "launchTime": "1766051750000",
+        "deliveryTime": "1766142000000",
+        "deliveryFeeRate": "",
+        "priceScale": "4",
+        "leverageFilter": {
+          "minLeverage": "1",
+          "maxLeverage": "16.67",
+          "leverageStep": "0.01"
+        },
+        "priceFilter": {
+          "minPrice": "0.0001",
+          "maxPrice": "1999.9998",
+          "tickSize": "0.0001"
+        },
+        "lotSizeFilter": {
+          "maxOrderQty": "248710",
+          "minOrderQty": "1",
+          "qtyStep": "1",
+          "postOnlyMaxOrderQty": "248710",
+          "maxMktOrderQty": "26580",
+          "minNotionalValue": "5"
+        },
+        "unifiedMarginTrade": true,
+        "fundingInterval": 240,
+        "settleCoin": "USDT",
+        "copyTrading": "none",
+        "upperFundingRate": "0.03",
+        "lowerFundingRate": "-0.03",
+        "isPreListing": false,
+        "preListingInfo": null,
+        "riskParameters": {
+          "priceLimitRatioX": "0.05",
+          "priceLimitRatioY": "0.1"
+        },
+        "displayName": "LITENTRYUSDT",
+        "symbolType": "",
+        "forbidUplWithdrawal": false,
+        "symbolId": 2541,
+        "fullName": "litentry",
+        "marketRegion": "",
+        "underlyingTicker": ""
+      },
+      {
+        "symbol": "MONPROUSDT",
+        "contractType": "LinearPerpetual",
+        "status": "PendingOpen",
+        "baseCoin": "MONPRO",
+        "quoteCoin": "USDT",
+        "launchTime": "1761230273000",
+        "deliveryTime": "1761306300000",
+        "deliveryFeeRate": "",
+        "priceScale": "5",
+        "leverageFilter": {
+          "minLeverage": "1",
+          "maxLeverage": "12.50",
+          "leverageStep": "0.01"
+        },
+        "priceFilter": {
+          "minPrice": "0.00001",
+          "maxPrice": "199.99998",
+          "tickSize": "0.00001"
+        },
+        "lotSizeFilter": {
+          "maxOrderQty": "200000",
+          "minOrderQty": "1",
+          "qtyStep": "1",
+          "postOnlyMaxOrderQty": "200000",
+          "maxMktOrderQty": "40000",
+          "minNotionalValue": "5"
+        },
+        "unifiedMarginTrade": true,
+        "fundingInterval": 240,
+        "settleCoin": "USDT",
+        "copyTrading": "none",
+        "upperFundingRate": "0.04",
+        "lowerFundingRate": "-0.04",
+        "isPreListing": false,
+        "preListingInfo": null,
+        "riskParameters": {
+          "priceLimitRatioX": "0.1",
+          "priceLimitRatioY": "0.2"
+        },
+        "displayName": "MONPROUSDT",
+        "symbolType": "",
+        "forbidUplWithdrawal": false,
+        "symbolId": 2475,
+        "fullName": "MONPRO",
+        "marketRegion": "",
+        "underlyingTicker": ""
+      }
+    ],
+    "nextPageCursor": "first%3D10000000AIDOGEUSDT%26last%3DZKJUSDT"
+  },
+  "retExtInfo": {},
+  "time": 1790637225326
+}

@@ -1,0 +1,90 @@
+{
+  "retCode": 0,
+  "retMsg": "OK",
+  "result": {
+    "category": "linear",
+    "list": [
+      {
+        "symbol": "ANTHROPICUSDT",
+        "contractType": "LinearPerpetual",
+        "status": "PreLaunch",
+        "baseCoin": "ANTHROPIC",
+        "quoteCoin": "USDT",
+        "launchTime": "1783934824000",
+        "deliveryTime": "0",
+        "deliveryFeeRate": "",
+        "priceScale": "2",
+        "leverageFilter": {
+          "minLeverage": "1",
+          "maxLeverage": "25.00",
+          "leverageStep": "0.01"
+        },
+        "priceFilter": {
+          "minPrice": "0.01",
+          "maxPrice": "199999.98",
+          "tickSize": "0.01"
+        },
+        "lotSizeFilter": {
+          "maxOrderQty": "124.000",
+          "minOrderQty": "0.001",
+          "qtyStep": "0.001",
+          "postOnlyMaxOrderQty": "124.000",
+          "maxMktOrderQty": "31.000",
+          "minNotionalValue": "5"
+        },
+        "unifiedMarginTrade": true,
+        "fundingInterval": 480,
+        "settleCoin": "USDT",
+        "copyTrading": "none",
+        "upperFundingRate": "0.02",
+        "lowerFundingRate": "-0.02",
+        "isPreListing": true,
+        "preListingInfo": {
+          "curAuctionPhase": "ContinuousTrading",
+          "phases": [
+            {
+              "phase": "CallAuction",
+              "startTime": "946684800000",
+              "endTime": "946684800000"
+            },
+            {
+              "phase": "CallAuctionNoCancel",
+              "startTime": "946684800000",
+              "endTime": "946684800000"
+            },
+            {
+              "phase": "CrossMatching",
+              "startTime": "946684800000",
+              "endTime": "946684800000"
+            },
+            {
+              "phase": "ContinuousTrading",
+              "startTime": "946684800000",
+              "endTime": ""
+            }
+          ],
+          "auctionFeeInfo": {
+            "auctionFeeRate": "0",
+            "takerFeeRate": "0.00055",
+            "makerFeeRate": "0.0002"
+          },
+          "skipCallAuction": true
+        },
+        "riskParameters": {
+          "priceLimitRatioX": "0.03",
+          "priceLimitRatioY": "0.05"
+        },
+        "displayName": "ANTHROPICUSDT",
+        "symbolType": "stock",
+        "forbidUplWithdrawal": false,
+        "symbolId": 2755,
+        "fullName": "Anthropic",
+        "marketRegion": "US",
+        "underlyingTicker": "ANTHROPIC"
+      }
+    ],
+    "nextPageCursor": ""
+  },
+  "retExtInfo": {},
+  "time": 1790637226606
+}

@@ -237,6 +237,21 @@ def test_sync_instruments_preserves_asset_classification(tmp_path: Path) -> None
 # --- find_gaps --------------------------------------------------------------
 
 
+def test_snapshot_preserves_missing_notional_and_delisting_time(tmp_path: Path) -> None:
+    closed = replace(
+        _make_instrument(),
+        status="Closed",
+        delivery_time_ms=BASE_MS + DAY_MS,
+        min_notional_value=None,
+    )
+    client = FakeBybitClient(server_now_ms=BASE_MS, all_instruments=[closed])
+    sync_instruments(data_dir=tmp_path, client=client, clock=ManualClock(BASE_MS))
+    frame = pd.read_parquet(instruments_path(tmp_path, date(2024, 1, 1)))
+    assert pd.isna(frame.loc[0, "min_notional_value"])
+    assert frame.loc[0, "delivery_time_ms"] == BASE_MS + DAY_MS
+    assert frame.loc[0, "status"] == "Closed"
+
+
 def test_find_gaps_detects_single_gap() -> None:
     df = pd.DataFrame({"open_time_ms": [BASE_MS, BASE_MS + 3 * DAY_MS]})
     assert find_gaps(df, Interval.D1) == [(BASE_MS + DAY_MS, BASE_MS + 2 * DAY_MS)]

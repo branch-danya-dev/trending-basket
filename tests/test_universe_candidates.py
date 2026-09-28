@@ -23,8 +23,9 @@ def test_candidate_filters_and_asset_classification(tmp_path: Path) -> None:
         instrument("FUTUREUSDT", contract_type="LinearFutures"),
         instrument("BTCUSDC", quote_coin="USDC"),
         instrument("CLOSEDUSDT", status="Closed"),
+        instrument("CLOSEDGOLDUSDT", status="Closed", symbol_type="commodity"),
+        instrument("USDCUSDT", status="Closed"),
         instrument("PREUSDT", status="PreLaunch"),
-        instrument("USDCUSDT"),
         instrument("BLOCKUSDT"),
         instrument("PAXGUSDT"),
         instrument("AAPLUSDT", symbol_type="stock"),
@@ -42,9 +43,9 @@ def test_candidate_filters_and_asset_classification(tmp_path: Path) -> None:
         tmp_path / "bybit/linear/instruments/2024-06-02.parquet", index=False
     )
     pool = candidate_pool(tmp_path, exclusions)
-    assert pool.symbols == ["BTCUSDT", "INNOVUSDT"]
+    assert pool.symbols == ["BTCUSDT", "CLOSEDUSDT", "INNOVUSDT"]
     assert pool.snapshot.name == "2024-06-02.parquet"
-    assert pool.snapshot_status_counts["Closed"] == 1
+    assert pool.snapshot_status_counts["Closed"] == 3
     assert pool.excluded["USDCUSDT"] == "stablecoin"
     assert pool.excluded["BLOCKUSDT"] == "manual exclusion"
 

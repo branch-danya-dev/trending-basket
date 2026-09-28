@@ -14,7 +14,7 @@ from trending_basket.data.cache import instruments_dir
 DEFAULT_EXCLUSIONS = Path("config/universe_exclusions.csv")
 CRYPTO_SYMBOL_TYPES = frozenset({"", "innovation"})
 CLASSIFICATION_RULE = (
-    "Trading LinearPerpetual USDT; symbol_type in ['', 'innovation']; "
+    "Trading or Closed LinearPerpetual USDT; symbol_type in ['', 'innovation']; "
     "empty market_region and underlying_ticker; explicit symbol/base exclusions"
 )
 
@@ -26,6 +26,8 @@ class CandidatePool:
     excluded: dict[str, str]
     snapshot_status_counts: dict[str, int]
     exclusions: dict[str, str]
+    statuses: dict[str, str]
+    delivery_times_ms: dict[str, int | None]
 
 
 def load_exclusions(path: Path) -> dict[str, str]:
@@ -76,13 +78,15 @@ def candidate_pool(data_dir: Path, exclusions_path: Path = DEFAULT_EXCLUSIONS) -
     exclusions = load_exclusions(exclusions_path)
     selected: list[str] = []
     excluded: dict[str, str] = {}
+    statuses: dict[str, str] = {}
+    delivery_times: dict[str, int | None] = {}
     for row in instruments.to_dict(orient="records"):
         symbol = str(row["symbol"])
         reason = ""
         if row["contract_type"] != "LinearPerpetual" or row["quote_coin"] != "USDT":
             reason = "not a linear USDT perpetual"
-        elif row["status"] != "Trading":
-            reason = "not Trading"
+        elif row["status"] not in {"Trading", "Closed"}:
+            reason = "not Trading or Closed"
         elif symbol in exclusions or str(row["base_coin"]) in exclusions:
             reason = exclusions.get(symbol, exclusions.get(str(row["base_coin"]), ""))
         elif any(
@@ -97,5 +101,14 @@ def candidate_pool(data_dir: Path, exclusions_path: Path = DEFAULT_EXCLUSIONS) -
             excluded[symbol] = reason
         else:
             selected.append(symbol)
+            statuses[symbol] = str(row["status"])
+            delivery = row.get("delivery_time_ms")
+            delivery_times[symbol] = (
+                int(delivery)
+                if delivery is not None and not pd.isna(delivery) and delivery
+                else None
+            )
     counts = {str(key): int(value) for key, value in instruments["status"].value_counts().items()}
-    return CandidatePool(snapshot, sorted(selected), excluded, counts, exclusions)
+    return CandidatePool(
+        snapshot, sorted(selected), excluded, counts, exclusions, statuses, delivery_times
+    )

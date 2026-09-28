@@ -22,6 +22,7 @@ from trending_basket.domain.types import Candle, FundingRate, InstrumentInfo, In
 _KLINE_PAGE_LIMIT = 1000
 _FUNDING_PAGE_LIMIT = 200
 _INSTRUMENTS_PAGE_LIMIT = 1000
+_INSTRUMENT_STATUSES = ("Trading", "Closed", "PreLaunch", "PendingOpen", "Delivering")
 
 _RATE_LIMIT_RET_CODE = 10006
 _RETRYABLE_RET_CODES = frozenset({_RATE_LIMIT_RET_CODE})
@@ -212,12 +213,31 @@ class BybitPublicClient:
         return [by_time[t] for t in sorted(by_time)]
 
     def fetch_instruments(self) -> list[InstrumentInfo]:
-        """Fetch all linear instruments, paginating via cursor."""
-        instruments: list[InstrumentInfo] = []
+        """Query every documented status, retaining actual response statuses and duplicates once."""
+        instruments: dict[str, InstrumentInfo] = {}
+        for status in _INSTRUMENT_STATUSES:
+            for instrument in self._fetch_instrument_status(status):
+                previous = instruments.get(instrument.symbol)
+                if previous is not None and previous != instrument:
+                    raise BybitAPIError(
+                        _NON_RET_CODE,
+                        f"conflicting instrument rows for {instrument.symbol}; retry snapshot",
+                        "/v5/market/instruments-info",
+                        {"category": "linear", "status": status},
+                    )
+                instruments[instrument.symbol] = instrument
+        return [instruments[symbol] for symbol in sorted(instruments)]
+
+    def _fetch_instrument_status(self, status: str) -> Iterator[InstrumentInfo]:
         cursor = ""
+        seen_cursors: set[str] = set()
 
         while True:
-            params: dict[str, Any] = {"category": "linear", "limit": _INSTRUMENTS_PAGE_LIMIT}
+            params: dict[str, Any] = {
+                "category": "linear",
+                "limit": _INSTRUMENTS_PAGE_LIMIT,
+                "status": status,
+            }
             if cursor:
                 params["cursor"] = cursor
             payload = self._request("/v5/market/instruments-info", params)
@@ -226,32 +246,40 @@ class BybitPublicClient:
             for row in result["list"]:
                 price_filter = row["priceFilter"]
                 lot_size_filter = row["lotSizeFilter"]
-                instruments.append(
-                    InstrumentInfo(
-                        symbol=row["symbol"],
-                        contract_type=row["contractType"],
-                        status=row["status"],
-                        base_coin=row["baseCoin"],
-                        quote_coin=row["quoteCoin"],
-                        launch_time_ms=int(row["launchTime"]),
-                        delivery_time_ms=int(row["deliveryTime"]),
-                        funding_interval_ms=int(row["fundingInterval"]) * 60_000,
-                        tick_size=Decimal(price_filter["tickSize"]),
-                        min_order_qty=Decimal(lot_size_filter["minOrderQty"]),
-                        max_order_qty=Decimal(lot_size_filter["maxOrderQty"]),
-                        qty_step=Decimal(lot_size_filter["qtyStep"]),
-                        min_notional_value=Decimal(lot_size_filter["minNotionalValue"]),
-                        symbol_type=row.get("symbolType"),
-                        market_region=row.get("marketRegion"),
-                        underlying_ticker=row.get("underlyingTicker"),
-                    )
+                yield InstrumentInfo(
+                    symbol=row["symbol"],
+                    contract_type=row["contractType"],
+                    status=row["status"],
+                    base_coin=row["baseCoin"],
+                    quote_coin=row["quoteCoin"],
+                    launch_time_ms=int(row["launchTime"]),
+                    delivery_time_ms=int(row.get("deliveryTime") or 0),
+                    funding_interval_ms=int(row["fundingInterval"]) * 60_000,
+                    tick_size=Decimal(price_filter["tickSize"]),
+                    min_order_qty=Decimal(lot_size_filter["minOrderQty"]),
+                    max_order_qty=Decimal(lot_size_filter["maxOrderQty"]),
+                    qty_step=Decimal(lot_size_filter["qtyStep"]),
+                    min_notional_value=(
+                        Decimal(lot_size_filter["minNotionalValue"])
+                        if lot_size_filter.get("minNotionalValue")
+                        else None
+                    ),
+                    symbol_type=row.get("symbolType"),
+                    market_region=row.get("marketRegion"),
+                    underlying_ticker=row.get("underlyingTicker"),
                 )
 
             cursor = result.get("nextPageCursor", "")
             if not cursor:
                 break
-
-        return instruments
+            if cursor in seen_cursors:
+                raise BybitAPIError(
+                    _NON_RET_CODE,
+                    "repeated instrument cursor",
+                    "/v5/market/instruments-info",
+                    params,
+                )
+            seen_cursors.add(cursor)
 
     def _request(self, endpoint: str, params: dict[str, Any]) -> dict[str, Any]:
         last_ret_code = _NON_RET_CODE

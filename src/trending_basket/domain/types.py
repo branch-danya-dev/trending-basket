@@ -85,7 +85,7 @@ class InstrumentInfo:
     min_order_qty: Decimal
     max_order_qty: Decimal
     qty_step: Decimal
-    min_notional_value: Decimal
+    min_notional_value: Decimal | None
     symbol_type: str | None = None
     market_region: str | None = None
     underlying_ticker: str | None = None

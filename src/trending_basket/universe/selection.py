@@ -10,6 +10,7 @@ from datetime import UTC, datetime
 import pandas as pd
 
 from trending_basket.domain.types import Interval
+from trending_basket.universe.lifecycle import TradingPeriod
 
 DAY_MS = Interval.D1.duration_ms
 UNIVERSE_DTYPES = {
@@ -69,6 +70,7 @@ def select_universe(
     candles: Mapping[str, pd.DataFrame],
     rebalance_time_ms: int,
     parameters: SelectionParameters,
+    trading_periods: Mapping[str, TradingPeriod] | None = None,
 ) -> pd.DataFrame:
     if month_start_ms(rebalance_time_ms) != rebalance_time_ms:
         raise ValueError("rebalance time must be a month boundary at 00:00 UTC")
@@ -76,6 +78,8 @@ def select_universe(
     window_start_ms = rebalance_time_ms - parameters.turnover_window_days * DAY_MS
     expected_window = list(range(window_start_ms, rebalance_time_ms, DAY_MS))
     for symbol, frame in candles.items():
+        if trading_periods is not None and not trading_periods[symbol].contains(rebalance_time_ms):
+            continue
         # Slice first: future turnover, gaps and duplicates cannot influence eligibility.
         closed = frame.loc[
             frame["open_time_ms"] <= rebalance_time_ms - DAY_MS, ["open_time_ms", "turnover"]

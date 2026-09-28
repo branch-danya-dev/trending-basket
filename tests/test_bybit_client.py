@@ -236,6 +236,7 @@ def test_fetch_funding_history_paginates_backward() -> None:
 
 def test_fetch_instruments_paginates_via_cursor(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(bybit_client, "_INSTRUMENTS_PAGE_LIMIT", 500)
+    monkeypatch.setattr(bybit_client, "_INSTRUMENT_STATUSES", ("Trading",))
     requests: list[httpx.Request] = []
     transport = route_transport(
         {
@@ -259,13 +260,80 @@ def test_fetch_instruments_paginates_via_cursor(monkeypatch: pytest.MonkeyPatch)
     assert instruments[0].market_region == ""
     assert instruments[0].underlying_ticker == ""
     assert [dict(r.url.params) for r in requests] == [
-        {"category": "linear", "limit": "500"},
+        {"category": "linear", "limit": "500", "status": "Trading"},
         {
             "category": "linear",
             "limit": "500",
+            "status": "Trading",
             "cursor": "first%3D0GUSDT%26last%3DMONUSDT",
         },
     ]
+
+
+def test_instrument_status_pages_keep_actual_status_and_nullable_notional() -> None:
+    requests: list[httpx.Request] = []
+    pages = [
+        load_fixture(name)
+        for name in (
+            "instruments_page1_cursor.json",
+            "instruments_page2_final.json",
+            "instruments_closed_page1.json",
+            "instruments_closed_page2.json",
+            "instruments_prelaunch_page1.json",
+            "instruments_pendingopen_page1.json",
+            "instruments_delivering_page1.json",
+        )
+    ]
+    client, _, _ = _make_client(
+        route_transport({"/v5/market/instruments-info": pages}, requests=requests)
+    )
+    instruments = {row.symbol: row for row in client.fetch_instruments()}
+    assert instruments["1000000VINUUSDT"].min_notional_value is None
+    assert instruments["10000000AIDOGEUSDT"].delivery_time_ms == 1745809200000
+    assert instruments["ZRCUSDT"].status == "Closed"
+    assert instruments["DATAOLD01USDT"].status == "PendingOpen"
+    assert {row.status for row in instruments.values()} == {
+        "Trading",
+        "Closed",
+        "PreLaunch",
+        "PendingOpen",
+    }
+    assert [r.url.params["status"] for r in requests] == [
+        "Trading",
+        "Trading",
+        "Closed",
+        "Closed",
+        "PreLaunch",
+        "PendingOpen",
+        "Delivering",
+    ]
+    assert requests[3].url.params["cursor"] == pages[2]["result"]["nextPageCursor"]
+    assert "cursor" not in requests[4].url.params
+
+
+def test_instrument_queries_deduplicate_overlapping_responses() -> None:
+    page = load_fixture("instruments_page2_final.json")
+    client, _, _ = _make_client(route_transport({"/v5/market/instruments-info": [page]}))
+    assert [row.symbol for row in client.fetch_instruments()] == ["SOLUSDT"]
+
+
+def test_conflicting_instrument_rows_fail_instead_of_overwriting() -> None:
+    page = load_fixture("instruments_page2_final.json")
+    changed = deepcopy(page)
+    changed["result"]["list"][0]["status"] = "Closed"
+    client, _, _ = _make_client(route_transport({"/v5/market/instruments-info": [page, changed]}))
+    with pytest.raises(BybitAPIError, match="conflicting instrument"):
+        client.fetch_instruments()
+
+
+def test_instrument_repeated_cursor_fails_instead_of_hanging() -> None:
+    client, _, _ = _make_client(
+        route_transport(
+            {"/v5/market/instruments-info": [load_fixture("instruments_page1_cursor.json")]}
+        )
+    )
+    with pytest.raises(BybitAPIError, match="repeated instrument cursor"):
+        client.fetch_instruments()
 
 
 # --- Retries -----------------------------------------------------------------
