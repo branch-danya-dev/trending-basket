@@ -3,8 +3,11 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import Any
 
+from trending_basket.domain.types import Interval
 from trending_basket.strategies.base import Decision, DecisionContext, TargetPosition
+from trending_basket.strategies.trend_basket import TrendBasket, TrendBasketParams
 from trending_basket.universe.selection import month_start_ms
 
 
@@ -43,7 +46,11 @@ class EqualWeightUniverse:
         return {symbol: TargetPosition(weight) for symbol in ctx.universe}
 
 
-def make_strategy(name: str) -> BuyAndHoldBTC | EqualWeightUniverse:
+def make_strategy(
+    name: str, params: dict[str, Any] | None = None, interval: Interval = Interval.D1
+) -> BuyAndHoldBTC | EqualWeightUniverse | TrendBasket:
+    if name == "trend_basket":
+        return TrendBasket(TrendBasketParams.model_validate(params or {}), interval)
     if name == "buy_and_hold_btc":
         return BuyAndHoldBTC()
     if name == "equal_weight_universe":

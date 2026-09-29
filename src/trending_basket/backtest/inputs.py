@@ -13,6 +13,7 @@ import pandas as pd
 
 from trending_basket.backtest.config import Experiment
 from trending_basket.backtest.market import DataStore
+from trending_basket.backtest.periods import WARMUP_MS
 from trending_basket.backtest.sim_executor import InstrumentRules
 from trending_basket.data.cache import funding_path, klines_path
 from trending_basket.domain.types import Candle, Interval
@@ -31,7 +32,15 @@ class Inputs:
 
 def load_inputs(data_dir: Path, experiment: Experiment) -> Inputs:
     universe = load_universe(data_dir, experiment.run.universe)
-    symbols = sorted(set(universe.table["symbol"]))
+    symbols = sorted(
+        set(
+            universe.table.loc[
+                universe.table["rebalance_time_ms"] < experiment.run.end_ms, "symbol"
+            ]
+        )
+    )
+    if experiment.run.symbols is not None:
+        symbols = sorted(set(symbols) & set(experiment.run.symbols))
     if experiment.run.strategy == "buy_and_hold_btc":
         symbols = ["BTCUSDT"]
     snapshot = latest_snapshot(data_dir)
@@ -80,7 +89,10 @@ def load_inputs(data_dir: Path, experiment: Experiment) -> Inputs:
                 continue
             frame = pd.read_parquet(path)
             record(path, frame, "open_time_ms")
-            frame = frame.loc[frame["open_time_ms"] < experiment.run.end_ms]
+            frame = frame.loc[
+                (frame["open_time_ms"] < experiment.run.end_ms)
+                & (frame["open_time_ms"] >= WARMUP_MS)
+            ]
             rows = []
             for r in frame.to_dict(orient="records"):
                 values = [
@@ -97,6 +109,7 @@ def load_inputs(data_dir: Path, experiment: Experiment) -> Inputs:
             continue
         frame = pd.read_parquet(path)
         record(path, frame, "funding_time_ms")
+        frame = frame.loc[frame["funding_time_ms"] < experiment.run.end_ms]
         if (
             frame["funding_time_ms"].duplicated().any()
             or not frame["rate_frac"].map(math.isfinite).all()

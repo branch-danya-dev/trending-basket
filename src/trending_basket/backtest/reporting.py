@@ -17,7 +17,8 @@ from trending_basket.backtest.engine import BacktestResult
 from trending_basket.clock import Clock
 
 ASSUMPTIONS = [
-    "Main evaluation period was chosen before strategy runs: 2021-11-01 onward.",
+    "Periods preregistered in ADR-015: dev 2021-11-01..2024-06-30; "
+    "val 2024-07-01..2025-09-30; holdout from 2025-10-01.",
     "Latest instrument filters include Closed records; historical filters are unavailable.",
     "Decisions see closed bars only; fills use the next open, with adverse slippage.",
     "A gap stop fills at the open; an intrabar touch fills at the stop at bar close. "
@@ -30,7 +31,8 @@ ASSUMPTIONS = [
     "Coverage measures settlements while a position is open; insufficient history yields null.",
     "Gross PnL uses reference prices; fees and slippage are subtracted once; funding is signed.",
     "Targets round toward zero; small reductions expand to an executable order or a full exit. "
-    "After fees and slippage actual exposures are reduced until every limit holds within 1e-9. "
+    "When limits are enabled, actual exposures after fees and slippage are reduced "
+    "until every limit holds within 1e-9. "
     "Each adjustment and post-rebalance exposure is logged. Limits may drift between decisions. "
     "Unknown Closed minNotionalValue is logged.",
     "End date is inclusive; terminal open positions are marked, without a fictitious liquidation.",
@@ -100,7 +102,11 @@ def report_markdown(name: str, metrics: dict[str, Any]) -> str:
                 f"| {gap['symbol']} | {first} | {last} | {gap['interval_ms'] / 3600000:g} | "
                 f"{gap['missing_count']} | {gap['source']} |"
             )
-    for title, key in (("Year attribution", "by_year"), ("Symbol attribution", "by_symbol")):
+    for title, key in (
+        ("Year attribution", "by_year"),
+        ("Symbol attribution", "by_symbol"),
+        ("Costs by direction", "by_direction"),
+    ):
         lines.extend(["", f"## {title}", ""])
         rows = metrics[key]
         if rows:
@@ -114,6 +120,25 @@ def report_markdown(name: str, metrics: dict[str, Any]) -> str:
                     )
                     + " |"
                 )
+    lines += [
+        "",
+        "## Closed lifecycle returns in R",
+        "",
+        "Quantiles: " + str(metrics["r_distribution"]["quantiles"]),
+    ]
+    for label in ("best_five", "worst_five"):
+        lines += [
+            "",
+            f"### {label}",
+            "",
+            "| Symbol | Direction | Entry ms | Exit ms | R | Net USD |",
+            "|---|---|---:|---:|---:|---:|",
+        ]
+        for p in metrics["r_distribution"][label]:
+            lines.append(
+                f"| {p['symbol']} | {p.get('direction', '')} | {p['entry_time_ms']} | "
+                f"{p['exit_time_ms']} | {p['return_r']:.6g} | {p['net_pnl_usd']:.6g} |"
+            )
     lines += ["", "## Assumptions", "", *(f"- {s}" for s in ASSUMPTIONS), ""]
     return "\n".join(lines)
 

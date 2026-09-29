@@ -48,6 +48,7 @@ class Position:
     entry_time_ms: int
     stop_price: float | None
     initial_risk_usd: float | None
+    direction: str = "long"
     gross_pnl_usd: float = 0.0
     fees_usd: float = 0.0
     slippage_usd: float = 0.0
@@ -77,6 +78,8 @@ class SimExecutor:
                 p.stop_price,
                 p.initial_risk_usd,
                 p.quantity * marks[s],
+                p.entry_time_ms,
+                p.lifecycle_id,
             )
             for s, p in self.positions.items()
         }
@@ -135,6 +138,12 @@ class SimExecutor:
         self.slippage_usd += slip
         position = self.positions.get(symbol)
         realized = 0.0
+        executed_risk = None
+        if target.initial_risk_usd is not None and target.notional_usd:
+            total_quantity = abs(quantity) + (abs(position.quantity) if position else 0.0)
+            executed_risk = (
+                target.initial_risk_usd * total_quantity * base_price / abs(target.notional_usd)
+            )
         if position is None:
             position = Position(
                 self._next_id,
@@ -144,11 +153,14 @@ class SimExecutor:
                 base_price,
                 time_ms,
                 target.stop_price,
-                target.initial_risk_usd,
+                executed_risk,
+                "long" if quantity > 0 else "short",
             )
             self._next_id += 1
             self.positions[symbol] = position
         elif position.quantity * quantity > 0:
+            if executed_risk is not None:
+                position.initial_risk_usd = max(position.initial_risk_usd or 0.0, executed_risk)
             total = abs(position.quantity) + abs(quantity)
             position.average_entry_price = (
                 abs(position.quantity) * position.average_entry_price + abs(quantity) * price
@@ -200,6 +212,7 @@ class SimExecutor:
         return {
             "lifecycle_id": p.lifecycle_id,
             "symbol": p.symbol,
+            "direction": p.direction,
             "entry_time_ms": p.entry_time_ms,
             "exit_time_ms": exit_time_ms,
             "exit_reason": reason,

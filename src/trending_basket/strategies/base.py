@@ -41,6 +41,15 @@ class PositionView:
     stop_price: float | None
     initial_risk_usd: float | None
     notional_usd: float
+    entry_time_ms: int = 0
+    lifecycle_id: int = 0
+
+
+@dataclass(frozen=True, slots=True)
+class PositionExit:
+    symbol: str
+    time_ms: int
+    reason: str
 
 
 @dataclass(frozen=True, slots=True)
@@ -50,6 +59,7 @@ class DecisionContext:
     positions: Mapping[str, PositionView]
     universe: tuple[str, ...]
     market: MarketView
+    recent_exits: tuple[PositionExit, ...] = ()
 
 
 @dataclass(frozen=True, slots=True)

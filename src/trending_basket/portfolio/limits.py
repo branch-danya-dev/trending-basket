@@ -12,6 +12,7 @@ from trending_basket.strategies.base import Decision
 
 class PortfolioLimits(BaseModel):
     model_config = ConfigDict(extra="forbid", frozen=True, allow_inf_nan=False)
+    enabled: bool = True
     max_gross_exposure: float = Field(default=2.0, gt=0)
     max_net_exposure: float = Field(default=1.5, gt=0)
     max_symbol_exposure: float = Field(default=0.5, gt=0)
@@ -31,6 +32,8 @@ def actual_exposures(notionals: Mapping[str, float], equity_usd: float) -> dict[
 def limit_violations(
     notionals: Mapping[str, float], equity_usd: float, limits: PortfolioLimits
 ) -> list[str]:
+    if not limits.enabled:
+        return []
     if equity_usd <= 0 and any(notionals.values()):
         return ["capital_depleted"]
     values = actual_exposures(notionals, equity_usd)
@@ -48,6 +51,8 @@ def assert_actual_limits(
 def apply_limits(
     decision: Decision, equity_usd: float, limits: PortfolioLimits
 ) -> tuple[Decision, list[str]]:
+    if not limits.enabled:
+        return dict(decision), []
     if equity_usd <= 0:
         return {s: replace(t, notional_usd=0) for s, t in decision.items()}, ["capital_depleted"]
     notionals = [t.notional_usd for t in decision.values()]
@@ -64,5 +69,12 @@ def apply_limits(
         [1.0] + [equity_usd * cap / value for value, cap in measures.values() if value > 0]
     )
     return {
-        s: replace(t, notional_usd=t.notional_usd * factor) for s, t in decision.items()
+        s: replace(
+            t,
+            notional_usd=t.notional_usd * factor,
+            initial_risk_usd=t.initial_risk_usd * factor
+            if t.initial_risk_usd is not None
+            else None,
+        )
+        for s, t in decision.items()
     }, exceeded

@@ -12,7 +12,8 @@ from trending_basket.backtest.config import load_experiment
 from trending_basket.backtest.engine import BacktestEngine
 from trending_basket.backtest.inputs import load_inputs
 from trending_basket.backtest.metrics import calculate_metrics
-from trending_basket.backtest.reporting import metric_label, save_report, scalar_table
+from trending_basket.backtest.periods import BENCHMARKS, authorize_period
+from trending_basket.backtest.reporting import _git_state, metric_label, save_report, scalar_table
 from trending_basket.clock import SystemClock
 from trending_basket.config import load_settings
 from trending_basket.strategies.benchmarks import make_strategy
@@ -21,14 +22,39 @@ backtest_app = typer.Typer(help="Run and inspect reproducible offline experiment
 
 
 @backtest_app.command("run")
-def run_cmd(experiment_file: Annotated[Path, typer.Argument()]) -> None:
+def run_cmd(
+    experiment_file: Annotated[Path, typer.Argument()],
+    allow_val: Annotated[bool, typer.Option(help="Explicitly access validation data.")] = False,
+    allow_holdout: Annotated[
+        bool, typer.Option(help="Access holdout/full after confirmation.")
+    ] = False,
+) -> None:
     try:
         settings = load_settings()
-        experiment = load_experiment(experiment_file)
+        clock = SystemClock()
+        experiment = load_experiment(experiment_file, clock)
+        run = experiment.run
+        assert run.period is not None
+        confirmed = False
+        if run.strategy not in BENCHMARKS and run.period in {"holdout", "full"} and allow_holdout:
+            confirmed = typer.confirm(
+                "Access protected holdout data? This will be permanently logged."
+            )
+        access = authorize_period(
+            experiment=run.name,
+            strategy=run.strategy,
+            period=run.period,
+            allow_val=allow_val,
+            allow_holdout=allow_holdout,
+            confirmed=confirmed,
+            reports_dir=settings.reports_dir,
+            clock=clock,
+            commit=_git_state()["commit"],
+        )
         inputs = load_inputs(settings.data_dir, experiment)
         result = BacktestEngine(
             experiment, inputs.data, inputs.universe, inputs.rules, inputs.funding
-        ).run(make_strategy(experiment.run.strategy))
+        ).run(make_strategy(run.strategy, experiment.strategy_params, run.interval), access)
         metrics = calculate_metrics(result)
         destination = save_report(
             settings.reports_dir,
@@ -37,7 +63,7 @@ def run_cmd(experiment_file: Annotated[Path, typer.Argument()]) -> None:
             result,
             metrics,
             inputs.provenance,
-            SystemClock(),
+            clock,
         )
     except (OSError, ValueError, ArithmeticError) as exc:
         typer.echo(f"backtest failed: {exc}", err=True)
