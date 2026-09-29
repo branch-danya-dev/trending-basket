@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import sys
 import time
 from typing import Protocol
 
@@ -22,6 +23,16 @@ class SystemClock:
 
     def now_ms(self) -> int:
         return time.time_ns() // 1_000_000
+
+    def monotonic_ms(self) -> int:
+        if sys.platform == "win32":
+            import ctypes
+
+            value = ctypes.c_ulonglong()
+            if not ctypes.windll.kernel32.QueryUnbiasedInterruptTime(ctypes.byref(value)):
+                raise OSError("Windows monotonic clock unavailable")
+            return value.value // 10000
+        return time.monotonic_ns() // 1_000_000
 
 
 class ManualClock:

@@ -12,6 +12,7 @@ from trending_basket.backtest.cli import backtest_app
 from trending_basket.config import format_settings, load_settings
 from trending_basket.data.cli import data_app
 from trending_basket.execution.cli import demo_app, run_app
+from trending_basket.execution.service import service_app
 from trending_basket.research.cli import research_app
 from trending_basket.universe.cli import universe_app
 
@@ -27,6 +28,7 @@ app.add_typer(backtest_app, name="backtest")
 app.add_typer(research_app, name="research")
 app.add_typer(run_app, name="run")
 app.add_typer(demo_app, name="demo")
+app.add_typer(service_app, name="service")
 
 
 @app.command()
