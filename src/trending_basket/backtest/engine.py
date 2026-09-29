@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field, replace
 from types import MappingProxyType
-from typing import Any
+from typing import Any, Literal
 
 from trending_basket.backtest.config import Experiment
 from trending_basket.backtest.market import DataStore
@@ -25,6 +25,7 @@ class BacktestResult:
     events: list[dict[str, Any]]
     btc_price_return: float | None
     funding_diagnostics: dict[str, dict[str, Any]] = field(default_factory=dict)
+    quantity_mode: Literal["exchange", "exact"] = "exchange"
 
 
 class BacktestEngine:
@@ -54,7 +55,12 @@ class BacktestEngine:
             )
             for s in rules
         }
-        self.book = SimExecutor(experiment.run.initial_capital_usd, rules, experiment.costs)
+        self.book = SimExecutor(
+            experiment.run.initial_capital_usd,
+            rules,
+            experiment.costs,
+            experiment.execution.quantity_mode,
+        )
         self.marks: dict[str, float] = {}
         self._delivered_exits = 0
 
@@ -103,6 +109,11 @@ class BacktestEngine:
         if self.config.run.symbols is not None:
             allowed = tuple(s for s in allowed if s in self.config.run.symbols)
         symbols = sorted(set(allowed) | set(self.book.positions))
+        if (
+            self.config.strategy_params.get("btc_regime_filter") == "sma"
+            and "BTCUSDT" not in symbols
+        ):
+            symbols = sorted([*symbols, "BTCUSDT"])
         market = self.data.view(at_ms, symbols)
         for symbol in symbols:
             last = self.data.last_closed(symbol, self.config.run.interval, at_ms)
@@ -188,7 +199,7 @@ class BacktestEngine:
                 bar.open,
                 at_ms,
                 reason,
-                allow_increase=symbol in allowed,
+                allow_increase=symbol in allowed and target.allow_increase,
             )
             self.marks[symbol] = bar.open
         self.marks.update(opening_prices)
@@ -250,4 +261,5 @@ class BacktestEngine:
             self.book.events,
             btc_return,
             {s: schedule.metadata() for s, schedule in self.funding_schedules.items()},
+            self.config.execution.quantity_mode,
         )

@@ -87,6 +87,11 @@ def show_cmd(run_dir: Annotated[Path, typer.Argument()]) -> None:
 def compare_cmd(run_dirs: Annotated[list[Path], typer.Argument()]) -> None:
     try:
         metrics = [json.loads((d / "metrics.json").read_text(encoding="utf-8")) for d in run_dirs]
+        typer.echo("| Run | Quantity mode |")
+        typer.echo("|---|---|")
+        for directory, values in zip(run_dirs, metrics, strict=True):
+            typer.echo(f"| {directory.name} | {values.get('quantity_mode', 'exchange')} |")
+        typer.echo("")
         keys = sorted({k for m in metrics for k, v in m.items() if not isinstance(v, (dict, list))})
         typer.echo("| Metric | " + " | ".join(d.name for d in run_dirs) + " |")
         typer.echo("|---|" + "---:|" * len(run_dirs))

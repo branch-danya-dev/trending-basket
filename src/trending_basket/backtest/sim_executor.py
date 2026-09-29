@@ -5,7 +5,7 @@ from __future__ import annotations
 import math
 from dataclasses import dataclass
 from decimal import ROUND_CEILING, ROUND_DOWN, Decimal
-from typing import Any
+from typing import Any, Literal
 
 from trending_basket.backtest.config import Costs
 from trending_basket.portfolio.limits import (
@@ -56,7 +56,14 @@ class Position:
 
 
 class SimExecutor:
-    def __init__(self, capital_usd: float, rules: dict[str, InstrumentRules], costs: Costs) -> None:
+    def __init__(
+        self,
+        capital_usd: float,
+        rules: dict[str, InstrumentRules],
+        costs: Costs,
+        quantity_mode: Literal["exchange", "exact"] = "exchange",
+    ) -> None:
+        self.quantity_mode = quantity_mode
         self.initial_capital_usd = capital_usd
         self.cash_usd = capital_usd
         self.rules, self.costs = rules, costs
@@ -128,7 +135,7 @@ class SimExecutor:
         slippage_bps: float,
         fee_bps: float,
     ) -> None:
-        if abs(quantity) < 1e-14:
+        if quantity == 0 if self.quantity_mode == "exact" else abs(quantity) < 1e-14:
             return
         price = base_price * (1 + math.copysign(slippage_bps / 10000, quantity))
         fee = abs(quantity) * price * fee_bps / 10000
@@ -199,7 +206,11 @@ class SimExecutor:
                 "realized_pnl_usd": realized,
             }
         )
-        if abs(position.quantity) < 1e-10:
+        if (
+            position.quantity == 0
+            if self.quantity_mode == "exact"
+            else abs(position.quantity) < 1e-10
+        ):
             self.closed_positions.append(self.position_record(position, time_ms, reason))
             del self.positions[symbol]
 
@@ -269,7 +280,7 @@ class SimExecutor:
         )
         if current:
             current.stop_price = target.stop_price
-        if abs(notional_delta) < 1e-8:
+        if notional_delta == 0 if self.quantity_mode == "exact" else abs(notional_delta) < 1e-8:
             return
         direction = target.notional_usd - (current.quantity * open_price if current else 0.0)
         sign = math.copysign(1, direction)
@@ -277,7 +288,11 @@ class SimExecutor:
         rules = self.rules[symbol]
         # Quantize the TARGET position, not its delta: a rounded reduction must not
         # leave an executed position larger than the target. Exact holds above do not drift.
-        target_quantity = rules.quantity(target.notional_usd, fill_price)
+        target_quantity = (
+            abs(target.notional_usd) / fill_price
+            if self.quantity_mode == "exact"
+            else rules.quantity(target.notional_usd, fill_price)
+        )
         held = abs(current.quantity) if current else 0.0
         if not allow_increase:
             target_quantity = min(target_quantity, held)
@@ -286,7 +301,9 @@ class SimExecutor:
             return
         quantity = float(Decimal(str(target_quantity)) - Decimal(str(held)))
         sign = math.copysign(1, target.notional_usd)
-        if (
+        if self.quantity_mode == "exact" and quantity == 0:
+            return
+        if self.quantity_mode == "exchange" and (
             quantity == 0
             or Decimal(str(quantity)) < rules.min_order_qty
             or Decimal(str(quantity)) * Decimal(str(fill_price)) < (rules.min_notional_value or 0)
@@ -322,8 +339,11 @@ class SimExecutor:
         sign = -math.copysign(1, current.quantity)
         price = open_price * (1 + sign * self.costs.slippage_bps / 10000)
         requested = held - target
-        lots = (requested / rules.qty_step).to_integral_value(rounding=ROUND_CEILING)
-        quantity = min(held, max(lots * rules.qty_step, rules.minimum_quantity(price)))
+        if self.quantity_mode == "exact":
+            quantity = min(held, requested)
+        else:
+            lots = (requested / rules.qty_step).to_integral_value(rounding=ROUND_CEILING)
+            quantity = min(held, max(lots * rules.qty_step, rules.minimum_quantity(price)))
         if quantity > requested:
             self.event(
                 time_ms,

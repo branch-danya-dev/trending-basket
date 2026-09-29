@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import math
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from itertools import pairwise
 from typing import Literal
 
@@ -22,6 +22,10 @@ class TrendBasketParams(BaseModel):
     risk_per_symbol_frac: float = Field(default=0.005, gt=0, le=1)
     rebalance_band_frac: float = Field(default=0.25, ge=0)
     direction: Literal["long_only", "long_short"] = "long_only"
+    btc_regime_filter: Literal["off", "sma"] = "off"
+    btc_regime_sma_days: int = Field(default=100, ge=1)
+    concentration_top_k: int | None = Field(default=None, ge=1)
+    concentration_rank_days: int = Field(default=100, ge=1)
 
     @field_validator("lookbacks_days")
     @classmethod
@@ -178,4 +182,49 @@ class TrendBasket:
             stop = max(stop, float.fromhex("0x1.0p-1022"))
             risk = abs(target) * self.params.stop_atr_mult * atr_frac
             decision[symbol] = TargetPosition(target, stop, risk)
+        return self._filter_targets(ctx, decision)
+
+    def _daily_window(self, ctx: DecisionContext, symbol: str, count: int) -> tuple[Candle, ...]:
+        rows = ctx.market.candles(symbol, Interval.D1, count)
+        day_ms = Interval.D1.duration_ms
+        if (
+            len(rows) != count
+            or rows[-1].open_time_ms + day_ms != ctx.time_ms // day_ms * day_ms
+            or any(b.open_time_ms - a.open_time_ms != day_ms for a, b in pairwise(rows))
+        ):
+            return ()
+        return rows
+
+    def _filter_targets(self, ctx: DecisionContext, decision: Decision) -> Decision:
+        if self.params.btc_regime_filter == "sma":
+            btc = self._daily_window(ctx, "BTCUSDT", self.params.btc_regime_sma_days)
+            difference = btc[-1].close - sum(b.close for b in btc) / len(btc) if btc else 0.0
+            for symbol, target in decision.items():
+                if symbol != "BTCUSDT" and target.notional_usd * difference <= 0:
+                    decision[symbol] = TargetPosition(0)
+        if self.params.concentration_top_k is not None:
+            scores = {}
+            for symbol in ctx.universe:
+                state = self.states.get(symbol)
+                if state is None or not sum(state.subsystems) or not state.atr:
+                    continue
+                daily = self._daily_window(ctx, symbol, self.params.concentration_rank_days + 1)
+                bars = ctx.market.candles(symbol, self.interval, 1)
+                if daily and bars:
+                    change = daily[-1].close / daily[0].close - 1
+                    scores[symbol] = abs(change) / (state.atr / bars[-1].close)
+            selected = set(
+                sorted(scores, key=lambda s: (-scores[s], s))[: self.params.concentration_top_k]
+            )
+            for symbol, target in decision.items():
+                if symbol in selected:
+                    continue
+                position = ctx.positions.get(symbol)
+                current = position.notional_usd if position else 0.0
+                permitted = (
+                    math.copysign(min(abs(target.notional_usd), abs(current)), current)
+                    if target.notional_usd * current > 0
+                    else 0.0
+                )
+                decision[symbol] = replace(target, notional_usd=permitted, allow_increase=False)
         return decision

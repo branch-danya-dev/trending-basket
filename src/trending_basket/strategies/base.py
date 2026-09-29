@@ -67,6 +67,7 @@ class TargetPosition:
     notional_usd: float
     stop_price: float | None = None
     initial_risk_usd: float | None = None
+    allow_increase: bool = True
 
     def __post_init__(self) -> None:
         if not math.isfinite(self.notional_usd):

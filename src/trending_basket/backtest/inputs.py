@@ -43,6 +43,8 @@ def load_inputs(data_dir: Path, experiment: Experiment) -> Inputs:
         symbols = sorted(set(symbols) & set(experiment.run.symbols))
     if experiment.run.strategy == "buy_and_hold_btc":
         symbols = ["BTCUSDT"]
+    if experiment.strategy_params.get("btc_regime_filter") == "sma":
+        symbols = sorted(set(symbols) | {"BTCUSDT"})
     snapshot = latest_snapshot(data_dir)
     instruments = pd.read_parquet(snapshot).set_index("symbol")
     rules: dict[str, InstrumentRules] = {}

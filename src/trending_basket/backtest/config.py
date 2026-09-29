@@ -26,6 +26,11 @@ class Costs(BaseModel):
     rebalance_fill: Literal["taker", "maker"] = "taker"
 
 
+class Execution(BaseModel):
+    model_config = ConfigDict(extra="forbid", frozen=True)
+    quantity_mode: Literal["exchange", "exact"] = "exchange"
+
+
 class RunConfig(BaseModel):
     model_config = ConfigDict(extra="forbid", frozen=True, allow_inf_nan=False)
     name: str = Field(pattern=r"^[A-Za-z0-9][A-Za-z0-9_-]*$")
@@ -60,6 +65,7 @@ class Experiment(BaseModel):
     model_config = ConfigDict(extra="forbid", frozen=True)
     run: RunConfig
     costs: Costs = Costs()
+    execution: Execution = Execution()
     limits: PortfolioLimits = PortfolioLimits()
     strategy_params: dict[str, Any] = Field(default_factory=dict)
 
