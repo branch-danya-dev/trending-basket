@@ -3,8 +3,7 @@ name = "ew_core15"
 strategy = "equal_weight_universe"
 universe = "core15"
 interval = "1d"
-start = "2021-11-01"
-end = "2026-09-27"
+period = "dev"
 initial_capital_usd = 1000
 
 [costs]
