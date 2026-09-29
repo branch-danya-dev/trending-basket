@@ -1,0 +1,33 @@
+[run]
+name = "V2x"
+strategy = "trend_basket"
+period = "dev"
+universe = "core15"
+interval = "1d"
+initial_capital_usd = 10000
+
+[costs]
+taker_fee_bps = 5.5
+maker_fee_bps = 2.0
+slippage_bps = 2.0
+stop_slippage_bps = 5.0
+delist_slippage_bps = 200.0
+rebalance_fill = "taker"
+
+[limits]
+max_gross_exposure = 2.0
+max_net_exposure = 1.5
+max_symbol_exposure = 0.5
+exit_on_universe_removal = false
+
+[strategy_params]
+lookbacks_days = [20, 55, 100]
+exit_ratio = 0.5
+atr_days = 20
+stop_atr_mult = 3.0
+risk_per_symbol_frac = 0.005
+rebalance_band_frac = 0.25
+direction = "long_short"
+
+[execution]
+quantity_mode = "exact"
