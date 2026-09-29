@@ -18,6 +18,28 @@ from trending_basket.universe.storage import build_universe, load_universe
 universe_app = typer.Typer(help="Build and inspect monthly symbol universes.")
 
 
+@universe_app.command("members")
+def members_cmd(
+    name: Annotated[str, typer.Argument()],
+    out: Annotated[Path, typer.Option("--out")],
+) -> None:
+    """Export every historical member, sorted and unique."""
+    try:
+        universe = load_universe(load_settings().data_dir, name)
+        symbols = sorted(set(universe.table["symbol"]))
+        out.parent.mkdir(parents=True, exist_ok=True)
+        temporary = out.with_name(out.name + ".tmp")
+        try:
+            temporary.write_text("".join(f"{symbol}\n" for symbol in symbols), encoding="utf-8")
+            os.replace(temporary, out)
+        finally:
+            temporary.unlink(missing_ok=True)
+    except (OSError, ValueError) as exc:
+        typer.echo(f"ERROR {exc}", err=True)
+        raise typer.Exit(code=1) from exc
+    typer.echo(f"members={len(symbols)}")
+
+
 @universe_app.command("candidates")
 def candidates_cmd(
     out: Annotated[Path, typer.Option("--out", help="Output symbols file")],
