@@ -49,6 +49,7 @@ def authorize_period(
     reports_dir: Path,
     clock: Clock,
     commit: str,
+    override_holdout_lock: bool = False,
 ) -> PeriodAccess:
     if strategy not in BENCHMARKS and period != "dev":
         if period == "val" and not allow_val:
@@ -63,8 +64,32 @@ def authorize_period(
             commit=commit,
             period=period,
         )
-        with (reports_dir / "period-access-log.jsonl").open("a", encoding="utf-8") as stream:
-            stream.write(json.dumps(entry, sort_keys=True) + "\n")
+        # Serialize admission, including concurrent CLI processes. A stale lock fails closed.
+        lock = reports_dir / ".period-access.lock"
+        stream_lock = lock.open("x", encoding="utf-8")
+        try:
+            with stream_lock:
+                journal = reports_dir / "period-access-log.jsonl"
+                previous = []
+                if journal.exists():
+                    for line in journal.read_text(encoding="utf-8").splitlines():
+                        row = json.loads(line)
+                        if not isinstance(row, dict) or not {"strategy", "period"} <= row.keys():
+                            raise ValueError("invalid period access journal; refusing admission")
+                        previous.append(row)
+                protected = period in {"holdout", "full"}
+                used = any(
+                    row["strategy"] not in BENCHMARKS and row["period"] in {"holdout", "full"}
+                    for row in previous
+                )
+                if protected and used and not override_holdout_lock:
+                    raise ValueError("holdout already accessed; requires --override-holdout-lock")
+                if protected and override_holdout_lock:
+                    entry["warning"] = "HOLDOUT LOCK OVERRIDDEN: repeat access invalidates T005"
+                with journal.open("a", encoding="utf-8") as stream:
+                    stream.write(json.dumps(entry, sort_keys=True) + "\n")
+        finally:
+            lock.unlink()
     return PeriodAccess(experiment, strategy, period)
 
 

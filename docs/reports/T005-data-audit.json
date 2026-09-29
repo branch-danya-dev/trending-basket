@@ -1,0 +1,2343 @@
+{
+  "preflight": {
+    "checked_at_ms": 1790649078310,
+    "checks": [
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1672992000000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 8170,
+        "symbol": "1000BONKUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1672963200000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 1362,
+        "symbol": "1000BONKUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1677225600000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 7876,
+        "symbol": "1000FLOKIUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1677196800000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 1313,
+        "symbol": "1000FLOKIUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1683100800000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 7468,
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1683072000000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 1245,
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1700640000000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 6250,
+        "symbol": "1000RATSUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1700611200000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 1042,
+        "symbol": "1000RATSUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1620892800000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 11788,
+        "symbol": "AAVEUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1620864000000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 1965,
+        "symbol": "AAVEUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1616040000000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 12125,
+        "symbol": "ADAUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1616025600000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 2021,
+        "symbol": "ADAUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1784966400000,
+        "first_ms": 1700136000000,
+        "interval": "4h",
+        "last_ms": 1784966400000,
+        "rows": 5892,
+        "symbol": "AERGOUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1784937600000,
+        "first_ms": 1700092800000,
+        "interval": "1d",
+        "last_ms": 1784937600000,
+        "rows": 983,
+        "symbol": "AERGOUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1758888000000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 2205,
+        "symbol": "AKEUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1758844800000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 368,
+        "symbol": "AKEUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1647561600000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 9936,
+        "symbol": "APEUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1647561600000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 1656,
+        "symbol": "APEUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1666137600000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 8646,
+        "symbol": "APTUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1666137600000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 1441,
+        "symbol": "APTUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1679572800000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 7713,
+        "symbol": "ARBUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1679529600000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 1286,
+        "symbol": "ARBUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1633910400000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 10884,
+        "symbol": "ATOMUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1633910400000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 1814,
+        "symbol": "ATOMUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1690531200000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 6952,
+        "symbol": "AUCTIONUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1690502400000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 1159,
+        "symbol": "AUCTIONUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1631692800000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 11038,
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1631664000000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 1840,
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1630411200000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 11127,
+        "symbol": "AXSUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1630368000000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 1855,
+        "symbol": "AXSUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1609459200000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 12582,
+        "symbol": "BCHUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1609459200000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 2097,
+        "symbol": "BCHUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1763712000000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 1870,
+        "symbol": "BEATUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1763683200000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 312,
+        "symbol": "BEATUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1688443200000,
+        "first_ms": 1633924800000,
+        "interval": "4h",
+        "last_ms": 1688443200000,
+        "rows": 3787,
+        "symbol": "BITUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1688428800000,
+        "first_ms": 1633910400000,
+        "interval": "1d",
+        "last_ms": 1688428800000,
+        "rows": 632,
+        "symbol": "BITUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1676433600000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 7931,
+        "symbol": "BLURUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1676419200000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 1322,
+        "symbol": "BLURUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1735027200000,
+        "first_ms": 1654502400000,
+        "interval": "4h",
+        "last_ms": 1735027200000,
+        "rows": 5593,
+        "symbol": "BLZUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1734998400000,
+        "first_ms": 1654473600000,
+        "interval": "1d",
+        "last_ms": 1734998400000,
+        "rows": 933,
+        "symbol": "BLZUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1624939200000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 11507,
+        "symbol": "BNBUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1624924800000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 1918,
+        "symbol": "BNBUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1609459200000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 12582,
+        "symbol": "BTCUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1609459200000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 2097,
+        "symbol": "BTCUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1633996800000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 10878,
+        "symbol": "CHZUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1633996800000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 1813,
+        "symbol": "CHZUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1630411200000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 11127,
+        "symbol": "COMPUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1630368000000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 1855,
+        "symbol": "COMPUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1622620800000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 11668,
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1622592000000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 1945,
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1616054400000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 12124,
+        "symbol": "DOTUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1616025600000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 2021,
+        "symbol": "DOTUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1633924800000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 10883,
+        "symbol": "DYDXUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1633910400000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 1814,
+        "symbol": "DYDXUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1712044800000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 5458,
+        "symbol": "ENAUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1712016000000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 910,
+        "symbol": "ENAUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1747814400000,
+        "first_ms": 1624939200000,
+        "interval": "4h",
+        "last_ms": 1747814400000,
+        "rows": 8534,
+        "symbol": "EOSUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1747785600000,
+        "first_ms": 1624924800000,
+        "interval": "1d",
+        "last_ms": 1747785600000,
+        "rows": 1423,
+        "symbol": "EOSUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1624939200000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 11507,
+        "symbol": "ETCUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1624924800000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 1918,
+        "symbol": "ETCUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1615766400000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 12144,
+        "symbol": "ETHUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1615766400000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 2024,
+        "symbol": "ETHUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1734681600000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 3886,
+        "symbol": "FARTCOINUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1734652800000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 648,
+        "symbol": "FARTCOINUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1717747200000,
+        "first_ms": 1675915200000,
+        "interval": "4h",
+        "last_ms": 1717747200000,
+        "rows": 2906,
+        "symbol": "FETUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1717718400000,
+        "first_ms": 1675900800000,
+        "interval": "1d",
+        "last_ms": 1717718400000,
+        "rows": 485,
+        "symbol": "FETUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1624939200000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 11507,
+        "symbol": "FILUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1624924800000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 1918,
+        "symbol": "FILUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1736496000000,
+        "first_ms": 1632369600000,
+        "interval": "4h",
+        "last_ms": 1736496000000,
+        "rows": 7232,
+        "symbol": "FTMUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1736467200000,
+        "first_ms": 1632355200000,
+        "interval": "1d",
+        "last_ms": 1736467200000,
+        "rows": 1206,
+        "symbol": "FTMUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1636444800000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 10708,
+        "symbol": "GALAUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1636416000000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 1785,
+        "symbol": "GALAUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1647676800000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 9928,
+        "symbol": "GMTUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1647648000000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 1655,
+        "symbol": "GMTUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1635134400000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 10799,
+        "symbol": "HBARUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1635120000000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 1800,
+        "symbol": "HBARUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1750838400000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 2764,
+        "symbol": "HUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1750809600000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 461,
+        "symbol": "HUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1733400000000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 3975,
+        "symbol": "HYPEUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1733356800000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 663,
+        "symbol": "HYPEUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1631692800000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 11038,
+        "symbol": "ICPUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1631664000000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 1840,
+        "symbol": "ICPUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1660708800000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 9023,
+        "symbol": "INJUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1660694400000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 1504,
+        "symbol": "INJUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1641801600000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 10336,
+        "symbol": "KNCUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1641772800000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 1723,
+        "symbol": "KNCUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1761552000000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 2020,
+        "symbol": "LABUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1761523200000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 337,
+        "symbol": "LABUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1658376000000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 9185,
+        "symbol": "LDOUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1658361600000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 1531,
+        "symbol": "LDOUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1743062400000,
+        "first_ms": 1650456000000,
+        "interval": "4h",
+        "last_ms": 1743062400000,
+        "rows": 6432,
+        "symbol": "LINAUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1743033600000,
+        "first_ms": 1650412800000,
+        "interval": "1d",
+        "last_ms": 1743033600000,
+        "rows": 1073,
+        "symbol": "LINAUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1609459200000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 12582,
+        "symbol": "LINKUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1609459200000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 2097,
+        "symbol": "LINKUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1639382400000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 10504,
+        "symbol": "LPTUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1639353600000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 1751,
+        "symbol": "LPTUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1609459200000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 12582,
+        "symbol": "LTCUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1609459200000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 2097,
+        "symbol": "LTCUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1653984000000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 9490,
+        "symbol": "LUNA2USDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1653955200000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 1582,
+        "symbol": "LUNA2USDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1652342400000,
+        "first_ms": 1633924800000,
+        "interval": "4h",
+        "last_ms": 1652342400000,
+        "rows": 1280,
+        "symbol": "LUNAUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1652313600000,
+        "first_ms": 1633910400000,
+        "interval": "1d",
+        "last_ms": 1652313600000,
+        "rows": 214,
+        "symbol": "LUNAUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1638518400000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 10564,
+        "symbol": "MASKUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1638489600000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 1761,
+        "symbol": "MASKUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1725609600000,
+        "first_ms": 1624939200000,
+        "interval": "4h",
+        "last_ms": 1725609600000,
+        "rows": 6992,
+        "symbol": "MATICUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1725580800000,
+        "first_ms": 1624924800000,
+        "interval": "1d",
+        "last_ms": 1725580800000,
+        "rows": 1166,
+        "symbol": "MATICUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1696219200000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 6557,
+        "symbol": "MNTUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1696204800000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 1093,
+        "symbol": "MNTUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1727769600000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 4366,
+        "symbol": "MOODENGUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1727740800000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 728,
+        "symbol": "MOODENGUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1633924800000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 10883,
+        "symbol": "NEARUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1633910400000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 1814,
+        "symbol": "NEARUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1705996800000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 5878,
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1705968000000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 980,
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1654070400000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 9484,
+        "symbol": "OPUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1654041600000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 1581,
+        "symbol": "OPUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1684742400000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 7354,
+        "symbol": "ORDIUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1684713600000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 1226,
+        "symbol": "ORDIUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1734436800000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 3903,
+        "symbol": "PENGUUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1734393600000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 651,
+        "symbol": "PENGUUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1640764800000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 10408,
+        "symbol": "PEOPLEUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1640736000000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 1735,
+        "symbol": "PEOPLEUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1737100800000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 3718,
+        "symbol": "PIPPINUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1737072000000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 620,
+        "symbol": "PIPPINUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1711612800000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 5488,
+        "symbol": "POPCATUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1711584000000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 915,
+        "symbol": "POPCATUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1752120000000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 2675,
+        "symbol": "PUMPFUNUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1752105600000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 446,
+        "symbol": "PUMPFUNUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1701072000000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 6220,
+        "symbol": "RAREUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1701043200000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 1037,
+        "symbol": "RAREUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1765771200000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 1727,
+        "symbol": "RAVEUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1765756800000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 288,
+        "symbol": "RAVEUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1737532800000,
+        "first_ms": 1644912000000,
+        "interval": "4h",
+        "last_ms": 1737532800000,
+        "rows": 6433,
+        "symbol": "REEFUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1737504000000,
+        "first_ms": 1644883200000,
+        "interval": "1d",
+        "last_ms": 1737504000000,
+        "rows": 1073,
+        "symbol": "REEFUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1761134400000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 2049,
+        "symbol": "RIVERUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1761091200000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 342,
+        "symbol": "RIVERUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1721635200000,
+        "first_ms": 1638360000000,
+        "interval": "4h",
+        "last_ms": 1721635200000,
+        "rows": 5784,
+        "symbol": "RNDRUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1721606400000,
+        "first_ms": 1638316800000,
+        "interval": "1d",
+        "last_ms": 1721606400000,
+        "rows": 965,
+        "symbol": "RNDRUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1638172800000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 10588,
+        "symbol": "RUNEUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1638144000000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 1765,
+        "symbol": "RUNEUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1635753600000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 10756,
+        "symbol": "SANDUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1635724800000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 1793,
+        "symbol": "SANDUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1692158400000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 6839,
+        "symbol": "SEIUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1692144000000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 1140,
+        "symbol": "SEIUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1634702400000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 10829,
+        "symbol": "SHIB1000USDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1634688000000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 1805,
+        "symbol": "SHIB1000USDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1634256000000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 10860,
+        "symbol": "SOLUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1634256000000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 1810,
+        "symbol": "SOLUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1638518400000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 10564,
+        "symbol": "STXUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1638489600000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 1761,
+        "symbol": "STXUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1683115200000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 7467,
+        "symbol": "SUIUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1683072000000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 1245,
+        "symbol": "SUIUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1638230400000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 10584,
+        "symbol": "SUSHIUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1638230400000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 1764,
+        "symbol": "SUSHIUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1775188800000,
+        "first_ms": 1638950400000,
+        "interval": "4h",
+        "last_ms": 1775188800000,
+        "rows": 9462,
+        "symbol": "SXPUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1775174400000,
+        "first_ms": 1638921600000,
+        "interval": "1d",
+        "last_ms": 1775174400000,
+        "rows": 1578,
+        "symbol": "SXPUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1706601600000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 5836,
+        "symbol": "TAOUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1706572800000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 973,
+        "symbol": "TAOUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1698768000000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 6380,
+        "symbol": "TIAUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1698710400000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 1064,
+        "symbol": "TIAUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1699948800000,
+        "first_ms": 1651132800000,
+        "interval": "4h",
+        "last_ms": 1699948800000,
+        "rows": 3391,
+        "symbol": "TOMOUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1699920000000,
+        "first_ms": 1651104000000,
+        "interval": "1d",
+        "last_ms": 1699920000000,
+        "rows": 566,
+        "symbol": "TOMOUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1781510400000,
+        "first_ms": 1693454400000,
+        "interval": "4h",
+        "last_ms": 1781510400000,
+        "rows": 6116,
+        "symbol": "TONUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1781481600000,
+        "first_ms": 1693440000000,
+        "interval": "1d",
+        "last_ms": 1781481600000,
+        "rows": 1020,
+        "symbol": "TONUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1654848000000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 9430,
+        "symbol": "TRBUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1654819200000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 1572,
+        "symbol": "TRBUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1737187200000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 3712,
+        "symbol": "TRUMPUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1737158400000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 619,
+        "symbol": "TRUMPUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1630411200000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 11127,
+        "symbol": "TRXUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1630368000000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 1855,
+        "symbol": "TRXUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1730707200000,
+        "first_ms": 1653897600000,
+        "interval": "4h",
+        "last_ms": 1730707200000,
+        "rows": 5335,
+        "symbol": "UNFIUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1730678400000,
+        "first_ms": 1653868800000,
+        "interval": "1d",
+        "last_ms": 1730678400000,
+        "rows": 890,
+        "symbol": "UNFIUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1730448000000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 4180,
+        "symbol": "VIRTUALUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1730419200000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 697,
+        "symbol": "VIRTUALUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1641369600000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 10366,
+        "symbol": "WAVESUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1641340800000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 1728,
+        "symbol": "WAVESUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1704974400000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 5949,
+        "symbol": "WIFUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1704931200000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 992,
+        "symbol": "WIFUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1690185600000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 6976,
+        "symbol": "WLDUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1690156800000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 1163,
+        "symbol": "WLDUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1620892800000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 11788,
+        "symbol": "XRPUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1620864000000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 1965,
+        "symbol": "XRPUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1609459200000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 12582,
+        "symbol": "XTZUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1609459200000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 2097,
+        "symbol": "XTZUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1637654400000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 10624,
+        "symbol": "YGGUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1637625600000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 1771,
+        "symbol": "YGGUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790625600000,
+        "first_ms": 1637726400000,
+        "interval": "4h",
+        "last_ms": 1790625600000,
+        "rows": 10619,
+        "symbol": "ZECUSDT"
+      },
+      {
+        "errors": 0,
+        "expected_last_ms": 1790553600000,
+        "first_ms": 1637712000000,
+        "interval": "1d",
+        "last_ms": 1790553600000,
+        "rows": 1770,
+        "symbol": "ZECUSDT"
+      }
+    ],
+    "funding": [
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "1000BONKUSDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "1000FLOKIUSDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "1000RATSUSDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "AAVEUSDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "ADAUSDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "AERGOUSDT"
+      },
+      {
+        "known": true,
+        "missing": 3,
+        "symbol": "AKEUSDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "APEUSDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "APTUSDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "ARBUSDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "ATOMUSDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "AUCTIONUSDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "AXSUSDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "BCHUSDT"
+      },
+      {
+        "known": true,
+        "missing": 2,
+        "symbol": "BEATUSDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "BITUSDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "BLURUSDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "BLZUSDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "BNBUSDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "BTCUSDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "CHZUSDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "COMPUSDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "DOTUSDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "DYDXUSDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "ENAUSDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "EOSUSDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "ETCUSDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "ETHUSDT"
+      },
+      {
+        "known": true,
+        "missing": 1,
+        "symbol": "FARTCOINUSDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "FETUSDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "FILUSDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "FTMUSDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "GALAUSDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "GMTUSDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "HBARUSDT"
+      },
+      {
+        "known": true,
+        "missing": 2,
+        "symbol": "HUSDT"
+      },
+      {
+        "known": true,
+        "missing": 1,
+        "symbol": "HYPEUSDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "ICPUSDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "INJUSDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "KNCUSDT"
+      },
+      {
+        "known": true,
+        "missing": 2,
+        "symbol": "LABUSDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "LDOUSDT"
+      },
+      {
+        "known": true,
+        "missing": 1,
+        "symbol": "LINAUSDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "LINKUSDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "LPTUSDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "LTCUSDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "LUNA2USDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "LUNAUSDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "MASKUSDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "MATICUSDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "MNTUSDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "MOODENGUSDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "NEARUSDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "OPUSDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "ORDIUSDT"
+      },
+      {
+        "known": true,
+        "missing": 3,
+        "symbol": "PENGUUSDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "PEOPLEUSDT"
+      },
+      {
+        "known": true,
+        "missing": 1,
+        "symbol": "PIPPINUSDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "POPCATUSDT"
+      },
+      {
+        "known": true,
+        "missing": 1,
+        "symbol": "PUMPFUNUSDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "RAREUSDT"
+      },
+      {
+        "known": true,
+        "missing": 1,
+        "symbol": "RAVEUSDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "REEFUSDT"
+      },
+      {
+        "known": true,
+        "missing": 3,
+        "symbol": "RIVERUSDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "RNDRUSDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "RUNEUSDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "SANDUSDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "SEIUSDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "SHIB1000USDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "SOLUSDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "STXUSDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "SUIUSDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "SUSHIUSDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "SXPUSDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "TAOUSDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "TIAUSDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "TOMOUSDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "TONUSDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "TRBUSDT"
+      },
+      {
+        "known": true,
+        "missing": 2,
+        "symbol": "TRUMPUSDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "TRXUSDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "UNFIUSDT"
+      },
+      {
+        "known": true,
+        "missing": 1,
+        "symbol": "VIRTUALUSDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "WAVESUSDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "WIFUSDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "WLDUSDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "XRPUSDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "XTZUSDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "YGGUSDT"
+      },
+      {
+        "known": true,
+        "missing": 0,
+        "symbol": "ZECUSDT"
+      }
+    ],
+    "holdout_end": "2026-09-28",
+    "total_errors": 0
+  },
+  "runs": {
+    "holdout-V1x": {
+      "actual_limits": {
+        "gross": 0.3802677182586161,
+        "net": 0.3802677182586161,
+        "symbol": 0.0592505544842308
+      },
+      "actual_limits_enabled": true,
+      "funding_coverage_frac": 1.0,
+      "funding_expected": 4185,
+      "funding_gaps": [],
+      "funding_observed": 4185,
+      "minimum_order_skips": 0,
+      "pnl_reconciliation_error_usd": 1.1880274541908875e-11
+    },
+    "holdout-bh_btc": {
+      "actual_limits": {
+        "gross": 1.0307493899283542,
+        "net": 1.0307493899283542,
+        "symbol": 1.0307493899283542
+      },
+      "actual_limits_enabled": false,
+      "funding_coverage_frac": 1.0,
+      "funding_expected": 1088,
+      "funding_gaps": [],
+      "funding_observed": 1088,
+      "minimum_order_skips": 0,
+      "pnl_reconciliation_error_usd": 9.094947017729282e-13
+    },
+    "val-H1": {
+      "actual_limits": {
+        "gross": 0.36523923985342244,
+        "net": 0.36523923985342244,
+        "symbol": 0.07183872656676889
+      },
+      "actual_limits_enabled": true,
+      "funding_coverage_frac": 1.0,
+      "funding_expected": 19224,
+      "funding_gaps": [],
+      "funding_observed": 19224,
+      "minimum_order_skips": 0,
+      "pnl_reconciliation_error_usd": 3.745981302927248e-11
+    },
+    "val-H2": {
+      "actual_limits": {
+        "gross": 0.37638611491488,
+        "net": 0.37638611491488,
+        "symbol": 0.07183777790460485
+      },
+      "actual_limits_enabled": true,
+      "funding_coverage_frac": 1.0,
+      "funding_expected": 11766,
+      "funding_gaps": [],
+      "funding_observed": 11766,
+      "minimum_order_skips": 0,
+      "pnl_reconciliation_error_usd": 4.433786671143025e-11
+    },
+    "val-H3": {
+      "actual_limits": {
+        "gross": 0.7780221815591024,
+        "net": 0.7780221815591024,
+        "symbol": 0.2155202725285581
+      },
+      "actual_limits_enabled": true,
+      "funding_coverage_frac": 1.0,
+      "funding_expected": 13179,
+      "funding_gaps": [],
+      "funding_observed": 13179,
+      "minimum_order_skips": 0,
+      "pnl_reconciliation_error_usd": 7.275957614183426e-12
+    },
+    "val-V1x": {
+      "actual_limits": {
+        "gross": 0.3728232487314492,
+        "net": 0.3728232487314492,
+        "symbol": 0.07183799087116653
+      },
+      "actual_limits_enabled": true,
+      "funding_coverage_frac": 1.0,
+      "funding_expected": 6828,
+      "funding_gaps": [],
+      "funding_observed": 6828,
+      "minimum_order_skips": 0,
+      "pnl_reconciliation_error_usd": 1.3642420526593924e-12
+    },
+    "val-V1x-1k": {
+      "actual_limits": {
+        "gross": 0.2826860223846381,
+        "net": 0.2826860223846381,
+        "symbol": 0.04599646162435685
+      },
+      "actual_limits_enabled": true,
+      "funding_coverage_frac": 1.0,
+      "funding_expected": 5142,
+      "funding_gaps": [],
+      "funding_observed": 5142,
+      "minimum_order_skips": 936,
+      "pnl_reconciliation_error_usd": 1.3216094885137863e-12
+    },
+    "val-V2x": {
+      "actual_limits": {
+        "gross": 0.37605987598998636,
+        "net": 0.37605987598998636,
+        "symbol": 0.07183818346145472
+      },
+      "actual_limits_enabled": true,
+      "funding_coverage_frac": 1.0,
+      "funding_expected": 16906,
+      "funding_gaps": [],
+      "funding_observed": 16906,
+      "minimum_order_skips": 0,
+      "pnl_reconciliation_error_usd": 6.821210263296962e-13
+    },
+    "val-V3x": {
+      "actual_limits": {
+        "gross": 0.41212667795048097,
+        "net": 0.41212667795048097,
+        "symbol": 0.07590101885399622
+      },
+      "actual_limits_enabled": true,
+      "funding_coverage_frac": 1.0,
+      "funding_expected": 6569,
+      "funding_gaps": [],
+      "funding_observed": 6569,
+      "minimum_order_skips": 0,
+      "pnl_reconciliation_error_usd": 2.8393287720973603e-11
+    },
+    "val-V4x": {
+      "actual_limits": {
+        "gross": 0.41236022921505516,
+        "net": 0.41236022921505516,
+        "symbol": 0.07603968384315589
+      },
+      "actual_limits_enabled": true,
+      "funding_coverage_frac": 1.0,
+      "funding_expected": 17199,
+      "funding_gaps": [],
+      "funding_observed": 17199,
+      "minimum_order_skips": 0,
+      "pnl_reconciliation_error_usd": 5.093170329928398e-11
+    },
+    "val-bh_btc": {
+      "actual_limits": {
+        "gross": 1.0813644419366057,
+        "net": 1.0813644419366057,
+        "symbol": 1.0813644419366057
+      },
+      "actual_limits_enabled": false,
+      "funding_coverage_frac": 1.0,
+      "funding_expected": 1370,
+      "funding_gaps": [],
+      "funding_observed": 1370,
+      "minimum_order_skips": 0,
+      "pnl_reconciliation_error_usd": 1.8189894035458565e-12
+    },
+    "val-ew_core15": {
+      "actual_limits": {
+        "gross": 1.0243252357040706,
+        "net": 1.0243252357040706,
+        "symbol": 0.13895278893406748
+      },
+      "actual_limits_enabled": true,
+      "funding_coverage_frac": 1.0,
+      "funding_expected": 23722,
+      "funding_gaps": [],
+      "funding_observed": 23722,
+      "minimum_order_skips": 0,
+      "pnl_reconciliation_error_usd": 2.5011104298755527e-12
+    }
+  }
+}

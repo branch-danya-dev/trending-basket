@@ -55,8 +55,11 @@ def test_cli_authorized_attempt_is_logged_before_data_read(tmp_path, monkeypatch
         raise ValueError("synthetic stop after admission")
 
     monkeypatch.setattr(cli, "load_inputs", stop_after_log)
-    for _ in range(2):
-        result = CliRunner().invoke(app, ["backtest", "run", str(path), flag], input="y\n")
+    for attempt in range(2):
+        override = ["--override-holdout-lock"] if attempt and period != "val" else []
+        result = CliRunner().invoke(
+            app, ["backtest", "run", str(path), flag, *override], input="y\n"
+        )
         assert "synthetic stop after admission" in result.output
     assert len((report / "period-access-log.jsonl").read_text().splitlines()) == 2
 
@@ -114,3 +117,65 @@ def test_seven_preregistered_variants_and_disabled_btc_limits():
         assert run.run.start == date(2021, 11, 1) and run.run.end == date(2024, 6, 30)
         assert run.limits.enabled
     assert not load_experiment(Path("experiments/bh_btc.toml")).limits.enabled
+
+
+@pytest.mark.parametrize(
+    "first_period,second_period", [("holdout", "holdout"), ("full", "holdout"), ("holdout", "full")]
+)
+def test_second_candidate_locked_before_data_read_and_override_warns(
+    tmp_path, monkeypatch, first_period, second_period
+):
+    report = tmp_path / "reports"
+    authorize_period(
+        experiment="H2",
+        strategy="trend_basket",
+        period=first_period,
+        allow_val=False,
+        allow_holdout=True,
+        confirmed=True,
+        reports_dir=report,
+        clock=ManualClock(START),
+        commit="first",
+    )
+    path = experiment(tmp_path, second_period)
+    monkeypatch.setenv("TB_REPORTS_DIR", str(report))
+    monkeypatch.setattr(cli, "load_inputs", lambda *_: pytest.fail("protected data read"))
+    args = ["backtest", "run", str(path), "--allow-holdout"]
+    result = CliRunner().invoke(app, args, input="y\n")
+    assert result.exit_code == 1 and "requires --override-holdout-lock" in result.output
+    journal = report / "period-access-log.jsonl"
+    assert len(journal.read_text().splitlines()) == 1
+    assert not (report / ".period-access.lock").exists()
+
+    def admitted(*_):
+        rows = [json.loads(line) for line in journal.read_text().splitlines()]
+        assert len(rows) == 2 and "OVERRIDDEN" in rows[-1]["warning"]
+        raise ValueError("synthetic admitted override")
+
+    monkeypatch.setattr(cli, "load_inputs", admitted)
+    result = CliRunner().invoke(app, [*args, "--override-holdout-lock"], input="y\n")
+    assert "synthetic admitted override" in result.output and "WARNING" in result.output
+
+
+def test_existing_holdout_does_not_block_benchmark_and_corrupt_journal_fails_closed(tmp_path):
+    journal = tmp_path / "period-access-log.jsonl"
+    journal.write_text('{"period":"holdout","strategy":"trend_basket"}\n')
+    kwargs = dict(
+        experiment="btc",
+        strategy="buy_and_hold_btc",
+        period="holdout",
+        allow_val=False,
+        allow_holdout=False,
+        confirmed=False,
+        reports_dir=tmp_path,
+        clock=ManualClock(START),
+        commit="abc",
+    )
+    authorize_period(**kwargs)
+    assert len(journal.read_text().splitlines()) == 1
+    journal.write_text('{"unfinished":')
+    with pytest.raises(ValueError):
+        authorize_period(
+            **(kwargs | dict(strategy="trend_basket", allow_holdout=True, confirmed=True))
+        )
+    assert not (tmp_path / ".period-access.lock").exists()
