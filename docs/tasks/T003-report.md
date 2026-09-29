@@ -2,7 +2,7 @@
 
 Дата: 2026-09-29. PR #5 смержен в `main`; реализация T003 —
 [PR #6](https://github.com/branch-danya-dev/trending-basket/pull/6).
-Исходный код обоих итоговых прогонов: `cf15d784944aa1d992c263ad118cefd8d481f8f2`,
+Исходный код обоих итоговых прогонов: `1fde548da435da0d695904d341ebecaa66e6811a`,
 `git.dirty=false` в манифестах. Основной период **2021-11-01 — 2026-09-27 UTC**,
 конец включительно, начальный капитал $1000. ADR-012 и оба TOML закоммичены
 в `243970d` до первых реальных прогонов. Параметры по результатам не менялись.
@@ -29,12 +29,12 @@ SHA256 `7576210f2d2ba932114a42d257b468f5cc37c5c253b0f67be2abbdc023270fdd`.
 ```text
 uv run tb backtest run experiments/bh_btc.toml
 uv run tb backtest run experiments/ew_core15.toml
-uv run tb backtest show reports/ew_core15-20260929T003303Z
-uv run tb backtest compare reports/bh_btc-20260929T003254Z reports/ew_core15-20260929T003303Z
+uv run tb backtest show reports/ew_core15-20260929T003918Z
+uv run tb backtest compare reports/bh_btc-20260929T003910Z reports/ew_core15-20260929T003918Z
 ```
 
-Итоговые каталоги: `reports/bh_btc-20260929T003254Z/` и
-`reports/ew_core15-20260929T003303Z/`. В каждом есть все девять файлов T003:
+Итоговые каталоги: `reports/bh_btc-20260929T003910Z/` и
+`reports/ew_core15-20260929T003918Z/`. В каждом есть все девять файлов T003:
 четыре parquet, два JSON, Markdown и два PNG. Дополнительно:
 `reports/t003-data-sync.json`, журналы `t003-data-*.log`, `t003-compare.md`,
 `t003-show.md`, `t003-ordi-funding-schedule.json`. Графики проверены визуально.
@@ -144,7 +144,7 @@ BTC: 5375 из 5375 ожидаемых выплат, все цены из точ
 
 ## Автоматические проверки
 
-Ruff, форматирование, mypy — без ошибок; **171 offline-тест** прошёл на Windows.
+Ruff, форматирование, mypy — без ошибок; **172 offline-теста** прошёл на Windows.
 Пять лет × 30 символов: около **1.7 секунды** на движок; потолок теста CI — 8 секунд.
 Два запуска одного TOML дают побайтно одинаковые parquet и `metrics.json`.
 Проверены оба направления стопов, гэпы, точные границы выплат, цена fallback,
