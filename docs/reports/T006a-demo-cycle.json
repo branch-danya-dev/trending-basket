@@ -1,0 +1,184 @@
+{
+  "checked_at_utc": "2026-09-29T04:14:38.104000+00:00",
+  "code_commit": "447c0ae686a674c4f1b281fab86aeccb168b6faf",
+  "environment": "Bybit Demo",
+  "decision_ms": 1790640000000,
+  "preflight": {
+    "account_type": "UNIFIED",
+    "clock_offset_ms": 341,
+    "equity_usd": 185634.96885151,
+    "instruments": 15,
+    "key_permissions_checked": true,
+    "kind": "preflight",
+    "margin_mode": "REGULAR_MARGIN",
+    "private_mutations": 0,
+    "status": "passed",
+    "telegram": true,
+    "time_ms": 1790654949649
+  },
+  "fills": [
+    {
+      "decision_price": 15.442,
+      "exchange_time_ms": 1790655136284,
+      "execution_price": "14.662",
+      "fee_currency": "USDT",
+      "fee_usd": 4.38606399,
+      "quantity": "543.9",
+      "reason": "signal",
+      "reference_price": 15.442,
+      "reference_slippage_bps": -505.11591762725016,
+      "side": "Buy",
+      "slippage_bps": -505.11591762725016,
+      "symbol": "LINKUSDT",
+      "time_ms": 1790655137143
+    },
+    {
+      "decision_price": 15.442,
+      "exchange_time_ms": 1790655146182,
+      "execution_price": "14.664",
+      "fee_currency": "USDT",
+      "fee_usd": 4.38666228,
+      "quantity": "543.9",
+      "reason": "liquidation_distance",
+      "reference_price": 15.442,
+      "reference_slippage_bps": 503.820748607694,
+      "side": "Sell",
+      "slippage_bps": 503.820748607694,
+      "symbol": "LINKUSDT",
+      "time_ms": 1790655151124
+    }
+  ],
+  "stop_confirmations": [
+    {
+      "kind": "stop_confirmed",
+      "quantity": "543.9",
+      "stop_price": "13.104",
+      "symbol": "LINKUSDT",
+      "time_ms": 1790655139219
+    },
+    {
+      "kind": "stop_confirmed",
+      "quantity": "543.9",
+      "stop_price": "13.104",
+      "symbol": "LINKUSDT",
+      "time_ms": 1790655140989
+    }
+  ],
+  "protective_actions": [
+    {
+      "kind": "liquidation_reduction",
+      "liquidation": "unknown",
+      "quantity": "543.9",
+      "symbol": "LINKUSDT",
+      "time_ms": 1790655151963
+    }
+  ],
+  "exchange_order_verification": [
+    {
+      "symbol": "LINKUSDT",
+      "side": "Buy",
+      "qty": "543.9",
+      "cumExecQty": "543.9",
+      "avgPrice": "14.662",
+      "orderStatus": "Filled",
+      "reduceOnly": false
+    },
+    {
+      "symbol": "LINKUSDT",
+      "side": "Sell",
+      "qty": "543.9",
+      "cumExecQty": "543.9",
+      "avgPrice": "14.664",
+      "orderStatus": "Filled",
+      "reduceOnly": true
+    }
+  ],
+  "shadow_comparison": {
+    "actual_fills": [
+      {
+        "decision_price": 15.442,
+        "exchange_time_ms": 1790655136284,
+        "execution_price": "14.662",
+        "fee_currency": "USDT",
+        "fee_usd": 4.38606399,
+        "quantity": "543.9",
+        "reason": "signal",
+        "reference_price": 15.442,
+        "reference_slippage_bps": -505.11591762725016,
+        "side": "Buy",
+        "slippage_bps": -505.11591762725016,
+        "symbol": "LINKUSDT",
+        "time_ms": 1790655137143
+      },
+      {
+        "decision_price": 15.442,
+        "exchange_time_ms": 1790655146182,
+        "execution_price": "14.664",
+        "fee_currency": "USDT",
+        "fee_usd": 4.38666228,
+        "quantity": "543.9",
+        "reason": "liquidation_distance",
+        "reference_price": 15.442,
+        "reference_slippage_bps": 503.820748607694,
+        "side": "Sell",
+        "slippage_bps": 503.820748607694,
+        "symbol": "LINKUSDT",
+        "time_ms": 1790655151124
+      }
+    ],
+    "decision_ms": 1790640000000,
+    "differences": [
+      {
+        "execution_price_delta": -0.7830883999999987,
+        "fee_delta_usd": 0.004446861804001223,
+        "quantity_delta": 28.100000000000023,
+        "side": "buy",
+        "symbol": "LINKUSDT"
+      },
+      {
+        "execution_price_delta": null,
+        "fee_delta_usd": 4.38666228,
+        "quantity_delta": 543.9,
+        "side": "sell",
+        "symbol": "LINKUSDT"
+      }
+    ],
+    "kind": "comparison",
+    "simulated_fills": [
+      {
+        "fee_usd": 4.381617128195999,
+        "lifecycle_id": 1,
+        "price": 15.4450884,
+        "quantity": 515.8,
+        "realized_pnl_usd": 0.0,
+        "reason": "signal",
+        "reference_price": 15.442,
+        "side": "buy",
+        "signed_quantity": 515.8,
+        "slippage_usd": 1.5929967199996518,
+        "symbol": "LINKUSDT",
+        "time_ms": 1790640000000
+      }
+    ],
+    "time_ms": 1790655158389
+  },
+  "actual_position_count": 0,
+  "open_order_count": 0,
+  "halt": null,
+  "pending": null,
+  "pending_order": null,
+  "telegram_errors": 0,
+  "same_day_restart": {
+    "message": "Daily decision already completed; positions and stops checked.",
+    "order_count_before": 2,
+    "order_count_after": 2
+  },
+  "wallet_nonzero_currencies": [
+    "BTC",
+    "ETH",
+    "USDC",
+    "USDT"
+  ],
+  "fees_usd": "8.77272627",
+  "trade_pnl_before_fees_usd": "1.0878"
+}
