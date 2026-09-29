@@ -2,8 +2,9 @@
 
 Captured on Windows from **https://api.bybit.com**, without API keys,
 on **2026-09-28 at 22:28:25–22:28:30 UTC** (2026-09-29, Europe/Moscow).
+The additional T002a instrument fixtures below were captured separately.
 All JSON files except `rate_limit_10006.json` are real HTTP 200 responses.
-Only JSON formatting and the instrument list lengths were changed;
+Only JSON formatting and the list lengths explicitly described below were changed;
 field names, types, values, timestamps and cursor tokens are preserved.
 
 ## Requests and trimming
@@ -49,11 +50,14 @@ was observed in this capture.
 
 - Funding uses **`GET /v5/market/funding/history`**. Supplying only
   `startTime` returned `10001` (`params error: Time Is Invalid`).
-- Klines and funding arrive newest first; the next page uses the oldest
-  raw timestamp minus one millisecond. Count raw rows before discarding
-  an unclosed candle, otherwise a full page can appear incomplete.
+- Klines and funding arrive newest first. Funding uses the oldest timestamp
+  minus one millisecond. Since T002a, klines traverse consecutive time windows
+  of at most `limit` candle slots, including empty windows. Neither a short
+  nor an empty page proves that older history is absent for a delisted symbol.
+  Dropping an unclosed candle also must not stop pagination.
 - Instrument responses include `lotSizeFilter.minNotionalValue` as a
-  string and `fundingInterval` as an integer number of minutes.
+  string (possibly empty for historical instruments) and `fundingInterval`
+  as an integer number of minutes. An empty notional is stored as null.
 - Test execution is offline; fixture capture is a separate manual step.
 
 Official references: [funding history](https://bybit-exchange.github.io/docs/v5/market/history-fund-rate),
@@ -63,3 +67,38 @@ Official references: [funding history](https://bybit-exchange.github.io/docs/v5/
 
 Windows command results and limitations are recorded in
 [`T001a-bybit-live-validation.md`](../../../docs/tasks/T001a-bybit-live-validation.md).
+
+## T002a status fixtures
+
+Captured from the same public mainnet on Windows, 2026-09-28 around 23:13 UTC.
+Query parameters: `category=linear&limit=1000`, plus the status below.
+All envelopes, field values and cursors are unchanged; only lists are trimmed.
+
+| Fixture | Status query | Kept rows |
+|---|---|---|
+| `instruments_closed_page1.json` | Closed | 10000000AIDOGEUSDT, 1000000VINUUSDT and all 5 PendingOpen, from 1000 |
+| `instruments_closed_page2.json` | Closed, cursor from page 1 | Complete final response: ZRCUSDT |
+| `instruments_prelaunch_page1.json` | PreLaunch | First of 6 |
+| `instruments_pendingopen_page1.json` | PendingOpen | Complete empty response |
+| `instruments_delivering_page1.json` | Delivering | Complete empty response |
+
+The Closed cursor is `first%3D10000000AIDOGEUSDT%26last%3DZKJUSDT`.
+The actual row status must be preserved: the Closed query also returned
+PendingOpen, while the PendingOpen query itself was empty. Tests exercise
+pagination per status and the empty `minNotionalValue` in 1000000VINUUSDT.
+Overlap/conflict and repeated-cursor cases are synthetic modifications of
+recorded rows in tests, explicitly separate from the saved fixtures.
+
+## T002a delisted kline windows
+
+Captured on Windows on 2026-09-28 around 23:29 UTC, mainnet, no credentials.
+Both requests use `/v5/market/kline`, `category=linear&symbol=FTTUSDT&interval=D&limit=1000`.
+
+| Fixture | start | end | Kept rows |
+|---|---:|---:|---|
+| `kline_ftt_closed_empty_recent.json` | 1704240000000 | 1790639999999 | Complete empty response, retCode=0 |
+| `kline_ftt_closed_older.json` | 1617840000000 | 1704239999999 | Newest 3 and oldest 2 of 398 rows |
+
+The second window returned 2021-10-12 through 2022-11-13 despite the first
+window being empty. The regression test reuses the empty envelope for the
+earliest window before listing. Candle values and envelope fields are unchanged.

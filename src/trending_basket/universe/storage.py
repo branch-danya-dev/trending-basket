@@ -22,6 +22,7 @@ from trending_basket.universe.candidates import (
     DEFAULT_EXCLUSIONS,
     candidate_pool,
 )
+from trending_basket.universe.lifecycle import TradingPeriod, trading_period
 from trending_basket.universe.selection import (
     SelectionParameters,
     empty_universe,
@@ -30,10 +31,10 @@ from trending_basket.universe.selection import (
 )
 
 SURVIVORSHIP_EXPLANATION = (
-    "Candidates come from the latest Trading USDT-perpetual snapshot, not historical listings. "
-    "Delisted symbols are excluded even when the API exposes them with status=Closed. "
-    "Historical results have survivorship bias and may overstate performance. "
-    "Only candle selection is point-in-time; historical candidate membership is not."
+    "Closed symbols with available history are included, but survivorship bias remains: "
+    "the API may omit instruments or their candle history, and asset classification is current. "
+    "A last-candle close fallback estimates, rather than proves, the delisting time. "
+    "Historical results may still overstate performance."
 )
 
 
@@ -41,6 +42,11 @@ SURVIVORSHIP_EXPLANATION = (
 class Universe:
     table: pd.DataFrame
     metadata: dict[str, Any]
+
+    def is_tradeable_at(self, symbol: str, time_ms: int) -> bool:
+        """Observed listing window [first candle, delisting); independent of monthly membership."""
+        row = self.metadata["trading_periods"].get(symbol)
+        return False if row is None else TradingPeriod(**row).contains(time_ms)
 
     def universe_at(self, time_ms: int) -> list[str]:
         """Latest scheduled composition, including empty months; before the first, []."""
@@ -102,6 +108,8 @@ def save_universe(data_dir: Path, name: str, universe: Universe) -> None:
 def load_universe(data_dir: Path, name: str) -> Universe:
     parquet_path, metadata_path = universe_paths(data_dir, name)
     metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
+    if metadata.get("schema_version") != 2:
+        raise ValueError("universe lacks trading bounds; rebuild with tb universe build")
     if _sha256(parquet_path) != metadata["parquet_sha256"]:
         raise ValueError("universe data and metadata do not match; rebuild the universe")
     return Universe(pd.read_parquet(parquet_path), metadata)
@@ -138,10 +146,26 @@ def build_universe(
             "last_open_time_ms": int(frame["open_time_ms"].max()) if not frame.empty else None,
             "sha256": _sha256(path),
         }
-    selections = [select_universe(candles, at, parameters) for at in schedule]
+    periods = {
+        symbol: trading_period(
+            pool.statuses[symbol], pool.delivery_times_ms[symbol], candles.get(symbol)
+        )
+        for symbol in pool.symbols
+    }
+    delisted = [symbol for symbol in pool.symbols if pool.statuses[symbol] == "Closed"]
+    without_history = [symbol for symbol in delisted if periods[symbol].listed_from_ms is None]
+    selections = [select_universe(candles, at, parameters, periods) for at in schedule]
     table = pd.concat(selections, ignore_index=True) if selections else empty_universe()
+    for column, dtype in {
+        "listed_from_ms": "Int64",
+        "listed_until_ms": "Int64",
+        "listed_until_source": "str",
+    }.items():
+        table[column] = pd.Series(
+            [getattr(periods[symbol], column) for symbol in table["symbol"]], dtype=dtype
+        )
     metadata: dict[str, Any] = {
-        "schema_version": 1,
+        "schema_version": 2,
         "name": name,
         "parameters": asdict(parameters),
         "turnover_currency": "USDT",
@@ -152,7 +176,7 @@ def build_universe(
         "instrument_snapshot_sha256": _sha256(pool.snapshot),
         "snapshot_status_counts": pool.snapshot_status_counts,
         "snapshot_contains_closed": pool.snapshot_status_counts.get("Closed", 0) > 0,
-        "candidate_pool_source": "latest Trading snapshot",
+        "candidate_pool_source": "latest Trading and Closed snapshot",
         "candidate_symbols": pool.symbols,
         "candidate_count": len(pool.symbols),
         "excluded_candidates": pool.excluded,
@@ -162,8 +186,14 @@ def build_universe(
         "exclusions": pool.exclusions,
         "input_candles": inputs,
         "missing_caches": missing,
-        "survivorship_bias": True,
-        "survivorship_bias_explanation": SURVIVORSHIP_EXPLANATION,
+        "trading_periods": {symbol: asdict(period) for symbol, period in periods.items()},
+        "delisted_without_history_symbols": without_history,
+        "delisted_selected_symbols": sorted(set(table["symbol"]) & set(delisted)),
+        "survivorship_bias": {
+            "delisted_included": len(delisted) - len(without_history),
+            "delisted_without_history": len(without_history),
+            "note": SURVIVORSHIP_EXPLANATION,
+        },
         "rebalance_times_ms": schedule,
         "underfilled_months_ms": [
             at

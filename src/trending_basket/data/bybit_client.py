@@ -22,6 +22,7 @@ from trending_basket.domain.types import Candle, FundingRate, InstrumentInfo, In
 _KLINE_PAGE_LIMIT = 1000
 _FUNDING_PAGE_LIMIT = 200
 _INSTRUMENTS_PAGE_LIMIT = 1000
+_INSTRUMENT_STATUSES = ("Trading", "Closed", "PreLaunch", "PendingOpen", "Delivering")
 
 _RATE_LIMIT_RET_CODE = 10006
 _RETRYABLE_RET_CODES = frozenset({_RATE_LIMIT_RET_CODE})
@@ -131,6 +132,8 @@ class BybitPublicClient:
     def _parse_closed_klines(
         self, symbol: str, interval: Interval, rows: list[list[str]]
     ) -> list[Candle]:
+        if not rows:
+            return []
         server_now_ms = self.server_time_ms()
         candles = []
         for row in rows:
@@ -160,19 +163,20 @@ class BybitPublicClient:
         by_open_time: dict[int, Candle] = {}
         page_end_ms = end_ms
 
-        while True:
-            rows = self._fetch_kline_rows(symbol, interval, start_ms, page_end_ms)
-            if not rows:
-                break
+        while page_end_ms >= start_ms:
+            # Bybit can return a short/empty page for a delisted symbol even though
+            # older candles exist. Traverse bounded time windows, not row counts.
+            window_start_ms = max(
+                start_ms,
+                (page_end_ms // interval.duration_ms - self._kline_page_limit + 1)
+                * interval.duration_ms,
+            )
+            rows = self._fetch_kline_rows(symbol, interval, window_start_ms, page_end_ms)
             page = self._parse_closed_klines(symbol, interval, rows)
             for candle in page:
                 by_open_time[candle.open_time_ms] = candle
 
-            # A full page can become shorter (or empty) after dropping unclosed candles.
-            earliest_ms = min(int(row[0]) for row in rows)
-            if earliest_ms <= start_ms or len(rows) < self._kline_page_limit:
-                break
-            page_end_ms = earliest_ms - 1
+            page_end_ms = window_start_ms - 1
 
         for open_time_ms in sorted(by_open_time):
             yield by_open_time[open_time_ms]
@@ -212,12 +216,31 @@ class BybitPublicClient:
         return [by_time[t] for t in sorted(by_time)]
 
     def fetch_instruments(self) -> list[InstrumentInfo]:
-        """Fetch all linear instruments, paginating via cursor."""
-        instruments: list[InstrumentInfo] = []
+        """Query every documented status, retaining actual response statuses and duplicates once."""
+        instruments: dict[str, InstrumentInfo] = {}
+        for status in _INSTRUMENT_STATUSES:
+            for instrument in self._fetch_instrument_status(status):
+                previous = instruments.get(instrument.symbol)
+                if previous is not None and previous != instrument:
+                    raise BybitAPIError(
+                        _NON_RET_CODE,
+                        f"conflicting instrument rows for {instrument.symbol}; retry snapshot",
+                        "/v5/market/instruments-info",
+                        {"category": "linear", "status": status},
+                    )
+                instruments[instrument.symbol] = instrument
+        return [instruments[symbol] for symbol in sorted(instruments)]
+
+    def _fetch_instrument_status(self, status: str) -> Iterator[InstrumentInfo]:
         cursor = ""
+        seen_cursors: set[str] = set()
 
         while True:
-            params: dict[str, Any] = {"category": "linear", "limit": _INSTRUMENTS_PAGE_LIMIT}
+            params: dict[str, Any] = {
+                "category": "linear",
+                "limit": _INSTRUMENTS_PAGE_LIMIT,
+                "status": status,
+            }
             if cursor:
                 params["cursor"] = cursor
             payload = self._request("/v5/market/instruments-info", params)
@@ -226,32 +249,40 @@ class BybitPublicClient:
             for row in result["list"]:
                 price_filter = row["priceFilter"]
                 lot_size_filter = row["lotSizeFilter"]
-                instruments.append(
-                    InstrumentInfo(
-                        symbol=row["symbol"],
-                        contract_type=row["contractType"],
-                        status=row["status"],
-                        base_coin=row["baseCoin"],
-                        quote_coin=row["quoteCoin"],
-                        launch_time_ms=int(row["launchTime"]),
-                        delivery_time_ms=int(row["deliveryTime"]),
-                        funding_interval_ms=int(row["fundingInterval"]) * 60_000,
-                        tick_size=Decimal(price_filter["tickSize"]),
-                        min_order_qty=Decimal(lot_size_filter["minOrderQty"]),
-                        max_order_qty=Decimal(lot_size_filter["maxOrderQty"]),
-                        qty_step=Decimal(lot_size_filter["qtyStep"]),
-                        min_notional_value=Decimal(lot_size_filter["minNotionalValue"]),
-                        symbol_type=row.get("symbolType"),
-                        market_region=row.get("marketRegion"),
-                        underlying_ticker=row.get("underlyingTicker"),
-                    )
+                yield InstrumentInfo(
+                    symbol=row["symbol"],
+                    contract_type=row["contractType"],
+                    status=row["status"],
+                    base_coin=row["baseCoin"],
+                    quote_coin=row["quoteCoin"],
+                    launch_time_ms=int(row["launchTime"]),
+                    delivery_time_ms=int(row.get("deliveryTime") or 0),
+                    funding_interval_ms=int(row["fundingInterval"]) * 60_000,
+                    tick_size=Decimal(price_filter["tickSize"]),
+                    min_order_qty=Decimal(lot_size_filter["minOrderQty"]),
+                    max_order_qty=Decimal(lot_size_filter["maxOrderQty"]),
+                    qty_step=Decimal(lot_size_filter["qtyStep"]),
+                    min_notional_value=(
+                        Decimal(lot_size_filter["minNotionalValue"])
+                        if lot_size_filter.get("minNotionalValue")
+                        else None
+                    ),
+                    symbol_type=row.get("symbolType"),
+                    market_region=row.get("marketRegion"),
+                    underlying_ticker=row.get("underlyingTicker"),
                 )
 
             cursor = result.get("nextPageCursor", "")
             if not cursor:
                 break
-
-        return instruments
+            if cursor in seen_cursors:
+                raise BybitAPIError(
+                    _NON_RET_CODE,
+                    "repeated instrument cursor",
+                    "/v5/market/instruments-info",
+                    params,
+                )
+            seen_cursors.add(cursor)
 
     def _request(self, endpoint: str, params: dict[str, Any]) -> dict[str, Any]:
         last_ret_code = _NON_RET_CODE

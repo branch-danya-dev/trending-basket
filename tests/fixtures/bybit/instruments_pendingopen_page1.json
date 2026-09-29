@@ -1,0 +1,11 @@
+{
+  "retCode": 0,
+  "retMsg": "OK",
+  "result": {
+    "category": "",
+    "list": [],
+    "nextPageCursor": ""
+  },
+  "retExtInfo": {},
+  "time": 1790637226895
+}

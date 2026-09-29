@@ -42,7 +42,7 @@ def test_candidate_build_report_and_show_commands(
     )
     assert result.exit_code == 0, result.output
     assert "missing caches (1): MISSINGUSDT" in result.output
-    assert "survivorship_bias=true" in result.output
+    assert "survivorship_bias: delisted_included=0, delisted_without_history=0" in result.output
     result = runner.invoke(app, ["universe", "report", "core15"])
     assert result.exit_code == 0, result.output
     assert "2024-05-01 | 2 | BTCUSDT,ETHUSDT | -" in result.output

@@ -116,11 +116,11 @@ def test_iter_klines_paginates_without_dupes_or_gaps() -> None:
             "category": "linear",
             "symbol": "BTCUSDT",
             "interval": "D",
-            "start": "1704067200000",
+            "start": str(start),
             "end": str(end),
             "limit": "3",
         }
-        for end in (1704499199999, 1704239999999)
+        for start, end in ((1704240000000, 1704499199999), (1704067200000, 1704239999999))
     ]
 
 
@@ -159,15 +159,54 @@ def test_iter_klines_continues_after_dropping_unclosed_candle(page_limit: int) -
         assert int(request.url.params["end"]) == int(previous["result"]["list"][-1][0]) - 1
 
 
-def test_iter_klines_stops_on_empty_response() -> None:
+def test_iter_klines_empty_requested_window() -> None:
     empty = load_fixture("kline_1d_page1_recent.json")
     empty["result"]["list"] = []
     requests: list[httpx.Request] = []
-    transport = route_transport({"/v5/market/kline": [empty]}, requests=requests)
+    transport = route_transport(
+        {"/v5/market/kline": [empty], "/v5/market/time": [load_fixture("server_time.json")]},
+        requests=requests,
+    )
     client, _, _ = _make_client(transport)
 
     assert list(client.iter_klines("BTCUSDT", Interval.D1, 0, 1)) == []
-    assert len(requests) == 1
+    assert len([r for r in requests if r.url.path == "/v5/market/kline"]) == 1
+
+
+@pytest.mark.parametrize(
+    "recent_rows", [[], [["1704412800000", "100", "101", "99", "100", "1", "100"]]]
+)
+def test_iter_klines_continues_after_empty_or_short_delisted_window(
+    recent_rows: list[list[str]],
+) -> None:
+    start_ms = 1704067200000
+    day_ms = Interval.D1.duration_ms
+    requests: list[httpx.Request] = []
+    older_rows = [
+        [str(start_ms + i * day_ms), "100", "101", "99", "100", "1", "100"] for i in [1, 0]
+    ]
+    client, _, _ = _make_client(
+        route_transport(
+            {
+                "/v5/market/time": [load_fixture("server_time.json")],
+                "/v5/market/kline": [
+                    {"retCode": 0, "result": {"list": recent_rows}},
+                    {"retCode": 0, "result": {"list": older_rows}},
+                ],
+            },
+            requests=requests,
+        ),
+        kline_page_limit=3,
+    )
+    candles = list(client.iter_klines("OLDUSDT", Interval.D1, start_ms, start_ms + 5 * day_ms - 1))
+    assert [c.open_time_ms for c in candles] == [start_ms, start_ms + day_ms] + (
+        [1704412800000] if recent_rows else []
+    )
+    calls = [r for r in requests if r.url.path == "/v5/market/kline"]
+    assert [(int(r.url.params["start"]), int(r.url.params["end"])) for r in calls] == [
+        (start_ms + 2 * day_ms, start_ms + 5 * day_ms - 1),
+        (start_ms, start_ms + 2 * day_ms - 1),
+    ]
 
 
 def test_iter_klines_full_1000_row_page_preserves_boundary_and_coverage() -> None:
@@ -198,6 +237,27 @@ def test_iter_klines_full_1000_row_page_preserves_boundary_and_coverage() -> Non
     assert len(kline_requests) == 2
     assert all(r.url.params["limit"] == "1000" for r in kline_requests)
     assert int(kline_requests[1].url.params["end"]) == int(rows[999][0]) - 1
+
+
+def test_delisted_ftt_real_empty_recent_window_does_not_hide_older_history() -> None:
+    recent = load_fixture("kline_ftt_closed_empty_recent.json")
+    older = load_fixture("kline_ftt_closed_older.json")
+    requests: list[httpx.Request] = []
+    client, _, _ = _make_client(
+        route_transport(
+            {
+                "/v5/market/kline": [recent, older, recent],
+                "/v5/market/time": [load_fixture("server_time.json")],
+            },
+            requests=requests,
+        )
+    )
+    actual = list(client.iter_klines("FTTUSDT", Interval.D1, 1609459200000, 1790639999999))
+    assert [c.open_time_ms for c in actual] == sorted(int(r[0]) for r in older["result"]["list"])
+    assert len(actual) == 5
+    calls = [r for r in requests if r.url.path == "/v5/market/kline"]
+    assert len(calls) == 3
+    assert int(calls[-1].url.params["start"]) == 1609459200000
 
 
 def test_fetch_funding_history_paginates_backward() -> None:
@@ -236,6 +296,7 @@ def test_fetch_funding_history_paginates_backward() -> None:
 
 def test_fetch_instruments_paginates_via_cursor(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(bybit_client, "_INSTRUMENTS_PAGE_LIMIT", 500)
+    monkeypatch.setattr(bybit_client, "_INSTRUMENT_STATUSES", ("Trading",))
     requests: list[httpx.Request] = []
     transport = route_transport(
         {
@@ -259,13 +320,80 @@ def test_fetch_instruments_paginates_via_cursor(monkeypatch: pytest.MonkeyPatch)
     assert instruments[0].market_region == ""
     assert instruments[0].underlying_ticker == ""
     assert [dict(r.url.params) for r in requests] == [
-        {"category": "linear", "limit": "500"},
+        {"category": "linear", "limit": "500", "status": "Trading"},
         {
             "category": "linear",
             "limit": "500",
+            "status": "Trading",
             "cursor": "first%3D0GUSDT%26last%3DMONUSDT",
         },
     ]
+
+
+def test_instrument_status_pages_keep_actual_status_and_nullable_notional() -> None:
+    requests: list[httpx.Request] = []
+    pages = [
+        load_fixture(name)
+        for name in (
+            "instruments_page1_cursor.json",
+            "instruments_page2_final.json",
+            "instruments_closed_page1.json",
+            "instruments_closed_page2.json",
+            "instruments_prelaunch_page1.json",
+            "instruments_pendingopen_page1.json",
+            "instruments_delivering_page1.json",
+        )
+    ]
+    client, _, _ = _make_client(
+        route_transport({"/v5/market/instruments-info": pages}, requests=requests)
+    )
+    instruments = {row.symbol: row for row in client.fetch_instruments()}
+    assert instruments["1000000VINUUSDT"].min_notional_value is None
+    assert instruments["10000000AIDOGEUSDT"].delivery_time_ms == 1745809200000
+    assert instruments["ZRCUSDT"].status == "Closed"
+    assert instruments["DATAOLD01USDT"].status == "PendingOpen"
+    assert {row.status for row in instruments.values()} == {
+        "Trading",
+        "Closed",
+        "PreLaunch",
+        "PendingOpen",
+    }
+    assert [r.url.params["status"] for r in requests] == [
+        "Trading",
+        "Trading",
+        "Closed",
+        "Closed",
+        "PreLaunch",
+        "PendingOpen",
+        "Delivering",
+    ]
+    assert requests[3].url.params["cursor"] == pages[2]["result"]["nextPageCursor"]
+    assert "cursor" not in requests[4].url.params
+
+
+def test_instrument_queries_deduplicate_overlapping_responses() -> None:
+    page = load_fixture("instruments_page2_final.json")
+    client, _, _ = _make_client(route_transport({"/v5/market/instruments-info": [page]}))
+    assert [row.symbol for row in client.fetch_instruments()] == ["SOLUSDT"]
+
+
+def test_conflicting_instrument_rows_fail_instead_of_overwriting() -> None:
+    page = load_fixture("instruments_page2_final.json")
+    changed = deepcopy(page)
+    changed["result"]["list"][0]["status"] = "Closed"
+    client, _, _ = _make_client(route_transport({"/v5/market/instruments-info": [page, changed]}))
+    with pytest.raises(BybitAPIError, match="conflicting instrument"):
+        client.fetch_instruments()
+
+
+def test_instrument_repeated_cursor_fails_instead_of_hanging() -> None:
+    client, _, _ = _make_client(
+        route_transport(
+            {"/v5/market/instruments-info": [load_fixture("instruments_page1_cursor.json")]}
+        )
+    )
+    with pytest.raises(BybitAPIError, match="repeated instrument cursor"):
+        client.fetch_instruments()
 
 
 # --- Retries -----------------------------------------------------------------

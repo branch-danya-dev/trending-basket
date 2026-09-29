@@ -5,7 +5,7 @@ from __future__ import annotations
 import os
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Annotated
+from typing import Annotated, Any
 
 import typer
 
@@ -55,6 +55,17 @@ def _date_string(time_ms: int) -> str:
     return datetime.fromtimestamp(time_ms / 1000, tz=UTC).date().isoformat()
 
 
+def _report_survivorship(meta: dict[str, Any]) -> None:
+    bias = meta["survivorship_bias"]
+    typer.echo(
+        f"survivorship_bias: delisted_included={bias['delisted_included']}, "
+        f"delisted_without_history={bias['delisted_without_history']}; {bias['note']}"
+    )
+    typer.echo(
+        "delisted without history: " + (",".join(meta["delisted_without_history_symbols"]) or "-")
+    )
+
+
 @universe_app.command("build")
 def build_cmd(
     name: Annotated[str, typer.Option("--name")],
@@ -90,7 +101,7 @@ def build_cmd(
         "underfilled months: "
         + (",".join(_date_string(at) for at in meta["underfilled_months_ms"]) or "-")
     )
-    typer.echo("survivorship_bias=true: " + meta["survivorship_bias_explanation"])
+    _report_survivorship(meta)
 
 
 @universe_app.command("report")
@@ -101,7 +112,10 @@ def report_cmd(name: Annotated[str, typer.Argument()]) -> None:
         typer.echo(f"ERROR {exc}", err=True)
         raise typer.Exit(code=1) from exc
     previous: set[str] = set()
-    typer.echo("month | count | entered | exited | min_turnover_usd | median_turnover_usd | flags")
+    typer.echo(
+        "month | count | entered | exited | min_turnover_usd | median_turnover_usd "
+        "| flags | later_closed"
+    )
     for at in universe.metadata["rebalance_times_ms"]:
         current = set(universe.universe_at(at))
         selected = universe.table.loc[universe.table["rebalance_time_ms"] == at]
@@ -110,13 +124,23 @@ def report_cmd(name: Annotated[str, typer.Argument()]) -> None:
         minimum = f"{selected['median_turnover_usd'].min():.2f}" if current else "-"
         median = f"{selected['median_turnover_usd'].median():.2f}" if current else "-"
         flag = "underfilled" if at in universe.metadata["underfilled_months_ms"] else "-"
+        later_closed = (
+            ",".join(
+                sorted(
+                    symbol
+                    for symbol in current
+                    if universe.metadata["trading_periods"][symbol]["status"] == "Closed"
+                )
+            )
+            or "-"
+        )
         typer.echo(
             f"{_date_string(at)} | {len(current)} | {entered} | {exited} | "
-            f"{minimum} | {median} | {flag}"
+            f"{minimum} | {median} | {flag} | {later_closed}"
         )
         previous = current
     typer.echo("missing caches: " + (",".join(universe.metadata["missing_caches"]) or "-"))
-    typer.echo("survivorship_bias=true: " + universe.metadata["survivorship_bias_explanation"])
+    _report_survivorship(universe.metadata)
 
 
 @universe_app.command("show")
