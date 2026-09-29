@@ -73,9 +73,12 @@ def launcher_text(project: Path, uv: str) -> str:
         f"Set-Location -LiteralPath {quoted(str(project))}\n"
         "$demoLog = Join-Path 'data/live/demo/logs' "
         "('run-' + (Get-Date -Format 'yyyyMMdd-HHmmss') + '.log')\n"
-        f"& {quoted(uv)} run tb run --loop 2>&1 | "
-        "Out-File -LiteralPath $demoLog -Append -Encoding utf8\n"
-        "exit $LASTEXITCODE\n"
+        # Windows PowerShell 5 treats redirected native stderr as ErrorRecord;
+        # ordinary uv build messages must not abort startup under Stop preference.
+        f"$demoProcess = Start-Process -FilePath {quoted(uv)} "
+        "-ArgumentList 'run','tb','run','--loop' -WindowStyle Hidden -Wait -PassThru "
+        "-RedirectStandardOutput $demoLog -RedirectStandardError ($demoLog + '.stderr')\n"
+        "exit $demoProcess.ExitCode\n"
     )
 
 
