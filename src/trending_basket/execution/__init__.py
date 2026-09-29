@@ -1,1 +1,1 @@
-"""Order execution: reconciles target positions with the exchange."""
+"""Demo-only exchange execution and durable reconciliation."""
