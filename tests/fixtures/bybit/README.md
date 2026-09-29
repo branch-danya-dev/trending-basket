@@ -102,3 +102,13 @@ Both requests use `/v5/market/kline`, `category=linear&symbol=FTTUSDT&interval=D
 The second window returned 2021-10-12 through 2022-11-13 despite the first
 window being empty. The regression test reuses the empty envelope for the
 earliest window before listing. Candle values and envelope fields are unchanged.
+
+## T006a: Demo
+
+`demo-public.json` записан 2026-09-29 с `https://api-demo.bybit.com` без ключей:
+GET `/v5/market/time` и GET `/v5/market/instruments-info?category=linear&symbol=BTCUSDT`.
+Сохранены реальные публичные ответы; параметры количества/цены проверяются тестом.
+Приватные сценарии в `tests/demo_support.py` — явно синтетическая биржа на
+`httpx.MockTransport`: записи позиций, заявок, стопов и исполнений меняются после
+запросов. Это не выдаётся за запись реального Demo-счёта. Подпись проверена также
+фиксированным значением независимого `.NET HMACSHA256`.

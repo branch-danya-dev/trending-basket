@@ -25,6 +25,10 @@ class Settings(BaseSettings):
     bybit_api_key: SecretStr | None = None
     bybit_api_secret: SecretStr | None = None
     bybit_rest_url: str = "https://api.bybit.com"
+    bybit_demo_rest_url: str = "https://api-demo.bybit.com"
+    telegram_bot_token: SecretStr | None = None
+    telegram_chat_id: SecretStr | None = None
+    demo_risk_file: Path = Path("docs/reports/T006-risk-level.json")
     rest_timeout_s: float = 10.0
     rest_min_interval_s: float = 0.2
     rest_max_retries: int = 6
@@ -89,6 +93,10 @@ def format_settings(settings: Settings) -> str:
         f"bybit_api_key={mask(settings.bybit_api_key)}",
         f"bybit_api_secret={mask(settings.bybit_api_secret)}",
         f"bybit_rest_url={settings.bybit_rest_url}",
+        f"bybit_demo_rest_url={settings.bybit_demo_rest_url}",
+        f"telegram_bot_token={mask(settings.telegram_bot_token)}",
+        f"telegram_chat_id={mask(settings.telegram_chat_id)}",
+        f"demo_risk_file={settings.demo_risk_file}",
         f"rest_timeout_s={settings.rest_timeout_s}",
         f"rest_min_interval_s={settings.rest_min_interval_s}",
         f"rest_max_retries={settings.rest_max_retries}",

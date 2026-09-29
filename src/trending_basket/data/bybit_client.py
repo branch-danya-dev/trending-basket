@@ -101,6 +101,10 @@ class BybitPublicClient:
         self._kline_page_limit = kline_page_limit
         self._funding_page_limit = funding_page_limit
 
+    def close(self) -> None:
+        """Release pooled connections after a Demo synchronization batch."""
+        self._http.close()
+
     def server_time_ms(self) -> int:
         payload = self._request("/v5/market/time", {})
         return int(payload["result"]["timeSecond"]) * 1000
