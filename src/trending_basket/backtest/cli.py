@@ -28,6 +28,9 @@ def run_cmd(
     allow_holdout: Annotated[
         bool, typer.Option(help="Access holdout/full after confirmation.")
     ] = False,
+    override_holdout_lock: Annotated[
+        bool, typer.Option(help="Override repeat holdout protection; invalidates T005.")
+    ] = False,
 ) -> None:
     try:
         settings = load_settings()
@@ -50,7 +53,10 @@ def run_cmd(
             reports_dir=settings.reports_dir,
             clock=clock,
             commit=_git_state()["commit"],
+            override_holdout_lock=override_holdout_lock,
         )
+        if override_holdout_lock and run.period in {"holdout", "full"}:
+            typer.echo("WARNING: holdout lock override requested; invalidates T005", err=True)
         inputs = load_inputs(settings.data_dir, experiment)
         result = BacktestEngine(
             experiment, inputs.data, inputs.universe, inputs.rules, inputs.funding
