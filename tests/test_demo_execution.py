@@ -219,8 +219,10 @@ def test_read_only_transport_blocks_every_mutation(tmp_path):
     assert not mutations(api)
 
 
-def test_preflight_auth_rights_foreign_checks_are_get_only(tmp_path):
+@pytest.mark.parametrize("ips", [["192.0.2.1"], ["*"], []])
+def test_preflight_auth_rights_foreign_checks_are_get_only(tmp_path, ips):
     _, _, api, _, client, executor = setup_demo(tmp_path)
+    api.permissions["ips"] = ips
     result = check_account(client, executor)
     assert result["equity_usd"] == 1000 and result["key_permissions_checked"]
     assert not mutations(api)

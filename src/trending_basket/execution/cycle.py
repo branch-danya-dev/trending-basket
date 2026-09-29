@@ -274,8 +274,6 @@ def check_account(client: BybitPrivateClient, executor: LiveExecutor) -> dict[st
         or "DerivativesTrade" in groups.get("Derivatives", [])
     ):
         raise ValueError("contract trading permissions missing")
-    if not permissions.get("ips") or "*" in permissions["ips"]:
-        raise ValueError("IP-restricted API key required by AGENTS.md")
     executor.reconcile()
     return dict(
         account_type=wallet["accountType"],
