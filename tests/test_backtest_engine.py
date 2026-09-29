@@ -282,3 +282,52 @@ def test_equal_weight_rebalances_on_month_change_only():
     ).run(EqualWeightUniverse())
     assert [f["time_ms"] for f in result.fills] == [START + 30 * DAY] * 2 + [START + 31 * DAY] * 2
     assert len(result.positions) == 2
+
+
+def test_off_grid_funding_and_boundary_ownership():
+    # New orders do not owe funding at entry; the carried position owes the next boundary.
+    rates = {START: 0.9, START + H4 // 4: 0.01, START + DAY: 0.02}
+    result = BacktestEngine(
+        config(2),
+        store([candle(d) for d in range(-1, 2)]),
+        universe(),
+        {"BTCUSDT": FINE},
+        {"BTCUSDT": rates},
+    ).run(EnterOnce(400, None))
+    observed = [e for e in result.events if e["kind"] == "funding" and e["observed"]]
+    assert [e["time_ms"] for e in observed] == [START + H4 // 4, START + DAY]
+    assert result.equity[-1]["funding_usd"] == -12
+    assert observed[0]["price_source"] == "1d_open_fallback"
+
+
+def test_partial_reduction_below_minimum_is_logged_and_skipped():
+    rule = InstrumentRules(Decimal(".1"), Decimal(".2"), Decimal("25"), 2 * H4)
+    book = SimExecutor(1000, {"X": rule}, ZERO)
+    book.rebalance("X", TargetPosition(100), 100, 100, 0)
+    book.rebalance("X", TargetPosition(90), 100, 100, 1)
+    assert book.positions["X"].quantity == 1
+    assert book.events[-1]["kind"] == "minimum_order_skip"
+
+
+def test_missing_execution_bar_fails_instead_of_silently_holding_stale_price():
+    with pytest.raises(ValueError, match="missing execution bar"):
+        BacktestEngine(
+            config(2), store([candle(-1), candle(0)]), universe(), {"BTCUSDT": FINE}, {}
+        ).run(BuyAndHoldBTC())
+
+
+def test_four_hour_execution_works_without_daily_warmup():
+    experiment = config(1)
+    experiment = experiment.model_copy(
+        update={"run": experiment.run.model_copy(update={"interval": Interval.H4})}
+    )
+    rows = [
+        replace(candle(0, open=100, close=110, interval=Interval.H4), open_time_ms=START + i * H4)
+        for i in range(6)
+    ]
+    result = BacktestEngine(experiment, store(rows), universe(), {"BTCUSDT": FINE}, {}).run(
+        BuyAndHoldBTC()
+    )
+    assert len(result.equity) == 7
+    assert result.equity[-1]["equity_usd"] == 1100
+    assert len(result.fills) == 1

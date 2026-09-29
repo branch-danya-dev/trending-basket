@@ -58,7 +58,11 @@ def report_markdown(name: str, metrics: dict[str, Any]) -> str:
             lines += ["| Item | " + " | ".join(columns) + " |", "|---|" + "---:|" * len(columns)]
             for item, values in rows.items():
                 lines.append(
-                    f"| {item} | " + " | ".join(f"{values[c]:.8g}" for c in columns) + " |"
+                    f"| {item} | "
+                    + " | ".join(
+                        f"{values[c]:.8g}" if values[c] is not None else "None" for c in columns
+                    )
+                    + " |"
                 )
     lines += ["", "## Assumptions", "", *(f"- {s}" for s in ASSUMPTIONS), ""]
     return "\n".join(lines)

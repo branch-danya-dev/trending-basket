@@ -164,6 +164,46 @@ def test_five_years_thirty_symbols_speed():
     print(f"5 years x 30 symbols: {elapsed:.3f}s")
 
 
+def test_four_hour_metrics_use_midnight_endpoints_including_initial_capital():
+    # Six intraday observations in each day: 100 -> 110 -> 99 across UTC midnights.
+    values = [100 + i * 10 / 6 for i in range(7)] + [110 - i * 11 / 6 for i in range(1, 7)]
+    equity = [
+        {
+            "time_ms": START + i * Interval.H4.duration_ms,
+            "equity_usd": value,
+            "fees_usd": 0,
+            "slippage_usd": 0,
+            "funding_usd": 0,
+            "gross_exposure": 1,
+            "net_exposure": 1,
+        }
+        for i, value in enumerate(values)
+    ]
+    metrics = calculate_metrics(BacktestResult([], [], equity, [], None))
+    assert metrics["annual_volatility_frac"] == pytest.approx(math.sqrt(0.02 * 365))
+    assert metrics["sharpe"] == pytest.approx(0, abs=1e-12)
+
+
+@pytest.mark.parametrize("values,duration", [([100, 90, 100], 2), ([100, 110, 120], 0)])
+def test_drawdown_duration_includes_recovery_endpoint(values, duration):
+    equity = [
+        {
+            "time_ms": START + i * DAY,
+            "equity_usd": value,
+            "fees_usd": 0,
+            "slippage_usd": 0,
+            "funding_usd": 0,
+            "gross_exposure": 1,
+            "net_exposure": 1,
+        }
+        for i, value in enumerate(values)
+    ]
+    assert (
+        calculate_metrics(BacktestResult([], [], equity, [], None))["drawdown_duration_days"]
+        == duration
+    )
+
+
 @pytest.mark.parametrize(
     "edit",
     [

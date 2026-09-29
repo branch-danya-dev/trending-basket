@@ -57,8 +57,9 @@ def load_inputs(data_dir: Path, experiment: Experiment) -> Inputs:
         )
 
     record(snapshot, instruments)
-    for path in universe_paths(data_dir, experiment.run.universe):
-        record(path)
+    universe_parquet, universe_metadata = universe_paths(data_dir, experiment.run.universe)
+    record(universe_parquet, universe.table, "rebalance_time_ms")
+    record(universe_metadata)
     for symbol in symbols:
         if symbol not in instruments.index:
             raise ValueError(f"instrument missing from snapshot: {symbol}")

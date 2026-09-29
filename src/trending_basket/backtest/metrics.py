@@ -16,7 +16,7 @@ def calculate_metrics(result: BacktestResult) -> dict[str, Any]:
     frame = pd.DataFrame(result.equity)
     frame.index = pd.to_datetime(frame["time_ms"], unit="ms", utc=True)
     # Bar endpoints are UTC boundaries; include the initial capital observation.
-    daily = frame["equity_usd"].resample("1D").last().dropna()
+    daily = frame["equity_usd"].resample("1D", closed="right", label="right").last().dropna()
     returns = daily.pct_change().dropna()
     first, last = result.equity[0], result.equity[-1]
     years = (last["time_ms"] - first["time_ms"]) / DAY_MS / 365
@@ -27,10 +27,15 @@ def calculate_metrics(result: BacktestResult) -> dict[str, Any]:
     downside = math.sqrt(float(returns.clip(upper=0).pow(2).mean()))
     drawdown = frame["equity_usd"] / frame["equity_usd"].cummax() - 1
     duration_ms, peak_ms = 0, first["time_ms"]
+    underwater = False
     for row, dd in zip(result.equity, drawdown, strict=True):
         if dd >= -1e-12:
+            if underwater:
+                duration_ms = max(duration_ms, row["time_ms"] - peak_ms)
+            underwater = False
             peak_ms = row["time_ms"]
         else:
+            underwater = True
             duration_ms = max(duration_ms, row["time_ms"] - peak_ms)
     closed = [p for p in result.positions if p["exit_time_ms"] is not None]
     winners = [p for p in closed if p["net_pnl_usd"] > 0]
@@ -73,7 +78,7 @@ def calculate_metrics(result: BacktestResult) -> dict[str, Any]:
         row["positions"] += 1
         for key in ("gross_pnl_usd", "net_pnl_usd", "fees_usd", "slippage_usd", "funding_usd"):
             row[key] += p[key]
-    by_year: dict[str, dict[str, float]] = {}
+    by_year: dict[str, dict[str, Any]] = {}
     previous = first
     for row in result.equity[1:]:
         # The 1 January endpoint belongs to the bar ending in the preceding year.
@@ -94,7 +99,11 @@ def calculate_metrics(result: BacktestResult) -> dict[str, Any]:
         previous = row
     for row_year in by_year.values():
         row_year["net_pnl_usd"] = row_year["end_equity_usd"] - row_year["start_equity_usd"]
-        row_year["return_frac"] = row_year["end_equity_usd"] / row_year["start_equity_usd"] - 1
+        row_year["return_frac"] = (
+            row_year["end_equity_usd"] / row_year["start_equity_usd"] - 1
+            if row_year["start_equity_usd"] > 0
+            else None
+        )
     metrics: dict[str, Any] = {
         "initial_capital_usd": first["equity_usd"],
         "final_equity_usd": last["equity_usd"],
