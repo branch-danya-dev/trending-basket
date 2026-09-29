@@ -132,6 +132,41 @@ def calculate_metrics(result: BacktestResult) -> dict[str, Any]:
         row["positions"] += 1
         for key in ("gross_pnl_usd", "net_pnl_usd", "fees_usd", "slippage_usd", "funding_usd"):
             row[key] += p[key]
+    by_direction: dict[str, dict[str, Any]] = {}
+    for direction in ("long", "short"):
+        positions = [p for p in result.positions if p.get("direction") == direction]
+        payments = [
+            e["payment_usd"] for e in funding if (e["quantity"] > 0) == (direction == "long")
+        ]
+        profit = sum(max(0.0, p["gross_pnl_usd"]) for p in positions)
+        costs = {
+            key: sum(p[key] for p in positions)
+            for key in ("fees_usd", "slippage_usd", "funding_usd")
+        }
+        by_direction[direction] = {
+            "positions": len(positions),
+            "gross_profit_usd": profit,
+            **costs,
+            "funding_paid_usd": sum(max(0.0, -v) for v in payments),
+            "funding_received_usd": sum(max(0.0, v) for v in payments),
+            **{
+                key.replace("_usd", "_pct_gross_profit"): value / profit * 100 if profit else None
+                for key, value in costs.items()
+            },
+        }
+    ranked_r = sorted(
+        (p for p in closed if p["return_r"] is not None),
+        key=lambda p: (p["return_r"], p["lifecycle_id"]),
+    )
+    r_values = pd.Series([p["return_r"] for p in ranked_r], dtype=float)
+    r_distribution = {
+        "count": len(r_values),
+        "quantiles": {str(q): float(r_values.quantile(q)) for q in (0, 0.25, 0.5, 0.75, 1)}
+        if len(r_values)
+        else {},
+        "best_five": list(reversed(ranked_r[-5:])),
+        "worst_five": ranked_r[:5],
+    }
     by_year: dict[str, dict[str, Any]] = {}
     previous = first
     for row in result.equity[1:]:
@@ -204,6 +239,8 @@ def calculate_metrics(result: BacktestResult) -> dict[str, Any]:
         "delisting_exits": sum(p["exit_reason"] == "delisting" for p in closed),
         "btc_price_return_frac": result.btc_price_return,
         "by_year": by_year,
+        "by_direction": by_direction,
+        "r_distribution": r_distribution,
         "by_symbol": dict(sorted(by_symbol.items())),
         "warnings": warnings,
     }

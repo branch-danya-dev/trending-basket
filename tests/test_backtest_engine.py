@@ -25,7 +25,9 @@ def test_four_bar_hand_calculation():
     # Bar 4 open 105, low 89 touches stop 90 (no gap); sell slip 2% -> 88.2.
     # Exit fee 4*88.2*.001=.3528. Cash 595.596-4.8+352.8-.3528=943.2432.
     # Independent gross-price identity: 1000 + 4*(90-100) - (.404+.3528)
-    # - [4*(101-100)+4*(90-88.2)] - 4.8 = 943.2432. Net=-56.7568, R=-1.41892.
+    # - [4*(101-100)+4*(90-88.2)] - 4.8 = 943.2432. Net=-56.7568.
+    # Executed reference notional=400, risk=40*400/404.
+    # R=-56.7568/(40*400/404)=-1.4331092; costs do not inflate the risk denominator.
     rows = [
         candle(0),
         candle(1, close=110),
@@ -50,7 +52,7 @@ def test_four_bar_hand_calculation():
     assert result.equity[-1]["fees_usd"] == pytest.approx(0.7568, abs=1e-9, rel=0)
     assert result.equity[-1]["slippage_usd"] == pytest.approx(11.2, abs=1e-9, rel=0)
     assert result.equity[-1]["funding_usd"] == pytest.approx(-4.8, abs=1e-9, rel=0)
-    assert result.positions[0]["return_r"] == pytest.approx(-1.41892, abs=1e-9, rel=0)
+    assert result.positions[0]["return_r"] == pytest.approx(-1.4331092, abs=1e-9, rel=0)
     metrics = calculate_metrics(result)
     # One observed payment cannot establish an interval: coverage must be unknown.
     assert metrics["funding_coverage_frac"] is None

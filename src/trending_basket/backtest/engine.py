@@ -8,11 +8,12 @@ from typing import Any
 
 from trending_basket.backtest.config import Experiment
 from trending_basket.backtest.market import DataStore
+from trending_basket.backtest.periods import PeriodAccess, require_access
 from trending_basket.backtest.sim_executor import InstrumentRules, SimExecutor
 from trending_basket.data.funding_schedule import FundingSchedule
 from trending_basket.domain.types import Candle
 from trending_basket.portfolio.limits import apply_limits
-from trending_basket.strategies.base import DecisionContext, Strategy, TargetPosition
+from trending_basket.strategies.base import DecisionContext, PositionExit, Strategy, TargetPosition
 from trending_basket.universe.storage import Universe
 
 
@@ -55,6 +56,7 @@ class BacktestEngine:
         }
         self.book = SimExecutor(experiment.run.initial_capital_usd, rules, experiment.costs)
         self.marks: dict[str, float] = {}
+        self._delivered_exits = 0
 
     def _delisted(self, at_ms: int) -> None:
         for symbol in sorted(self.book.positions):
@@ -98,6 +100,8 @@ class BacktestEngine:
 
     def _decide_and_fill(self, strategy: Strategy, at_ms: int) -> None:
         allowed = tuple(self.universe.universe_at(at_ms))
+        if self.config.run.symbols is not None:
+            allowed = tuple(s for s in allowed if s in self.config.run.symbols)
         symbols = sorted(set(allowed) | set(self.book.positions))
         market = self.data.view(at_ms, symbols)
         for symbol in symbols:
@@ -110,7 +114,12 @@ class BacktestEngine:
             MappingProxyType(self.book.views(self.marks)),
             allowed,
             market,
+            tuple(
+                PositionExit(p["symbol"], p["exit_time_ms"], p["exit_reason"])
+                for p in self.book.closed_positions[self._delivered_exits :]
+            ),
         )
+        self._delivered_exits = len(self.book.closed_positions)
         requested = strategy.decide(ctx)
         targets = dict(requested)
         removal: set[str] = set()
@@ -197,8 +206,9 @@ class BacktestEngine:
             self.book.close(symbol, bar.open if gap else stop, time_ms, "stop")
             self.book.event(time_ms, "stop", symbol, gap=gap, bar_open_time_ms=bar.open_time_ms)
 
-    def run(self, strategy: Strategy) -> BacktestResult:
+    def run(self, strategy: Strategy, access: PeriodAccess | None = None) -> BacktestResult:
         run = self.config.run
+        require_access(run.name, strategy.name, run.period, access)
         equity = [self.book.snapshot(run.start_ms, {})]
         for symbol, rules in sorted(self.rules.items()):
             if rules.min_notional_value is None:

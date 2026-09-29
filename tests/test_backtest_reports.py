@@ -41,7 +41,9 @@ def seed(tmp_path):
     for interval in Interval:
         path = klines_path(tmp_path / "data", interval, "BTCUSDT")
         path.parent.mkdir(parents=True, exist_ok=True)
-        pd.DataFrame([asdict(candle(d, interval=interval)) for d in range(-1, 5)]).to_parquet(path)
+        pd.DataFrame([asdict(candle(d, interval=interval)) for d in range(-1, 182)]).to_parquet(
+            path
+        )
     path = funding_path(tmp_path / "data", "BTCUSDT")
     path.parent.mkdir(parents=True, exist_ok=True)
     pd.DataFrame(
@@ -53,7 +55,7 @@ def seed(tmp_path):
     toml = tmp_path / "experiment.toml"
     toml.write_text(
         '[run]\nname="offline"\nstrategy="buy_and_hold_btc"\n'
-        'universe="test"\nstart="2024-01-01"\nend="2024-01-04"\n'
+        'universe="test"\nperiod="dev"\n'
         "initial_capital_usd=1000\n[limits]\nmax_symbol_exposure=1\n",
         encoding="utf-8",
     )
@@ -212,7 +214,7 @@ def test_drawdown_duration_includes_recovery_endpoint(values, duration):
 @pytest.mark.parametrize(
     "edit",
     [
-        ('start="2024-01-01"', 'start="2025-01-01"'),
+        ('period="dev"', 'period="dev"\nstart="2025-01-01"'),
         ('name="offline"', 'name="../unsafe"'),
         ("max_symbol_exposure=1", "max_symbol_exposure=-1"),
     ],

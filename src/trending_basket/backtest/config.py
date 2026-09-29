@@ -5,12 +5,15 @@ from __future__ import annotations
 import tomllib
 from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
-from typing import Literal
+from typing import Any, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
+from trending_basket.backtest.periods import Period, period_dates
+from trending_basket.clock import Clock
 from trending_basket.domain.types import Interval
 from trending_basket.portfolio.limits import PortfolioLimits
+from trending_basket.strategies.trend_basket import TrendBasketParams
 
 
 class Costs(BaseModel):
@@ -26,8 +29,10 @@ class Costs(BaseModel):
 class RunConfig(BaseModel):
     model_config = ConfigDict(extra="forbid", frozen=True, allow_inf_nan=False)
     name: str = Field(pattern=r"^[A-Za-z0-9][A-Za-z0-9_-]*$")
-    strategy: Literal["buy_and_hold_btc", "equal_weight_universe"]
+    strategy: Literal["buy_and_hold_btc", "equal_weight_universe", "trend_basket"]
     universe: str
+    period: Period | None = None
+    symbols: tuple[str, ...] | None = None
     interval: Interval = Interval.D1
     start: date
     end: date
@@ -56,14 +61,23 @@ class Experiment(BaseModel):
     run: RunConfig
     costs: Costs = Costs()
     limits: PortfolioLimits = PortfolioLimits()
-    strategy_params: dict[str, float] = Field(default_factory=dict)
+    strategy_params: dict[str, Any] = Field(default_factory=dict)
 
     @model_validator(mode="after")
     def no_unused_parameters(self) -> Experiment:
-        if self.strategy_params:
+        if self.run.strategy == "trend_basket":
+            TrendBasketParams.model_validate(self.strategy_params)
+            if not self.limits.enabled:
+                raise ValueError("trend strategy requires enabled exposure limits")
+        elif self.strategy_params:
             raise ValueError("reference strategies have no tunable strategy_params")
         return self
 
 
-def load_experiment(path: Path) -> Experiment:
-    return Experiment.model_validate(tomllib.loads(path.read_text(encoding="utf-8")))
+def load_experiment(path: Path, clock: Clock | None = None) -> Experiment:
+    raw = tomllib.loads(path.read_text(encoding="utf-8"))
+    run = raw.get("run", {})
+    if "period" not in run or "start" in run or "end" in run:
+        raise ValueError("run.period is mandatory; manual start/end are forbidden")
+    run["start"], run["end"] = period_dates(run["period"], clock)
+    return Experiment.model_validate(raw)
