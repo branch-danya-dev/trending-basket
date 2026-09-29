@@ -1,0 +1,24 @@
+[run]
+name = "ew_core15"
+strategy = "equal_weight_universe"
+universe = "core15"
+interval = "1d"
+start = "2021-11-01"
+end = "2026-09-27"
+initial_capital_usd = 1000
+
+[costs]
+taker_fee_bps = 5.5
+maker_fee_bps = 2.0
+slippage_bps = 2.0
+stop_slippage_bps = 5.0
+delist_slippage_bps = 200.0
+rebalance_fill = "taker"
+
+[limits]
+max_gross_exposure = 2.0
+max_net_exposure = 1.5
+max_symbol_exposure = 0.5
+exit_on_universe_removal = false
+
+[strategy_params]
