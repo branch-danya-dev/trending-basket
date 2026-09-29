@@ -1,0 +1,775 @@
+{
+  "V1-regression": {
+    "directory": "reports/V1-20260929T020219Z",
+    "git": {
+      "commit": "e45c9b10a9eb8a1c57e47c9a75abc8e8c729768a",
+      "dirty": false
+    },
+    "resolved_config": {
+      "costs": {
+        "delist_slippage_bps": 200.0,
+        "maker_fee_bps": 2.0,
+        "rebalance_fill": "taker",
+        "slippage_bps": 2.0,
+        "stop_slippage_bps": 5.0,
+        "taker_fee_bps": 5.5
+      },
+      "execution": {
+        "quantity_mode": "exchange"
+      },
+      "limits": {
+        "enabled": true,
+        "exit_on_universe_removal": false,
+        "max_gross_exposure": 2.0,
+        "max_net_exposure": 1.5,
+        "max_symbol_exposure": 0.5
+      },
+      "run": {
+        "end": "2024-06-30",
+        "initial_capital_usd": 1000.0,
+        "interval": "1d",
+        "name": "V1",
+        "period": "dev",
+        "start": "2021-11-01",
+        "strategy": "trend_basket",
+        "symbols": null,
+        "universe": "core15"
+      },
+      "strategy_params": {
+        "atr_days": 20,
+        "direction": "long_only",
+        "exit_ratio": 0.5,
+        "lookbacks_days": [
+          20,
+          55,
+          100
+        ],
+        "rebalance_band_frac": 0.25,
+        "risk_per_symbol_frac": 0.005,
+        "stop_atr_mult": 3.0
+      }
+    },
+    "sha256": {
+      "fills.parquet": "642df70901973126adae565866e5546b63c807472bc2f730492b2d4d1a7d2b6a",
+      "positions.parquet": "57238495f4bbc72f8227e0caa1406b3d8f396955043ac9c538aa6938b5b4e778",
+      "equity.parquet": "ea24151de8212db381718637a434aa6a6ed77e3860c2a34b102b59318b684221",
+      "events.parquet": "f9edf2a6c88ee24a754cf5292132d75e920b719659534b4045e34220e9e01f9f",
+      "metrics.json": "57ceeda488b5450bce0623c85e32481df138b98475e2cd43beacc8a025673a7b",
+      "manifest.json": "f42a453344a4cff3dceea6b37b24408e2eb47ff70a62c4f4f553e901ef443134"
+    }
+  },
+  "V2-regression": {
+    "directory": "reports/V2-20260929T020225Z",
+    "git": {
+      "commit": "e45c9b10a9eb8a1c57e47c9a75abc8e8c729768a",
+      "dirty": false
+    },
+    "resolved_config": {
+      "costs": {
+        "delist_slippage_bps": 200.0,
+        "maker_fee_bps": 2.0,
+        "rebalance_fill": "taker",
+        "slippage_bps": 2.0,
+        "stop_slippage_bps": 5.0,
+        "taker_fee_bps": 5.5
+      },
+      "execution": {
+        "quantity_mode": "exchange"
+      },
+      "limits": {
+        "enabled": true,
+        "exit_on_universe_removal": false,
+        "max_gross_exposure": 2.0,
+        "max_net_exposure": 1.5,
+        "max_symbol_exposure": 0.5
+      },
+      "run": {
+        "end": "2024-06-30",
+        "initial_capital_usd": 1000.0,
+        "interval": "1d",
+        "name": "V2",
+        "period": "dev",
+        "start": "2021-11-01",
+        "strategy": "trend_basket",
+        "symbols": null,
+        "universe": "core15"
+      },
+      "strategy_params": {
+        "atr_days": 20,
+        "direction": "long_short",
+        "exit_ratio": 0.5,
+        "lookbacks_days": [
+          20,
+          55,
+          100
+        ],
+        "rebalance_band_frac": 0.25,
+        "risk_per_symbol_frac": 0.005,
+        "stop_atr_mult": 3.0
+      }
+    },
+    "sha256": {
+      "fills.parquet": "0c3610b71376439bca3da43564e3aa3332cbfb4369234511fefbc6b8eaf29d4b",
+      "positions.parquet": "c3f127adf9274f46c090943bb0706a8e1d4f4713387e1a150082c9948ae27d75",
+      "equity.parquet": "09bcaddb3f3474514c5e8c40c3644863ac1379dad768ebe82e795f73aa331fd7",
+      "events.parquet": "78ef127b6a0935ca9562b0cbf0ffdc2e1a0bd62e461039177cd35950456bd670",
+      "metrics.json": "02da12d2e5202c8ffcc17d833c924c68ef8f274f73dc28b3e3b91f0732ef8141",
+      "manifest.json": "d51791f6d15b6cda278c2082fbe6ffabf207a3f6f3bee6ac4df4f32aaf31af9a"
+    }
+  },
+  "V3-regression": {
+    "directory": "reports/V3-20260929T020240Z",
+    "git": {
+      "commit": "e45c9b10a9eb8a1c57e47c9a75abc8e8c729768a",
+      "dirty": false
+    },
+    "resolved_config": {
+      "costs": {
+        "delist_slippage_bps": 200.0,
+        "maker_fee_bps": 2.0,
+        "rebalance_fill": "taker",
+        "slippage_bps": 2.0,
+        "stop_slippage_bps": 5.0,
+        "taker_fee_bps": 5.5
+      },
+      "execution": {
+        "quantity_mode": "exchange"
+      },
+      "limits": {
+        "enabled": true,
+        "exit_on_universe_removal": false,
+        "max_gross_exposure": 2.0,
+        "max_net_exposure": 1.5,
+        "max_symbol_exposure": 0.5
+      },
+      "run": {
+        "end": "2024-06-30",
+        "initial_capital_usd": 1000.0,
+        "interval": "4h",
+        "name": "V3",
+        "period": "dev",
+        "start": "2021-11-01",
+        "strategy": "trend_basket",
+        "symbols": null,
+        "universe": "core15"
+      },
+      "strategy_params": {
+        "atr_days": 20,
+        "direction": "long_only",
+        "exit_ratio": 0.5,
+        "lookbacks_days": [
+          20,
+          55,
+          100
+        ],
+        "rebalance_band_frac": 0.25,
+        "risk_per_symbol_frac": 0.005,
+        "stop_atr_mult": 3.0
+      }
+    },
+    "sha256": {
+      "fills.parquet": "51be46e3856f6418a08d97c50fc133a22e515f0ab5bcafea94561a2f8c564c26",
+      "positions.parquet": "4d4e1d8068e12db986c3d924a46f544ccf9c106659fd3badbb3a025803bbc322",
+      "equity.parquet": "284596500422ed4d1143acc51dae1b44ecfa53df8282f19313139201043e5df3",
+      "events.parquet": "504e88116f553328cd0fa6092cd88c41e13dbb4adcdc2c4bb02d99d79b37e073",
+      "metrics.json": "bbff74dcf56ab684673615ca0f436eae4ce6d0d8b76629778cf8cc722f7e90a0",
+      "manifest.json": "8e6025c748a8736ba93ede5ae0b92c164bd6444c0651a759db8e822d3d86a509"
+    }
+  },
+  "V4-regression": {
+    "directory": "reports/V4-20260929T020259Z",
+    "git": {
+      "commit": "e45c9b10a9eb8a1c57e47c9a75abc8e8c729768a",
+      "dirty": false
+    },
+    "resolved_config": {
+      "costs": {
+        "delist_slippage_bps": 200.0,
+        "maker_fee_bps": 2.0,
+        "rebalance_fill": "taker",
+        "slippage_bps": 2.0,
+        "stop_slippage_bps": 5.0,
+        "taker_fee_bps": 5.5
+      },
+      "execution": {
+        "quantity_mode": "exchange"
+      },
+      "limits": {
+        "enabled": true,
+        "exit_on_universe_removal": false,
+        "max_gross_exposure": 2.0,
+        "max_net_exposure": 1.5,
+        "max_symbol_exposure": 0.5
+      },
+      "run": {
+        "end": "2024-06-30",
+        "initial_capital_usd": 1000.0,
+        "interval": "4h",
+        "name": "V4",
+        "period": "dev",
+        "start": "2021-11-01",
+        "strategy": "trend_basket",
+        "symbols": null,
+        "universe": "core15"
+      },
+      "strategy_params": {
+        "atr_days": 20,
+        "direction": "long_short",
+        "exit_ratio": 0.5,
+        "lookbacks_days": [
+          20,
+          55,
+          100
+        ],
+        "rebalance_band_frac": 0.25,
+        "risk_per_symbol_frac": 0.005,
+        "stop_atr_mult": 3.0
+      }
+    },
+    "sha256": {
+      "fills.parquet": "425fc642a80261e9afe17d1c750a96fc9cc93818134b449c431e5662f1c3ddc9",
+      "positions.parquet": "b86e5f07e2cd150dbda522559d0a9fe45a4e696a69748ba20b577dbee6328c97",
+      "equity.parquet": "92ebd482b056683ef10dd70063b163ac5a0d8a62879b9fe9b41229588222f149",
+      "events.parquet": "7165d16a281e3a7ab3391e255cf36adacfdb66b0e1de6fa3e46f24d1fdfc475a",
+      "metrics.json": "0eb7ae6582a7ab5a4d77fec497e42fdc72012ff129f24fc20fe1eb3c7e12bee1",
+      "manifest.json": "b92f5cb393c12e09da5a88b05d14f70643c0db2ff2358157de6e011bf8da8a02"
+    }
+  },
+  "V1x": {
+    "directory": "reports/V1x-20260929T020305Z",
+    "git": {
+      "commit": "e45c9b10a9eb8a1c57e47c9a75abc8e8c729768a",
+      "dirty": false
+    },
+    "resolved_config": {
+      "costs": {
+        "delist_slippage_bps": 200.0,
+        "maker_fee_bps": 2.0,
+        "rebalance_fill": "taker",
+        "slippage_bps": 2.0,
+        "stop_slippage_bps": 5.0,
+        "taker_fee_bps": 5.5
+      },
+      "execution": {
+        "quantity_mode": "exact"
+      },
+      "limits": {
+        "enabled": true,
+        "exit_on_universe_removal": false,
+        "max_gross_exposure": 2.0,
+        "max_net_exposure": 1.5,
+        "max_symbol_exposure": 0.5
+      },
+      "run": {
+        "end": "2024-06-30",
+        "initial_capital_usd": 10000.0,
+        "interval": "1d",
+        "name": "V1x",
+        "period": "dev",
+        "start": "2021-11-01",
+        "strategy": "trend_basket",
+        "symbols": null,
+        "universe": "core15"
+      },
+      "strategy_params": {
+        "atr_days": 20,
+        "direction": "long_only",
+        "exit_ratio": 0.5,
+        "lookbacks_days": [
+          20,
+          55,
+          100
+        ],
+        "rebalance_band_frac": 0.25,
+        "risk_per_symbol_frac": 0.005,
+        "stop_atr_mult": 3.0
+      }
+    },
+    "sha256": {
+      "fills.parquet": "c8c5207c46e0ed2025a35648b4bb5d579553a438d4cd536ae5449689fb5a2c0b",
+      "positions.parquet": "f6e8311f1c4035265b20ae738c4c207f3ebd645b4705d6e1e32e54ea19a14103",
+      "equity.parquet": "a45d1fc4f910f92e926c908092d1c0873f2af796f01ec94fe792973e1f9eac00",
+      "events.parquet": "9fe147793639e4bb1ee8ab6cb4563c58809271a7887800804c4d598a915d1caa",
+      "metrics.json": "f6522b029ffc868b5f35c3b25df3eb8abbf2bfcea70b55ecae07e1deb6fe296d",
+      "manifest.json": "a05c41f78d0760deb5bb8f89167cfb9b8cbe28c19f71675a5bffbbf19f47f9a2"
+    }
+  },
+  "V2x": {
+    "directory": "reports/V2x-20260929T020311Z",
+    "git": {
+      "commit": "e45c9b10a9eb8a1c57e47c9a75abc8e8c729768a",
+      "dirty": false
+    },
+    "resolved_config": {
+      "costs": {
+        "delist_slippage_bps": 200.0,
+        "maker_fee_bps": 2.0,
+        "rebalance_fill": "taker",
+        "slippage_bps": 2.0,
+        "stop_slippage_bps": 5.0,
+        "taker_fee_bps": 5.5
+      },
+      "execution": {
+        "quantity_mode": "exact"
+      },
+      "limits": {
+        "enabled": true,
+        "exit_on_universe_removal": false,
+        "max_gross_exposure": 2.0,
+        "max_net_exposure": 1.5,
+        "max_symbol_exposure": 0.5
+      },
+      "run": {
+        "end": "2024-06-30",
+        "initial_capital_usd": 10000.0,
+        "interval": "1d",
+        "name": "V2x",
+        "period": "dev",
+        "start": "2021-11-01",
+        "strategy": "trend_basket",
+        "symbols": null,
+        "universe": "core15"
+      },
+      "strategy_params": {
+        "atr_days": 20,
+        "direction": "long_short",
+        "exit_ratio": 0.5,
+        "lookbacks_days": [
+          20,
+          55,
+          100
+        ],
+        "rebalance_band_frac": 0.25,
+        "risk_per_symbol_frac": 0.005,
+        "stop_atr_mult": 3.0
+      }
+    },
+    "sha256": {
+      "fills.parquet": "d134a33da38c06aa180ff55ce09dbf95b03a6de237e00c1d6755c04d512d598a",
+      "positions.parquet": "01591137aea3ce226fb479c31b9268bd4d53a243070c0688b70809375f37ece3",
+      "equity.parquet": "dd725f6bdaed6b53d11f61ce369225be29fd1613d4fabe3cc03f0badc1f276e8",
+      "events.parquet": "76b719ba04abe8a0db160683b4fa07feed5ea559aacb85368a987586b25958a7",
+      "metrics.json": "a0ec094686268527e92ee7fb0b6270633806170ab2ef933e87ff38635670e7fe",
+      "manifest.json": "c27df25fbf72895b8a06382ae41377272022df6db5332a6ab55e6376f8f8c641"
+    }
+  },
+  "V3x": {
+    "directory": "reports/V3x-20260929T020325Z",
+    "git": {
+      "commit": "e45c9b10a9eb8a1c57e47c9a75abc8e8c729768a",
+      "dirty": false
+    },
+    "resolved_config": {
+      "costs": {
+        "delist_slippage_bps": 200.0,
+        "maker_fee_bps": 2.0,
+        "rebalance_fill": "taker",
+        "slippage_bps": 2.0,
+        "stop_slippage_bps": 5.0,
+        "taker_fee_bps": 5.5
+      },
+      "execution": {
+        "quantity_mode": "exact"
+      },
+      "limits": {
+        "enabled": true,
+        "exit_on_universe_removal": false,
+        "max_gross_exposure": 2.0,
+        "max_net_exposure": 1.5,
+        "max_symbol_exposure": 0.5
+      },
+      "run": {
+        "end": "2024-06-30",
+        "initial_capital_usd": 10000.0,
+        "interval": "4h",
+        "name": "V3x",
+        "period": "dev",
+        "start": "2021-11-01",
+        "strategy": "trend_basket",
+        "symbols": null,
+        "universe": "core15"
+      },
+      "strategy_params": {
+        "atr_days": 20,
+        "direction": "long_only",
+        "exit_ratio": 0.5,
+        "lookbacks_days": [
+          20,
+          55,
+          100
+        ],
+        "rebalance_band_frac": 0.25,
+        "risk_per_symbol_frac": 0.005,
+        "stop_atr_mult": 3.0
+      }
+    },
+    "sha256": {
+      "fills.parquet": "252dfc8019edd509a89e15d3f2e3e798cdd5ad0284e8b69a75d682bb036af246",
+      "positions.parquet": "92a6da3fe11ba97a431e54e3a8c5610d3f5cb00e8407b4c0a093f11919ea7c2f",
+      "equity.parquet": "6060e2090f3f773921cb151fbccffadbb4f94334d1f4dc3e9e943bc4f85c0da9",
+      "events.parquet": "e3fc2aa466237e745cc7efc63be8f574873e04dd440f6994eb26ffb3272bc444",
+      "metrics.json": "f64b1659e14242752b8d33dfb7b16b2484831c87eb4363f601066ff7814aec60",
+      "manifest.json": "004ddc8e112fc2e1d16e64e09576bebac3c1b04f5915961eb5c0401816378f1e"
+    }
+  },
+  "V4x": {
+    "directory": "reports/V4x-20260929T020345Z",
+    "git": {
+      "commit": "e45c9b10a9eb8a1c57e47c9a75abc8e8c729768a",
+      "dirty": false
+    },
+    "resolved_config": {
+      "costs": {
+        "delist_slippage_bps": 200.0,
+        "maker_fee_bps": 2.0,
+        "rebalance_fill": "taker",
+        "slippage_bps": 2.0,
+        "stop_slippage_bps": 5.0,
+        "taker_fee_bps": 5.5
+      },
+      "execution": {
+        "quantity_mode": "exact"
+      },
+      "limits": {
+        "enabled": true,
+        "exit_on_universe_removal": false,
+        "max_gross_exposure": 2.0,
+        "max_net_exposure": 1.5,
+        "max_symbol_exposure": 0.5
+      },
+      "run": {
+        "end": "2024-06-30",
+        "initial_capital_usd": 10000.0,
+        "interval": "4h",
+        "name": "V4x",
+        "period": "dev",
+        "start": "2021-11-01",
+        "strategy": "trend_basket",
+        "symbols": null,
+        "universe": "core15"
+      },
+      "strategy_params": {
+        "atr_days": 20,
+        "direction": "long_short",
+        "exit_ratio": 0.5,
+        "lookbacks_days": [
+          20,
+          55,
+          100
+        ],
+        "rebalance_band_frac": 0.25,
+        "risk_per_symbol_frac": 0.005,
+        "stop_atr_mult": 3.0
+      }
+    },
+    "sha256": {
+      "fills.parquet": "82c73b7631f80e24a615396b6e2af30983004c1ecf96151599b98be1273ab875",
+      "positions.parquet": "9eaa897db61017d3886e83744118eee41f9da966d44f55a8817c33ac54fc080f",
+      "equity.parquet": "8c04f9f0433decbb5868d76032c4ee9a78f4eeb762f0df79e6c37fc3a4fd39bf",
+      "events.parquet": "62f9992d7b4b63bd6cada50b9256068c2e9404f72762b69773d1138535a833e7",
+      "metrics.json": "b946a99803349652b673a36198d20e515c4ca508142d72633d399f05537d1dff",
+      "manifest.json": "6c5338f9346ecaf83ff0b0ea34d64f69686ab4c3329f3968b0106099ccf5aacd"
+    }
+  },
+  "H1": {
+    "directory": "reports/H1-20260929T020351Z",
+    "git": {
+      "commit": "e45c9b10a9eb8a1c57e47c9a75abc8e8c729768a",
+      "dirty": false
+    },
+    "resolved_config": {
+      "costs": {
+        "delist_slippage_bps": 200.0,
+        "maker_fee_bps": 2.0,
+        "rebalance_fill": "taker",
+        "slippage_bps": 2.0,
+        "stop_slippage_bps": 5.0,
+        "taker_fee_bps": 5.5
+      },
+      "execution": {
+        "quantity_mode": "exact"
+      },
+      "limits": {
+        "enabled": true,
+        "exit_on_universe_removal": false,
+        "max_gross_exposure": 2.0,
+        "max_net_exposure": 1.5,
+        "max_symbol_exposure": 0.5
+      },
+      "run": {
+        "end": "2024-06-30",
+        "initial_capital_usd": 10000.0,
+        "interval": "1d",
+        "name": "H1",
+        "period": "dev",
+        "start": "2021-11-01",
+        "strategy": "trend_basket",
+        "symbols": null,
+        "universe": "core15"
+      },
+      "strategy_params": {
+        "atr_days": 20,
+        "direction": "long_short",
+        "exit_ratio": 1.0,
+        "lookbacks_days": [
+          20,
+          55,
+          100
+        ],
+        "rebalance_band_frac": 0.25,
+        "risk_per_symbol_frac": 0.005,
+        "stop_atr_mult": 3.0
+      }
+    },
+    "sha256": {
+      "fills.parquet": "f1f76c7067e2543a8b21d50732d4d57f7054f4a578f80577f74906afeab738d4",
+      "positions.parquet": "455bac0083ee1f9572e740cc1681251ae1fa4e878144f2775f440e55c8a31256",
+      "equity.parquet": "5b87839fe34ac01e8e063ca53065bfd51341cf95343a463508ecc10c50beda8f",
+      "events.parquet": "c252efb18ca5e2cfae092ad502f90881ef5b2027985772b53afe8d9e31651212",
+      "metrics.json": "7f8eb19f861fb3e210803d7490abc36b3a17090ef0edeca86b1be0249fc73690",
+      "manifest.json": "f9c770b130928b30ba536f285fea2e8e0f1a68e7c536f541708862600bba18c9"
+    }
+  },
+  "H2": {
+    "directory": "reports/H2-20260929T020357Z",
+    "git": {
+      "commit": "e45c9b10a9eb8a1c57e47c9a75abc8e8c729768a",
+      "dirty": false
+    },
+    "resolved_config": {
+      "costs": {
+        "delist_slippage_bps": 200.0,
+        "maker_fee_bps": 2.0,
+        "rebalance_fill": "taker",
+        "slippage_bps": 2.0,
+        "stop_slippage_bps": 5.0,
+        "taker_fee_bps": 5.5
+      },
+      "execution": {
+        "quantity_mode": "exact"
+      },
+      "limits": {
+        "enabled": true,
+        "exit_on_universe_removal": false,
+        "max_gross_exposure": 2.0,
+        "max_net_exposure": 1.5,
+        "max_symbol_exposure": 0.5
+      },
+      "run": {
+        "end": "2024-06-30",
+        "initial_capital_usd": 10000.0,
+        "interval": "1d",
+        "name": "H2",
+        "period": "dev",
+        "start": "2021-11-01",
+        "strategy": "trend_basket",
+        "symbols": null,
+        "universe": "core15"
+      },
+      "strategy_params": {
+        "atr_days": 20,
+        "btc_regime_filter": "sma",
+        "btc_regime_sma_days": 100,
+        "direction": "long_short",
+        "exit_ratio": 0.5,
+        "lookbacks_days": [
+          20,
+          55,
+          100
+        ],
+        "rebalance_band_frac": 0.25,
+        "risk_per_symbol_frac": 0.005,
+        "stop_atr_mult": 3.0
+      }
+    },
+    "sha256": {
+      "fills.parquet": "bd8e96110288bcd10820837b69aa4c40d88c77edc9c299e412d7ef8eef130d52",
+      "positions.parquet": "bf08fb40e561fed454a98e49ecbcb41f80dcbfc125f41371ac88cde6a6090660",
+      "equity.parquet": "c4c41d0e015c257498c92b0ee29939e73f830f9ad710d40a2b2b64ee0fad3d9c",
+      "events.parquet": "4e833ff5fc55958b0a917ff85f220f6c1c624dac3f753301315af49eaea6436f",
+      "metrics.json": "fe4a6109df3ab3c805c2c13cfa4cf118b873ebeac327a366ccd5868b50638227",
+      "manifest.json": "89242d189f4ab33560483239244c703a312536372bdbea97699c4da91513e946"
+    }
+  },
+  "H3": {
+    "directory": "reports/H3-20260929T020404Z",
+    "git": {
+      "commit": "e45c9b10a9eb8a1c57e47c9a75abc8e8c729768a",
+      "dirty": false
+    },
+    "resolved_config": {
+      "costs": {
+        "delist_slippage_bps": 200.0,
+        "maker_fee_bps": 2.0,
+        "rebalance_fill": "taker",
+        "slippage_bps": 2.0,
+        "stop_slippage_bps": 5.0,
+        "taker_fee_bps": 5.5
+      },
+      "execution": {
+        "quantity_mode": "exact"
+      },
+      "limits": {
+        "enabled": true,
+        "exit_on_universe_removal": false,
+        "max_gross_exposure": 2.0,
+        "max_net_exposure": 1.5,
+        "max_symbol_exposure": 0.5
+      },
+      "run": {
+        "end": "2024-06-30",
+        "initial_capital_usd": 10000.0,
+        "interval": "1d",
+        "name": "H3",
+        "period": "dev",
+        "start": "2021-11-01",
+        "strategy": "trend_basket",
+        "symbols": null,
+        "universe": "core15"
+      },
+      "strategy_params": {
+        "atr_days": 20,
+        "concentration_rank_days": 100,
+        "concentration_top_k": 5,
+        "direction": "long_short",
+        "exit_ratio": 0.5,
+        "lookbacks_days": [
+          20,
+          55,
+          100
+        ],
+        "rebalance_band_frac": 0.25,
+        "risk_per_symbol_frac": 0.015,
+        "stop_atr_mult": 3.0
+      }
+    },
+    "sha256": {
+      "fills.parquet": "b245857a933e99dfca7594815c721320e16426dc683c7fcf24d8268b9ac4b33e",
+      "positions.parquet": "6c7a3faadd736772f31639c7371329e5e2bea3240df930584be9fa47b8b48bd1",
+      "equity.parquet": "c9c67d8bc134aa1d925c0b1d0dd892e4bf0552f845f3a293e63c861349da487f",
+      "events.parquet": "ad58757f6bf896c8aa6520b3464b17bd860c03f6b708767afd5ae872a08a8f26",
+      "metrics.json": "157fcaa97b357ef54705720591a3236730402e2d1798c5fddc0f51d1b530d7df",
+      "manifest.json": "423f714cc9bdbd91b0550242b4fe479120e8d120c13c13e4e99819de8a22c2ff"
+    }
+  },
+  "H3-1k": {
+    "directory": "reports/H3-1k-20260929T020410Z",
+    "git": {
+      "commit": "e45c9b10a9eb8a1c57e47c9a75abc8e8c729768a",
+      "dirty": false
+    },
+    "resolved_config": {
+      "costs": {
+        "delist_slippage_bps": 200.0,
+        "maker_fee_bps": 2.0,
+        "rebalance_fill": "taker",
+        "slippage_bps": 2.0,
+        "stop_slippage_bps": 5.0,
+        "taker_fee_bps": 5.5
+      },
+      "execution": {
+        "quantity_mode": "exchange"
+      },
+      "limits": {
+        "enabled": true,
+        "exit_on_universe_removal": false,
+        "max_gross_exposure": 2.0,
+        "max_net_exposure": 1.5,
+        "max_symbol_exposure": 0.5
+      },
+      "run": {
+        "end": "2024-06-30",
+        "initial_capital_usd": 1000.0,
+        "interval": "1d",
+        "name": "H3-1k",
+        "period": "dev",
+        "start": "2021-11-01",
+        "strategy": "trend_basket",
+        "symbols": null,
+        "universe": "core15"
+      },
+      "strategy_params": {
+        "atr_days": 20,
+        "concentration_rank_days": 100,
+        "concentration_top_k": 5,
+        "direction": "long_short",
+        "exit_ratio": 0.5,
+        "lookbacks_days": [
+          20,
+          55,
+          100
+        ],
+        "rebalance_band_frac": 0.25,
+        "risk_per_symbol_frac": 0.015,
+        "stop_atr_mult": 3.0
+      }
+    },
+    "sha256": {
+      "fills.parquet": "b687d1434c9ed9aeebc555dad384c89712185ade4a46e391f52765de4ef2665f",
+      "positions.parquet": "55aef9c6355397b6c9ca31562a9b40e78c330714f6e30dccb76135abdaeb3da7",
+      "equity.parquet": "09456762b90239f53d189320c40a7230b24f8b46bfce8bb83fb8e36a1fa6c55f",
+      "events.parquet": "3b15b93de4f8378c70066752cc98b272552be7f17b8378c8628519d856e415ee",
+      "metrics.json": "c4a23cd92b66d6e5ffbd0e63c9a23f0fd658fde580f950f9e08251a1b2b23f62",
+      "manifest.json": "b76968b4400b42bca725509bc760cd270535c84c073e306988fe81d304c68f42"
+    }
+  },
+  "V2-1k": {
+    "directory": "reports/V2-1k-20260929T020416Z",
+    "git": {
+      "commit": "e45c9b10a9eb8a1c57e47c9a75abc8e8c729768a",
+      "dirty": false
+    },
+    "resolved_config": {
+      "costs": {
+        "delist_slippage_bps": 200.0,
+        "maker_fee_bps": 2.0,
+        "rebalance_fill": "taker",
+        "slippage_bps": 2.0,
+        "stop_slippage_bps": 5.0,
+        "taker_fee_bps": 5.5
+      },
+      "execution": {
+        "quantity_mode": "exchange"
+      },
+      "limits": {
+        "enabled": true,
+        "exit_on_universe_removal": false,
+        "max_gross_exposure": 2.0,
+        "max_net_exposure": 1.5,
+        "max_symbol_exposure": 0.5
+      },
+      "run": {
+        "end": "2024-06-30",
+        "initial_capital_usd": 1000.0,
+        "interval": "1d",
+        "name": "V2-1k",
+        "period": "dev",
+        "start": "2021-11-01",
+        "strategy": "trend_basket",
+        "symbols": null,
+        "universe": "core15"
+      },
+      "strategy_params": {
+        "atr_days": 20,
+        "direction": "long_short",
+        "exit_ratio": 0.5,
+        "lookbacks_days": [
+          20,
+          55,
+          100
+        ],
+        "rebalance_band_frac": 0.25,
+        "risk_per_symbol_frac": 0.005,
+        "stop_atr_mult": 3.0
+      }
+    },
+    "sha256": {
+      "fills.parquet": "0c3610b71376439bca3da43564e3aa3332cbfb4369234511fefbc6b8eaf29d4b",
+      "positions.parquet": "c3f127adf9274f46c090943bb0706a8e1d4f4713387e1a150082c9948ae27d75",
+      "equity.parquet": "09bcaddb3f3474514c5e8c40c3644863ac1379dad768ebe82e795f73aa331fd7",
+      "events.parquet": "78ef127b6a0935ca9562b0cbf0ffdc2e1a0bd62e461039177cd35950456bd670",
+      "metrics.json": "02da12d2e5202c8ffcc17d833c924c68ef8f274f73dc28b3e3b91f0732ef8141",
+      "manifest.json": "5902d8dc39f9ef5ebbfe4bbe960a07b882912e74eab79465a4d9d239506e0894"
+    }
+  }
+}

@@ -30,11 +30,14 @@ ASSUMPTIONS = [
     "a stable regime and extrapolated history edges are listed for API verification. "
     "Coverage measures settlements while a position is open; insufficient history yields null.",
     "Gross PnL uses reference prices; fees and slippage are subtracted once; funding is signed.",
-    "Targets round toward zero; small reductions expand to an executable order or a full exit. "
+    "Exchange targets round toward zero; small reductions expand to an executable order or "
+    "a full exit. Exact uses fractional quantity without exchange rounding or order minima. "
     "When limits are enabled, actual exposures after fees and slippage are reduced "
     "until every limit holds within 1e-9. "
     "Each adjustment and post-rebalance exposure is logged. Limits may drift between decisions. "
     "Unknown Closed minNotionalValue is logged.",
+    "Sharpe standard error uses sqrt((1+SR^2/2)/years); it does not correct for "
+    "serial dependence, heavy tails or multiple testing.",
     "End date is inclusive; terminal open positions are marked, without a fictitious liquidation.",
     "Margin and liquidations are not modelled. Survivorship bias remains despite Closed inclusion.",
     "Annual turnover is one-way traded notional / mean daily equity / elapsed years. "
@@ -61,7 +64,14 @@ def scalar_table(metrics: dict[str, Any]) -> str:
 
 
 def report_markdown(name: str, metrics: dict[str, Any]) -> str:
-    lines = [f"# {name}", "", scalar_table(metrics), "", "## Warnings", ""]
+    lines = [
+        f"# {name} [quantity_mode={metrics.get('quantity_mode', 'exchange')}]",
+        "",
+        scalar_table(metrics),
+        "",
+        "## Warnings",
+        "",
+    ]
     lines.extend(f"- {w}" for w in metrics["warnings"])
     lines += [
         "",
@@ -206,6 +216,7 @@ def save_report(
             )
         manifest = {
             "schema_version": 1,
+            "quantity_mode": experiment.execution.quantity_mode,
             "created_at_ms": created_ms,
             "experiment_toml": toml,
             "resolved_config": experiment.model_dump(mode="json"),

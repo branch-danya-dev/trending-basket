@@ -194,6 +194,7 @@ def calculate_metrics(result: BacktestResult) -> dict[str, Any]:
             else None
         )
     metrics: dict[str, Any] = {
+        "quantity_mode": result.quantity_mode,
         "initial_capital_usd": first["equity_usd"],
         "final_equity_usd": last["equity_usd"],
         "total_return_frac": total,
@@ -262,4 +263,16 @@ def calculate_metrics(result: BacktestResult) -> dict[str, Any]:
     if min(frame["equity_usd"]) <= 0:
         for key in ("cagr_frac", "sharpe", "sortino", "calmar", "annual_volatility_frac"):
             metrics[key] = None
+    sharpe = metrics["sharpe"]
+    metrics["sharpe_standard_error"] = (
+        math.sqrt((1 + sharpe**2 / 2) / years) if sharpe is not None else None
+    )
+    position_observations = sum(row.get("position_count", 0) for row in result.equity[1:])
+    metrics["average_position_notional_usd"] = (
+        sum(row["gross_exposure"] * row["equity_usd"] for row in result.equity[1:])
+        / position_observations
+        if position_observations and min(frame["equity_usd"]) > 0
+        else None
+    )
+    metrics["average_fill_notional_usd"] = turnover / len(result.fills) if result.fills else None
     return metrics
