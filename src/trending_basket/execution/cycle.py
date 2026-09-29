@@ -22,6 +22,7 @@ from trending_basket.config import Settings
 from trending_basket.data.bybit_client import BybitPublicClient, build_client
 from trending_basket.data.cache import sync_funding, sync_instruments, sync_klines
 from trending_basket.domain.types import Interval
+from trending_basket.execution import capital
 from trending_basket.execution.bybit_private import DEMO_URL, BybitPrivateClient
 from trending_basket.execution.journal import Halted, Journal, Notifier, PreviewJournal
 from trending_basket.execution.live_executor import LiveExecutor
@@ -99,7 +100,8 @@ def decide(
     universe = tuple(
         s for s in inputs.universe.universe_at(day_ms) if inputs.universe.is_tradeable_at(s, day_ms)
     )
-    symbols = sorted(set(universe) | set(state["positions"]))
+    logical_positions = state.get("protected_reentries", {}) | state["positions"]
+    symbols = sorted(set(universe) | set(logical_positions))
     marks = {s: inputs.data.close_price(s, day_ms) for s in symbols}
     positions = {
         s: PositionView(
@@ -111,7 +113,7 @@ def decide(
             p["entry_time_ms"],
             p["lifecycle_id"],
         )
-        for s, p in state["positions"].items()
+        for s, p in logical_positions.items()
     }
     context = DecisionContext(
         day_ms,
@@ -213,37 +215,78 @@ def drawdown_guard(journal: Journal, equity_usd: float, threshold: float) -> Non
         raise Halted("drawdown from peak exceeds registered limit")
 
 
-def shadow(
+def persistent_shadow(
     config: Experiment,
-    targets: Decision,
-    marks: dict[str, float],
+    inputs: Inputs,
     state: dict[str, Any],
     rules: dict[str, ExchangeRules],
-    equity_usd: float,
     day_ms: int,
-) -> list[dict[str, Any]]:
-    book = SimExecutor(equity_usd, {s: r.quantity for s, r in rules.items()}, config.costs)
-    for symbol, p in state["positions"].items():
-        book.positions[symbol] = Position(
-            p["lifecycle_id"],
-            symbol,
-            float(p["quantity"]),
-            p["average_entry_price"],
-            marks[symbol],
-            p["entry_time_ms"],
-            p["stop_price"],
-            p.get("initial_risk_usd"),
-        )
-        book.cash_usd -= float(p["quantity"]) * marks[symbol]
-    ordered = sorted(
+) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+    saved = state.get("shadow_book") or {}
+    book = SimExecutor(
+        float(state["capital"]["allocated_usd"]),
+        {s: r.quantity for s, r in rules.items()},
+        config.costs,
+    )
+    for name in (
+        "cash_usd",
+        "realized_pnl_usd",
+        "fees_usd",
+        "slippage_usd",
+        "funding_usd",
+        "_next_id",
+    ):
+        if name in saved:
+            setattr(book, name, saved[name])
+    book.positions = {s: Position(**p) for s, p in saved.get("positions", {}).items()}
+    previous = saved.get("decision_ms", day_ms)
+    # Only completed bars are available here. Use the engine's stop ordering:
+    # opening gap, intrabar funding, then a touched stop at the bar close.
+    for at in range(previous, day_ms, DAY_MS):
+        for symbol in sorted(list(book.positions)):
+            bar = inputs.data.bar(symbol, Interval.D1, at)
+            if bar is None:
+                raise ValueError(f"missing shadow held bar: {symbol}")
+            p = book.positions[symbol]
+            stop = p.stop_price
+            if not inputs.universe.is_tradeable_at(symbol, at):
+                book.close(symbol, bar.open, at, "delisting")
+                continue
+            if stop is not None and bar.open <= stop:
+                book.close(symbol, bar.open, at, "stop")
+                continue
+            for stamp, rate in sorted(inputs.funding.get(symbol, {}).items()):
+                if at < stamp <= at + DAY_MS:
+                    try:
+                        price, source = inputs.data.funding_price(symbol, stamp)
+                    except ValueError:
+                        last = inputs.data.last_closed(symbol, Interval.H4, stamp)
+                        if last is None:
+                            last = inputs.data.last_closed(symbol, Interval.D1, stamp)
+                        if last is None:
+                            raise ValueError("missing closed shadow funding price") from None
+                        price, source = last.close, "last_closed_shadow_price"
+                    book.funding(symbol, stamp, rate, price, source)
+            if stop is not None and bar.low <= stop:
+                book.close(symbol, stop, at + DAY_MS, "stop")
+    logical = dict(
+        positions={s: asdict(p) for s, p in book.positions.items()},
+        strategy_states=saved.get("strategy_states", {}),
+        recent_exits=[
+            dict(symbol=p["symbol"], time_ms=p["exit_time_ms"], reason=p["exit_reason"])
+            for p in book.closed_positions
+        ],
+    )
+    marks = {s: inputs.data.close_price(s, day_ms) for s in book.positions}
+    targets, strategy_states, marks = decide(config, inputs, day_ms, book.equity(marks), logical)
+    for symbol in sorted(
         targets,
         key=lambda s: (
             targets[s].notional_usd
-            > float(state["positions"].get(s, {}).get("quantity", 0)) * marks[s],
+            > (book.positions[s].quantity * marks[s] if s in book.positions else 0),
             s,
         ),
-    )
-    for symbol in ordered:
+    ):
         book.rebalance(
             symbol,
             targets[symbol],
@@ -253,7 +296,24 @@ def shadow(
             allow_increase=targets[symbol].allow_increase,
         )
     book.enforce_limits(marks, day_ms, config.limits)
-    return book.fills
+    after = {
+        name: getattr(book, name)
+        for name in (
+            "cash_usd",
+            "realized_pnl_usd",
+            "fees_usd",
+            "slippage_usd",
+            "funding_usd",
+            "_next_id",
+        )
+    }
+    after.update(
+        positions={s: asdict(p) for s, p in book.positions.items()},
+        strategy_states=strategy_states,
+        decision_ms=day_ms,
+        equity_usd=book.equity(marks),
+    )
+    return book.fills, after
 
 
 def check_account(client: BybitPrivateClient, executor: LiveExecutor) -> dict[str, Any]:
@@ -274,11 +334,17 @@ def check_account(client: BybitPrivateClient, executor: LiveExecutor) -> dict[st
         or "DerivativesTrade" in groups.get("Derivatives", [])
     ):
         raise ValueError("contract trading permissions missing")
-    executor.reconcile()
+    actual = executor.reconcile()
+    capital.initialize(executor.journal, client.allocated_capital_usd, client.now_ms())
+    capital.sync_funding(executor.journal, client)
+    capital_values = capital.snapshot(executor.journal, actual)
+    margin = executor.ensure_account_margin(decision_day(client.now_ms()))
     return dict(
         account_type=wallet["accountType"],
         margin_mode=account.get("marginMode"),
-        equity_usd=float(wallet["totalEquity"]),
+        account_equity_usd=float(wallet["totalEquity"]),
+        **capital_values,
+        **margin,
         clock_offset_ms=client.offset_ms,
         key_permissions_checked=True,
     )
@@ -313,7 +379,12 @@ def run_cycle(
         raise Halted("risk configuration changed during Demo")
     state["config_sha256"] = config_sha
     day = decision_day(clock.now_ms())
-    symbols = sorted(set(inputs.universe.universe_at(day)) | set(state["positions"]))
+    symbols = sorted(
+        set(inputs.universe.universe_at(day))
+        | set(state["positions"])
+        | set(state.get("protected_reentries", {}))
+        | set(state.get("shadow_book", {}).get("positions", {}))
+    )
     for symbol in symbols:
         bar = inputs.data.last_closed(symbol, Interval.D1, day)
         if inputs.universe.is_tradeable_at(symbol, day) and (
@@ -341,6 +412,7 @@ def run_cycle(
         strategy_states, marks = pending["strategy_states"], pending["marks"]
     else:
         targets, strategy_states, marks = decide(config, inputs, day, account["equity_usd"], state)
+        shadow_fills, shadow_after = persistent_shadow(config, inputs, state, rules, day)
         pending = dict(
             day_ms=day,
             targets={s: asdict(t) for s, t in targets.items()},
@@ -348,7 +420,9 @@ def run_cycle(
             marks=marks,
             completed_symbols=[],
             consumed_exits=len(state.get("recent_exits", [])),
-            shadow_fills=shadow(config, targets, marks, state, rules, account["equity_usd"], day),
+            shadow_fills=shadow_fills,
+            shadow_after=shadow_after,
+            previous_orders=list(state["orders"]),
         )
     quotes = {s: float(client.ticker(s)["lastPrice"]) for s in targets}
     plan = []
@@ -403,6 +477,9 @@ def run_cycle(
                     reason="process offline; latest closed candle only",
                 )
         state["pending"] = pending
+        # Decisions and independent shadow advance even when execution is interrupted.
+        state["strategy_states"] = strategy_states
+        state["shadow_book"] = pending["shadow_after"]
         journal.save()
         journal.append("decisions", **(preview | {"status": "started"}))
     # Persisted with the decision, so a restart cannot lose or recompute its shadow baseline.
@@ -428,6 +505,9 @@ def run_cycle(
     executor.reconcile()
     record_comparison(journal, day)
     state["strategy_states"] = strategy_states
+    for symbol, target in targets.items():
+        if not target.notional_usd:
+            state.setdefault("protected_reentries", {}).pop(symbol, None)
     state["recent_exits"] = state.get("recent_exits", [])[pending["consumed_exits"] :]
     state["last_decision_ms"], state["pending"] = day, None
     state["api_errors"] = 0
@@ -435,10 +515,16 @@ def run_cycle(
     journal.append("decisions", **preview)
     actual = executor.actual()
     position_summary = {s: dict(qty=p["size"], stop=p["stopLoss"]) for s, p in actual.items()}
+    equity = capital.snapshot(journal, actual)
+    journal.append("equity", **equity)
+    drawdown_guard(journal, equity["equity_usd"], threshold)
+    positions_text = "; ".join(
+        f"{s}: {p['qty']}, стоп {p['stop']}" for s, p in position_summary.items()
+    )
     notifier.send(
-        f"DEMO daily summary: equity={client.wallet()['totalEquity']}; "
-        f"positions={json.dumps(position_summary)}; "
-        f"orders={sum(o['decision_ms'] == day for o in state['orders'].values())}"
+        f"Demo: дневной цикл завершён. Капитал стратегии: ${equity['equity_usd']:.2f}. "
+        f"Позиции: {positions_text or 'нет'}. "
+        f"Заявок за день: {sum(o['decision_ms'] == day for o in state['orders'].values())}."
     )
     return preview
 
@@ -456,7 +542,11 @@ def record_comparison(journal: Journal, day_ms: int) -> None:
     actual = {
         r["exec_id"]: r
         for r in rows("fills")
-        if journal.state["orders"].get(r["order_link_id"], {}).get("decision_ms") == day_ms
+        if (
+            journal.state["orders"].get(r["order_link_id"], {}).get("decision_ms") == day_ms
+            or (r["reason"] == "stop" and day_ms - DAY_MS < r["exchange_time_ms"] <= day_ms)
+        )
+        and r["exec_id"] in journal.state.get("capital", {}).get("fills", {})
     }
     simulated_fills = simulated[-1]["fills"] if simulated else []
     differences = []

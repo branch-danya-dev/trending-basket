@@ -94,6 +94,7 @@ class Journal:
             "equity",
             "events",
             "shadow",
+            "funding",
         }:
             raise ValueError("unknown journal")
         row = dict(time_ms=self.clock.now_ms(), **values)

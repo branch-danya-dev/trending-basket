@@ -36,6 +36,7 @@ def test_late_cycle_once_dry_run_does_not_consume_state_and_shadow_is_recorded(t
     inputs = market(executor)
     day = START + 400 * DAY
     clock.set(day + 5 * 3600000)
+    journal.state["capital"]["funding_checked_ms"] = clock.now_ms()
     api.last_price = str(inputs.data.close_price(SYMBOL, day))
     journal.state["last_decision_ms"] = day - 3 * DAY
     journal.save()
@@ -140,6 +141,7 @@ def test_interrupted_same_day_uses_checkpoint_not_second_signal(tmp_path, monkey
     inputs = market(executor)
     day = START + 400 * DAY
     clock.set(day + 300000)
+    journal.state["capital"]["funding_checked_ms"] = clock.now_ms()
     api.last_price = str(inputs.data.close_price(SYMBOL, day))
     if partial:
         api.fill_fraction = Decimal("0.5")
@@ -170,6 +172,7 @@ def test_cli_dry_run_is_read_only_and_does_not_create_checkpoint(tmp_path, monke
     inputs = market(executor)
     day = START + 400 * DAY
     clock.set(day + 300000)
+    journal.state["capital"]["funding_checked_ms"] = clock.now_ms()
     api.last_price = str(inputs.data.close_price(SYMBOL, day))
     monkeypatch.setattr("trending_basket.execution.cli.demo_settings", lambda: settings)
     monkeypatch.setattr("trending_basket.execution.cli.SystemClock", lambda: clock)

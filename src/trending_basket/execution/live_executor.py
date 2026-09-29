@@ -8,8 +8,11 @@ from dataclasses import asdict
 from decimal import Decimal
 from typing import Any, NoReturn
 
+from trending_basket.execution import capital
 from trending_basket.execution.bybit_private import BybitPrivateClient, PrivateAPIError
 from trending_basket.execution.journal import Halted, Journal, Notifier
+from trending_basket.execution.margin import cross_margin_stress, liquidation_distance, number
+from trending_basket.execution.messages import reason_ru
 from trending_basket.execution.planning import ExchangeRules, planned_delta, protected_stop
 from trending_basket.portfolio.limits import PortfolioLimits, limit_violations
 from trending_basket.strategies.base import PositionExit, TargetPosition
@@ -51,7 +54,7 @@ class LiveExecutor:
                         self.journal.append(
                             "events", kind="entry_cancel_failed", order_link_id=link
                         )
-        self.notifier.send(f"DEMO STOP: {reason}. Exchange stops preserved.")
+        self.notifier.send(f"Остановка Demo: {reason_ru(reason)}. Биржевые стопы сохранены.")
         raise Halted(reason)
 
     def _record_fills(self, fills: list[dict[str, Any]]) -> None:
@@ -90,8 +93,13 @@ class LiveExecutor:
             )
             slip = (float(price) / decision_price - 1) * 10000 * (1 if signed > 0 else -1)
             reference_slip = (float(price) / reference - 1) * 10000 * (1 if signed > 0 else -1)
+            realized = (
+                (price - D(str(position["average_entry_price"]))) * qty if signed < 0 else D(0)
+            )
+            capital.record_fill(self.journal, fill, realized)
             if remaining:
                 if position is None:
+                    state.setdefault("protected_reentries", {}).pop(symbol, None)
                     position = dict(
                         quantity="0",
                         average_entry_price=float(price),
@@ -114,6 +122,24 @@ class LiveExecutor:
                 if order:
                     position["decision_price"] = decision_price
             else:
+                if (
+                    position
+                    and order
+                    and order.get("reason")
+                    in {
+                        "liquidation_distance",
+                        "unprotected_exit",
+                        "account_margin",
+                        "emergency_exit",
+                    }
+                ):
+                    state.setdefault("protected_reentries", {})[symbol] = dict(position)
+                    self.journal.append(
+                        "events",
+                        kind="execution_protective_exit",
+                        symbol=symbol,
+                        reason=order["reason"],
+                    )
                 state["positions"].pop(symbol, None)
                 if stop_fill:
                     event = PositionExit(symbol, int(fill["execTime"]), "stop")
@@ -140,8 +166,9 @@ class LiveExecutor:
             )
             self.journal.save()
             self.notifier.send(
-                f"DEMO fill {symbol} {fill['side']} qty={qty} price={price}; "
-                f"fee={fill['execFee']}; slippage={slip:.3f} bps"
+                f"Demo: {'покупка' if signed > 0 else 'продажа'} {symbol}, "
+                f"количество {qty}, цена {price}; комиссия {fill['execFee']} USDT. "
+                f"Отклонение от цены решения: {slip:.3f} б.п."
             )
 
     def reconcile(self) -> dict[str, dict[str, Any]]:
@@ -212,7 +239,8 @@ class LiveExecutor:
         if state["pending_order"]:
             raise Halted("pending order requires recovery before another submit")
         seq = sum(
-            o["decision_ms"] == at_ms and o["symbol"] == symbol for o in state["orders"].values()
+            o["decision_ms"] // 86400000 == at_ms // 86400000 and o["symbol"] == symbol
+            for o in state["orders"].values()
         )
         digest = hashlib.sha256(symbol.encode()).hexdigest()[:10]
         link = f"tb-{at_ms // 86400000}-{digest}-{seq:04d}"
@@ -348,7 +376,7 @@ class LiveExecutor:
             cancel_entries=False,
         )
 
-    def close_unprotected(self, symbol: str, reason: str) -> None:
+    def close_unprotected(self, symbol: str, reason: str, *, halt_after: bool = True) -> None:
         self.journal.append("events", kind="emergency_close", symbol=symbol, reason=reason)
         self._cancel_pending()
         self.closing_unprotected = True
@@ -372,7 +400,8 @@ class LiveExecutor:
                 )
         finally:
             self.closing_unprotected = False
-        self.stop(reason)
+        if halt_after:
+            self.stop(reason)
 
     def confirm_stop(
         self, symbol: str, proposed: float, actual: dict[str, Any] | None = None
@@ -478,6 +507,17 @@ class LiveExecutor:
                 if actual:
                     self.close_unprotected(symbol, "market crossed decision stop")
                 return
+            self.ensure_account_margin(time_ms)
+            wallet = self.client.wallet()
+            required = delta * D(str(open_price)) * (D(1) / 3 + D("0.0011"))
+            if number(wallet.get("totalAvailableBalance")) < required:
+                self.journal.append(
+                    "events",
+                    kind="entry_skipped",
+                    symbol=symbol,
+                    reason="insufficient available account margin",
+                )
+                return
             self.client.set_leverage(symbol)
         # A restart resumes the remaining requested chunks, never the unfilled part of an IOC.
         pending = self.journal.state["pending"]
@@ -489,8 +529,11 @@ class LiveExecutor:
             delta = D(plans[symbol])
             requested = sum(
                 D(o["qty"])
-                for o in self.journal.state["orders"].values()
-                if o["symbol"] == symbol and o["decision_ms"] == time_ms and o["reason"] == reason
+                for link, o in self.journal.state["orders"].items()
+                if o["symbol"] == symbol
+                and o["decision_ms"] == time_ms
+                and o["reason"] == reason
+                and link not in pending.get("previous_orders", [])
             )
         else:
             requested = D(0)
@@ -516,13 +559,29 @@ class LiveExecutor:
                 return
             entry, stop = D(position["avgPrice"]), D(position["stopLoss"])
             liquidation = position.get("liqPrice")
-            if liquidation and entry - D(liquidation) >= D("1.5") * abs(entry - stop):
+            try:
+                distance = liquidation_distance(position, self.rules[symbol])
+            except ValueError:
+                distance = None
+            if distance is not None and distance >= D("1.5") * abs(entry - stop):
+                self.ensure_account_margin(at_ms)
+                self.journal.append(
+                    "events",
+                    kind="liquidation_verified",
+                    symbol=symbol,
+                    source="price" if liquidation else "instrument_bound",
+                    entry_price=str(entry),
+                    min_price=str(self.rules[symbol].min_price),
+                    max_price=str(self.rules[symbol].max_price),
+                    distance=str(distance),
+                    required=str(D("1.5") * abs(entry - stop)),
+                )
                 return
             quantity = D(position["size"])
             # No invented liquidation price when Bybit returns an empty field.
             reduce = (
                 quantity
-                if not liquidation
+                if distance is None
                 else max(self.rules[symbol].quantity.minimum_quantity(reference), quantity / 2)
             )
             step = self.rules[symbol].quantity.qty_step
@@ -532,7 +591,7 @@ class LiveExecutor:
             self._submit(
                 symbol, -reduce, reference, at_ms, TargetPosition(0), "liquidation_distance"
             )
-            self.notifier.send(f"DEMO {symbol}: reduced {reduce} for liquidation distance")
+            self.notifier.send(f"Demo: {symbol} сокращена на {reduce} для защиты от ликвидации.")
             self.journal.append(
                 "events",
                 kind="liquidation_reduction",
@@ -542,13 +601,28 @@ class LiveExecutor:
             )
         self.stop("cannot establish liquidation distance")
 
+    def ensure_account_margin(self, at_ms: int) -> dict[str, float]:
+        if self.client.account().get("marginMode") != "REGULAR_MARGIN":
+            return {}
+        actual = self.actual()
+        try:
+            result = cross_margin_stress(self.client.wallet(), actual)
+        except ValueError as exc:
+            if self.client.read_only:
+                raise
+            for symbol in actual:
+                self.close_unprotected(symbol, str(exc), halt_after=False)
+            self.stop(str(exc))
+        self.journal.append("events", kind="account_margin_verified", decision_ms=at_ms, **result)
+        return result
+
     def enforce_limits(
         self, marks: dict[str, float], time_ms: int, limits: PortfolioLimits
     ) -> None:
         # Use current exchange equity/marks AFTER fills and fees; repair only toward less risk.
         for _ in range(100):
             actual = self.actual()
-            equity = float(self.client.wallet()["totalEquity"])
+            equity = capital.snapshot(self.journal, actual)["equity_usd"]
             notionals = {s: float(p["size"]) * float(p["markPrice"]) for s, p in actual.items()}
             exceeded = limit_violations(notionals, equity, limits)
             if not exceeded:

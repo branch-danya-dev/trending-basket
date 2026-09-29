@@ -16,6 +16,8 @@ class ExchangeRules:
     quantity: InstrumentRules
     tick_size: Decimal
     max_market_qty: Decimal
+    min_price: Decimal | None = None
+    max_price: Decimal | None = None
 
     @classmethod
     def from_api(cls, row: dict[str, Any]) -> ExchangeRules:
@@ -35,6 +37,8 @@ class ExchangeRules:
             ),
             D(row["priceFilter"]["tickSize"]),
             D(lot["maxMktOrderQty"]),
+            D(row["priceFilter"]["minPrice"]) if row["priceFilter"].get("minPrice") else None,
+            D(row["priceFilter"]["maxPrice"]) if row["priceFilter"].get("maxPrice") else None,
         )
 
 

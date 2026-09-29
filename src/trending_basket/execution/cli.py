@@ -22,6 +22,7 @@ from trending_basket.execution.cycle import (
 )
 from trending_basket.execution.journal import Halted, Journal, Notifier, PreviewJournal
 from trending_basket.execution.live_executor import LiveExecutor
+from trending_basket.execution.messages import reason_ru
 from trending_basket.execution.planning import ExchangeRules
 
 run_app = typer.Typer(invoke_without_command=True, help="Execute the fixed Demo candidate.")
@@ -38,6 +39,8 @@ def safe_error(exc: Exception) -> str:
 
 def demo_settings() -> Settings:
     settings = load_settings()
+    if settings.allocated_capital_usd is None:
+        raise ValueError("TB_ALLOCATED_CAPITAL_USD is required")
     if settings.mode != "demo":
         raise ValueError("TB_MODE=demo is required")
     return settings
@@ -110,7 +113,9 @@ def run(
                             inputs = update_data(
                                 settings,
                                 decision_day(client.now_ms()),
-                                set(journal.state["positions"]),
+                                set(journal.state["positions"])
+                                | set(journal.state.get("shadow_book", {}).get("positions", {}))
+                                | set(journal.state.get("protected_reentries", {})),
                                 client,
                             )
                             result = run_cycle(
@@ -125,13 +130,15 @@ def run(
                             break
                         time.sleep(10)
                     except PrivateAPIError as exc:
-                        notifier.send(f"DEMO API error: code={exc.code}")
+                        notifier.send(f"Demo: ошибка API Bybit, код {exc.code}.")
                         if exc.code == 10002:
                             journal.halt(
                                 "exchange time is not synchronized; exchange stops preserved"
                             )
                         if journal.state["halt"]:
-                            notifier.send(f"DEMO STOP: {journal.state['halt']['reason']}")
+                            notifier.send(
+                                f"Остановка Demo: {reason_ru(journal.state['halt']['reason'])}."
+                            )
                         if journal.state["halt"] or once:
                             raise
                         time.sleep(2)
@@ -142,7 +149,10 @@ def run(
                     except Exception as exc:
                         if not dry_run:
                             journal.halt(f"Demo runtime error: {safe_error(exc)}")
-                            notifier.send(f"DEMO STOP: {safe_error(exc)}; inspect before resume")
+                            notifier.send(
+                                f"Остановка Demo: {reason_ru(safe_error(exc))}. "
+                                "Проверьте журнал перед возобновлением."
+                            )
                         raise
             finally:
                 client.close()
@@ -158,7 +168,7 @@ def resume_checkpoint(settings: Settings, executor: LiveExecutor) -> None:
     if not journal.state["halt"]:
         raise ValueError("Demo is not halted")
     # No order is resent by resume. Resolve an old intent read-only or cancel a known entry.
-    check_account(executor.client, executor)
+    account = check_account(executor.client, executor)
     if journal.state["pending_order"]:
         pending_order = journal.state["pending_order"]
         params = pending_order["params"]
@@ -181,12 +191,14 @@ def resume_checkpoint(settings: Settings, executor: LiveExecutor) -> None:
         )
         journal.state["pending"] = None
     _, threshold, _ = risk_config(settings.demo_risk_file)
-    drawdown_guard(journal, float(executor.client.wallet()["totalEquity"]), threshold)
+    drawdown_guard(journal, account["equity_usd"], threshold)
     previous = journal.state["halt"]
     journal.state["halt"], journal.state["api_errors"] = None, 0
     journal.save()
     journal.append("events", kind="resumed", previous=previous)
-    executor.notifier.send("DEMO resumed after console confirmation and reconciliation")
+    executor.notifier.send(
+        "Demo возобновлён после подтверждения в консоли и успешной сверки с биржей."
+    )
 
 
 @run_app.command("resume")
@@ -238,7 +250,7 @@ def check() -> None:
                     for s in inputs.universe.universe_at(decision_day(client.now_ms()))
                 }
                 telegram = notifier.send(
-                    "trending-basket DEMO preflight: test notification, no orders submitted"
+                    "Demo: проверка уведомлений пройдена; заявки не отправлялись."
                 )
                 if not telegram:
                     raise ValueError("Telegram preflight failed")

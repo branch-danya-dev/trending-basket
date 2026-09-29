@@ -27,7 +27,7 @@ INSTRUMENT = {
         "minNotionalValue": "5",
         "maxMktOrderQty": "100",
     },
-    "priceFilter": {"tickSize": "0.1"},
+    "priceFilter": {"tickSize": "0.1", "minPrice": "0.1", "maxPrice": "1000000"},
 }
 
 
@@ -40,6 +40,8 @@ class DemoAPI:
         self.stop_works, self.stop_error = True, 0
         self.timeout_after_fill = False
         self.fill_fraction = D(1)
+        self.transactions = []
+        self.wallet_override = {}
         self.foreign = False
         self.time_delay_ms = 0
         self.permissions = {
@@ -103,7 +105,18 @@ class DemoAPI:
         if path == "/v5/account/info":
             return self.response({"marginMode": "REGULAR_MARGIN"})
         if path == "/v5/account/wallet-balance":
-            return self.response({"list": [{"accountType": "UNIFIED", "totalEquity": self.equity}]})
+            wallet = dict(
+                accountType="UNIFIED",
+                totalEquity=self.equity,
+                totalMarginBalance=self.equity,
+                totalAvailableBalance=self.equity,
+                totalInitialMargin="0",
+                totalMaintenanceMargin="5",
+                accountMMRate=str(D(5) / D(self.equity)),
+            )
+            return self.response({"list": [wallet | self.wallet_override]})
+        if path == "/v5/account/transaction-log":
+            return self.response({"list": self.transactions, "nextPageCursor": ""})
         if path == "/v5/user/query-api":
             return self.response(self.permissions)
         foreign_market = params.get("category") != "linear" or params.get("settleCoin") == "USDC"
@@ -113,6 +126,11 @@ class DemoAPI:
                 if foreign_market
                 else list(self.positions.values())
             )
+            for p in positions:
+                if "markPrice" in p:
+                    p.setdefault(
+                        "unrealisedPnl", str((D(p["markPrice"]) - D(p["avgPrice"])) * D(p["size"]))
+                    )
             return self.response({"list": positions, "nextPageCursor": ""})
         if path in {"/v5/order/realtime", "/v5/order/history"}:
             if foreign_market:
@@ -213,12 +231,16 @@ def setup_demo(tmp_path):
     settings = Settings(
         _env_file=None,
         mode="demo",
+        allocated_capital_usd=1000,
         bybit_api_key="fixture-key",
         bybit_api_secret="fixture-secret",
         data_dir=tmp_path,
     )
     api = DemoAPI(clock)
     journal = Journal(tmp_path / "live" / "demo", clock)
+    journal.state["capital"] = dict(
+        allocated_usd="1000", start_ms=START - 1000, fills={}, funding={}
+    )
     client = BybitPrivateClient(
         settings,
         clock,

@@ -160,6 +160,10 @@ def test_gap_beyond_decision_stop_never_enters(tmp_path):
 def test_liquidation_distance_reduces_until_safe_or_flat(tmp_path, liq):
     _, _, api, journal, _, executor = setup_demo(tmp_path)
     api.liquidation = liq
+    if not liq:
+        executor.rules[SYMBOL] = ExchangeRules.from_api(
+            INSTRUMENT | {"priceFilter": {"tickSize": "0.1"}}
+        )
     own_position(journal, api)
     executor.ensure_liquidation_distance(SYMBOL, 100, START)
     assert not api.positions
@@ -170,7 +174,8 @@ def test_liquidation_distance_reduces_until_safe_or_flat(tmp_path, liq):
 def test_actual_equity_loss_minimum_orders_still_enforce_limits(tmp_path):
     _, _, api, journal, _, executor = setup_demo(tmp_path)
     own_position(journal, api, "2")
-    api.equity = "390"  # 200/390 > 0.5, even though before loss 200/400 == 0.5.
+    api.equity = "1000000"  # Wallet collateral cannot mask loss in allocated capital.
+    journal.state["capital"]["allocated_usd"] = "390"
     executor.rules[SYMBOL] = ExchangeRules.from_api(
         copy.deepcopy(INSTRUMENT)
         | {"lotSizeFilter": INSTRUMENT["lotSizeFilter"] | {"minOrderQty": "0.5"}}

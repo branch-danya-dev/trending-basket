@@ -58,6 +58,7 @@ class BybitPrivateClient:
         self.offset_ms = 0
         self.synced_at_ms: int | None = None
         self.recv_window_ms = 5000
+        self.allocated_capital_usd = settings.allocated_capital_usd
 
     def close(self) -> None:
         self.http.close()
@@ -189,6 +190,18 @@ class BybitPrivateClient:
 
     def executions(self, **filters: Any) -> list[dict[str, Any]]:
         return self.pages("/v5/execution/list", category="linear", limit=100, **filters)
+
+    def transactions(self, start_ms: int, end_ms: int) -> list[dict[str, Any]]:
+        return self.pages(
+            "/v5/account/transaction-log",
+            accountType="UNIFIED",
+            category="linear",
+            currency="USDT",
+            type="SETTLEMENT",
+            startTime=start_ms,
+            endTime=end_ms,
+            limit=50,
+        )
 
     def find_order(self, link_id: str, symbol: str) -> dict[str, Any] | None:
         for path in ("/v5/order/realtime", "/v5/order/history"):

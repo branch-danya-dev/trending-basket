@@ -7,7 +7,7 @@ import os
 from pathlib import Path
 from typing import Literal
 
-from pydantic import SecretStr
+from pydantic import Field, SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 _ENV_PREFIX = "TB_"
@@ -29,6 +29,7 @@ class Settings(BaseSettings):
     telegram_bot_token: SecretStr | None = None
     telegram_chat_id: SecretStr | None = None
     demo_risk_file: Path = Path("docs/reports/T006-risk-level.json")
+    allocated_capital_usd: float | None = Field(default=None, gt=0, allow_inf_nan=False)
     rest_timeout_s: float = 10.0
     rest_min_interval_s: float = 0.2
     rest_max_retries: int = 6
@@ -97,6 +98,7 @@ def format_settings(settings: Settings) -> str:
         f"telegram_bot_token={mask(settings.telegram_bot_token)}",
         f"telegram_chat_id={mask(settings.telegram_chat_id)}",
         f"demo_risk_file={settings.demo_risk_file}",
+        f"allocated_capital_usd={settings.allocated_capital_usd}",
         f"rest_timeout_s={settings.rest_timeout_s}",
         f"rest_min_interval_s={settings.rest_min_interval_s}",
         f"rest_max_retries={settings.rest_max_retries}",
