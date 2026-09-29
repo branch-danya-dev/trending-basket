@@ -39,6 +39,7 @@ class Ledger:
     def __init__(self, directory: Path) -> None:
         self.path = directory / "journal.jsonl"
         self.records: list[dict[str, Any]] = []
+        self.checkpoint_state: dict[str, Any] | None = None
 
     def verify(self, now_ms: int, *, repair: bool = False) -> str | None:
         self.records = []
@@ -94,17 +95,47 @@ class Ledger:
 
     def restore(self, state: dict[str, Any]) -> dict[str, Any]:
         anchor = state.get("journal_seq", 0)
-        if anchor:
-            if anchor > len(self.records):
-                raise LedgerError("snapshot is ahead of journal")
-            row = self.records[anchor - 1]
-            clean = {k: v for k, v in state.items() if k not in {"journal_seq", "journal_hash"}}
-            if row.get("state") != clean or state.get("journal_hash") != row["hash"]:
-                raise LedgerError("snapshot does not match its journal checkpoint")
-        snapshots = [r for r in self.records if r["channel"] == "checkpoints"]
-        if snapshots:
-            last = snapshots[-1]
-            return dict(last["state"], journal_seq=last["seq"], journal_hash=last["hash"])
-        if anchor:
-            raise LedgerError("missing journal checkpoint")
-        return state
+        reconstructed: dict[str, Any] = {}
+        clean = {k: v for k, v in state.items() if k not in {"journal_seq", "journal_hash"}}
+        matched = not anchor
+        last = None
+        for row in self.records:
+            if row["channel"] != "checkpoints":
+                continue
+            if "state" in row:
+                reconstructed = copy.deepcopy(row["state"])
+            else:
+                reconstructed.update(copy.deepcopy(row["changes"]))
+                for key in row["removed"]:
+                    reconstructed.pop(key, None)
+            if row["seq"] == anchor:
+                if reconstructed != clean or state.get("journal_hash") != row["hash"]:
+                    raise LedgerError("snapshot does not match its journal checkpoint")
+                matched = True
+            last = row
+        if not matched:
+            raise LedgerError("snapshot checkpoint missing from journal")
+        self.checkpoint_state = copy.deepcopy(reconstructed) if last else None
+        return (
+            dict(reconstructed, journal_seq=last["seq"], journal_hash=last["hash"])
+            if last
+            else state
+        )
+
+    def checkpoint(self, state: dict[str, Any], now_ms: int) -> dict[str, Any]:
+        # Full state.json remains atomic. Store only changed keys in the write-ahead log
+        # to avoid retaining gigabytes of identical strategy state over fourteen days.
+        previous = self.checkpoint_state
+        values = (
+            {"state": state}
+            if previous is None
+            else {
+                "changes": {
+                    k: v for k, v in state.items() if k not in previous or previous[k] != v
+                },
+                "removed": [k for k in previous if k not in state],
+            }
+        )
+        row = self.append("checkpoints", now_ms, values)
+        self.checkpoint_state = copy.deepcopy(state)
+        return row

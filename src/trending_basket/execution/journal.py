@@ -86,9 +86,7 @@ class Journal:
             clean = {
                 k: v for k, v in self.state.items() if k not in {"journal_seq", "journal_hash"}
             }
-            row = self.ledger.append(
-                "checkpoints", self.clock.now_ms(), {"state": copy.deepcopy(clean)}
-            )
+            row = self.ledger.checkpoint(clean, self.clock.now_ms())
             self.state.update(journal_seq=row["seq"], journal_hash=row["hash"])
             atomic_json(self.path, self.state)
             return

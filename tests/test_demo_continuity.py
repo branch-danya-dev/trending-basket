@@ -91,6 +91,25 @@ def test_crash_after_wal_before_replace_restores_committed_state(tmp_path, monke
         assert reopened.state["peak_equity_usd"] == 1001
 
 
+def test_repeated_checkpoints_store_deltas_and_restore_deleted_keys(tmp_path):
+    _, clock, _, journal, _, _ = managed(tmp_path)
+    journal.state["large_unchanged"] = "x" * 100000
+    journal.state["temporary_value"] = "remove-me"
+    journal.save()
+    before = journal.ledger.path.stat().st_size
+    for i in range(100):
+        journal.state["last_poll_ms"] = START + i
+        journal.save()
+    assert journal.ledger.path.stat().st_size - before < 50000
+    journal.state.pop("temporary_value")
+    journal.save()
+    reopened = Journal(journal.directory, clock)
+    with reopened.locked():
+        assert reopened.state["large_unchanged"] == "x" * 100000
+        assert "temporary_value" not in reopened.state
+        assert reopened.state["last_poll_ms"] == START + 99
+
+
 def test_active_identity_config_account_and_code_guards(tmp_path, monkeypatch):
     settings, clock, _, journal, client, _ = managed(tmp_path)
     assert active_directory(settings) == journal.directory
