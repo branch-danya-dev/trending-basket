@@ -87,8 +87,12 @@ def run(
         clock = SystemClock()
         journal = Journal(settings.data_dir / "live" / "demo", clock)
         with journal.locked():
+            if dry_run:
+                journal = PreviewJournal(journal)
             notifier = Notifier(settings, journal)
+            notifier.silent = dry_run
             client = BybitPrivateClient(settings, clock, on_error=journal.api_error)
+            client.read_only = dry_run
             try:
                 while True:
                     try:
@@ -132,7 +136,7 @@ def run(
                             raise
                         time.sleep(2)
                     except Halted as exc:
-                        if not journal.state["halt"]:
+                        if not dry_run and not journal.state["halt"]:
                             executor_for(client, journal, notifier).stop(str(exc))
                         raise
                     except Exception as exc:

@@ -2,6 +2,7 @@
 
 import copy
 import json
+import re
 from dataclasses import asdict, replace
 from datetime import UTC, datetime
 from decimal import Decimal
@@ -163,7 +164,8 @@ def test_interrupted_same_day_uses_checkpoint_not_second_signal(tmp_path, monkey
     assert journal.state["last_decision_ms"] == day
 
 
-def test_cli_dry_run_is_read_only_and_does_not_create_checkpoint(tmp_path, monkeypatch):
+@pytest.mark.parametrize("foreign", [False, True])
+def test_cli_dry_run_is_read_only_and_does_not_create_checkpoint(tmp_path, monkeypatch, foreign):
     settings, clock, api, journal, client, executor = setup_demo(tmp_path)
     inputs = market(executor)
     day = START + 400 * DAY
@@ -173,9 +175,13 @@ def test_cli_dry_run_is_read_only_and_does_not_create_checkpoint(tmp_path, monke
     monkeypatch.setattr("trending_basket.execution.cli.SystemClock", lambda: clock)
     monkeypatch.setattr("trending_basket.execution.cli.BybitPrivateClient", lambda *a, **kw: client)
     monkeypatch.setattr("trending_basket.execution.cli.update_data", lambda *a: inputs)
+    api.foreign = foreign
     result = CliRunner().invoke(app, ["run", "--mode", "demo", "--once", "--dry-run"])
-    assert result.exit_code == 0, result.output
-    assert '"status": "dry_run"' in result.output
+    if foreign:
+        assert result.exit_code != 0
+    else:
+        assert result.exit_code == 0, result.output
+        assert '"status": "dry_run"' in result.output
     assert not mutations(api)
     assert not journal.path.exists()
 
@@ -187,4 +193,4 @@ def test_cli_rejects_live_before_data_or_private_api(tmp_path, monkeypatch):
     )
     result = CliRunner().invoke(app, ["run", "--mode", "live", "--once"])
     assert result.exit_code != 0
-    assert "--mode demo" in result.output
+    assert "--mode demo" in re.sub(r"\x1b\[[0-9;]*m", "", result.output)

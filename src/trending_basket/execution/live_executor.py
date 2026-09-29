@@ -400,7 +400,6 @@ class LiveExecutor:
                     self.close_unprotected(
                         symbol, "last price crossed protective stop before confirmation"
                     )
-                self.client.set_stop(symbol, str(stop))
                 current = self.actual().get(symbol)
                 if current is None:
                     return
@@ -423,6 +422,7 @@ class LiveExecutor:
                         )
                         self.journal.operation_succeeded()
                         return
+                self.client.set_stop(symbol, str(stop))
             except PrivateAPIError as exc:
                 if exc.code == 10002:
                     self.stop(

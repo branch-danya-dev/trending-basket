@@ -461,3 +461,13 @@ def test_mismatch_delta_uses_exchange_quantity_then_refuses_to_submit(tmp_path):
     assert event["held_quantity"] == "2"
     assert D(event["requested_delta"]) == D("-.1")
     assert not mutations(api, "/v5/order/create")
+
+
+def test_existing_full_stop_is_confirmed_without_needless_mutation(tmp_path):
+    _, _, api, journal, _, executor = setup_demo(tmp_path)
+    own_position(journal, api)
+    api.stop_error = 10016  # An already valid exchange stop does not require a successful rewrite.
+    executor.confirm_stop(SYMBOL, 90)
+    assert not mutations(api)
+    assert journal.state["positions"][SYMBOL]["unprotected_since_ms"] is None
+    assert not journal.state["halt"]
