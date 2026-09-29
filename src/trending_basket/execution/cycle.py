@@ -156,6 +156,11 @@ def _update_data(
         date.replace(day=1, hour=0, minute=0, second=0, microsecond=0).timestamp() * 1000
     )
     if max(universe.metadata["rebalance_times_ms"]) < month_ms:
+        latest = datetime.fromtimestamp(max(universe.metadata["rebalance_times_ms"]) / 1000, UTC)
+        missing_month = latest.replace(
+            year=latest.year + (latest.month == 12), month=latest.month % 12 + 1
+        )
+        month_ms = int(missing_month.timestamp() * 1000)
         for symbol in candidate_pool(settings.data_dir).symbols:
             sync_klines(
                 data_dir=settings.data_dir,
@@ -405,13 +410,37 @@ def run_cycle(
     if state["last_decision_ms"] == day:
         return dict(status="already_completed", decision_ms=day)
     if state["pending"] and state["pending"]["day_ms"] != day:
-        raise Halted("unfinished previous-day decision; reconcile and resume explicitly")
+        if state["pending_order"]:
+            raise Halted("pending order must be reconciled before skipping stale decision")
+        journal.append(
+            "decisions",
+            decision_ms=state["pending"]["day_ms"],
+            status="missed_remainder",
+            reason="new daily decision superseded stale target",
+        )
+        state["pending"] = None
+        journal.save()
     if state["pending"]:
         pending = state["pending"]
         targets = {s: TargetPosition(**t) for s, t in pending["targets"].items()}
         strategy_states, marks = pending["strategy_states"], pending["marks"]
     else:
-        targets, strategy_states, marks = decide(config, inputs, day, account["equity_usd"], state)
+        from trending_basket.execution.replay import historical_book, strategy_step
+
+        previous = state["last_decision_ms"]
+        if journal.ledger is not None and previous is not None:
+            for missed in range(previous + DAY_MS, day, DAY_MS):
+                context = copy.deepcopy(state)
+                context["positions"] = historical_book(journal, missed)[0]
+                context["recent_exits"] = [
+                    e for e in state.get("recent_exits", []) if e["time_ms"] <= missed
+                ]
+                strategy_step(
+                    journal, config, inputs, missed, account["equity_usd"], context=context
+                )
+        targets, strategy_states, marks = strategy_step(
+            journal, config, inputs, day, account["equity_usd"]
+        )
         shadow_fills, shadow_after = persistent_shadow(config, inputs, state, rules, day)
         pending = dict(
             day_ms=day,
@@ -461,6 +490,7 @@ def run_cycle(
         status="dry_run" if dry_run else "completed",
         decision_ms=day,
         late=clock.now_ms() > day + DELAY_MS + 1000,
+        lateness_ms=max(0, clock.now_ms() - day - DELAY_MS),
         equity_usd=account["equity_usd"],
         plan=plan,
     )
@@ -510,6 +540,8 @@ def run_cycle(
             state.setdefault("protected_reentries", {}).pop(symbol, None)
     state["recent_exits"] = state.get("recent_exits", [])[pending["consumed_exits"] :]
     state["last_decision_ms"], state["pending"] = day, None
+    state["snapshot_time_ms"] = clock.now_ms()
+    state.setdefault("t006b_started_ms", clock.now_ms())
     state["api_errors"] = 0
     journal.save()
     journal.append("decisions", **preview)
@@ -525,18 +557,14 @@ def run_cycle(
         f"Demo: дневной цикл завершён. Капитал стратегии: ${equity['equity_usd']:.2f}. "
         f"Позиции: {positions_text or 'нет'}. "
         f"Заявок за день: {sum(o['decision_ms'] == day for o in state['orders'].values())}."
+        f" Простой: {state.get('downtime_ms', 0) / 60000:.1f} мин; "
+        f"перезапусков: {state.get('restart_count', 0)}."
     )
     return preview
 
 
 def record_comparison(journal: Journal, day_ms: int) -> None:
-    def rows(channel: str) -> list[dict[str, Any]]:
-        path = journal.directory / f"{channel}.jsonl"
-        return (
-            [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines()]
-            if path.exists()
-            else []
-        )
+    rows = journal.read_rows
 
     simulated = [r for r in rows("shadow") if r.get("decision_ms") == day_ms and "fills" in r]
     actual = {

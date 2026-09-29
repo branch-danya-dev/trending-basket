@@ -3,15 +3,18 @@
 from __future__ import annotations
 
 import json
-import time
+from decimal import Decimal
 from typing import Any
 
+import httpx
 import typer
 from pydantic import ValidationError
 
 from trending_basket.clock import SystemClock
 from trending_basket.config import Settings, load_settings
+from trending_basket.data.bybit_client import BybitAPIError
 from trending_basket.execution.bybit_private import BybitPrivateClient, PrivateAPIError
+from trending_basket.execution.continuity import Heartbeat, Retry, recover
 from trending_basket.execution.cycle import (
     check_account,
     decision_day,
@@ -24,6 +27,12 @@ from trending_basket.execution.journal import Halted, Journal, Notifier, Preview
 from trending_basket.execution.live_executor import LiveExecutor
 from trending_basket.execution.messages import reason_ru
 from trending_basket.execution.planning import ExchangeRules
+from trending_basket.execution.replay import reconstruct_equity, replay_strategy, verify_capital
+from trending_basket.execution.runs import active_directory
+from trending_basket.execution.runs import close as close_run
+from trending_basket.execution.runs import create as create_run
+from trending_basket.execution.runs import root as run_root
+from trending_basket.execution.runs import validate as validate_run
 
 run_app = typer.Typer(invoke_without_command=True, help="Execute the fixed Demo candidate.")
 demo_app = typer.Typer(help="Read-only exchange preflight for Demo.")
@@ -71,6 +80,67 @@ def supervise(settings: Settings, executor: LiveExecutor) -> dict[str, Any]:
     return account
 
 
+def held_symbols(journal: Journal) -> set[str]:
+    return (
+        set(journal.state["positions"])
+        | set(journal.state.get("strategy_states", {}))
+        | set(journal.state.get("shadow_book", {}).get("positions", {}))
+        | set(journal.state.get("protected_reentries", {}))
+    )
+
+
+def transient(exc: Exception) -> bool:
+    return (
+        (isinstance(exc, PrivateAPIError) and exc.code in {-1, 10000, 10006, 10016})
+        or (isinstance(exc, BybitAPIError) and exc.ret_code in {-1, 10006})
+        or isinstance(exc, httpx.TransportError)
+    )
+
+
+def verify_current(
+    settings: Settings,
+    client: BybitPrivateClient,
+    journal: Journal,
+    notifier: Notifier,
+    *,
+    accept_gap: bool = False,
+) -> dict[str, Any]:
+    executor = executor_for(client, journal, notifier)
+    counts = recover(executor, accept_gap=accept_gap)
+    inputs = update_data(settings, decision_day(client.now_ms()), held_symbols(journal), client)
+    config, _, _ = risk_config(settings.demo_risk_file)
+    replay_strategy(journal, config, inputs)
+    values = verify_capital(journal, executor.actual())
+    reconstruct_equity(journal, inputs, client.now_ms())
+    # Validation observes protection; it never places orders or repairs stops silently.
+    for symbol, position in executor.actual().items():
+        price = Decimal(str(journal.state["positions"][symbol]["stop_price"]))
+        if not any(executor._valid_stop(o, position, price) for o in client.open_orders()):
+            raise Halted("exchange stop not confirmed during verify")
+    journal.append("events", kind="run_verified", counts=counts, **values)
+    journal.save()
+    return dict(
+        status="consistent",
+        run_id=journal.state["run_id"],
+        recovered=counts,
+        allocated_capital=values,
+        accepted_gap=journal.state.get("accepted_gap", False),
+        interruptions=[
+            r
+            for r in journal.read_rows("events")
+            if r.get("kind")
+            in {
+                "downtime",
+                "network_outage",
+                "network_recovered",
+                "recovery_completed",
+                "unrecoverable_gap",
+                "gap_accepted",
+            }
+        ],
+    )
+
+
 @run_app.callback()
 def run(
     ctx: typer.Context,
@@ -78,6 +148,7 @@ def run(
     once: bool = False,
     loop: bool = False,
     dry_run: bool = False,
+    allow_code_change: bool = False,
 ) -> None:
     if ctx.invoked_subcommand:
         return
@@ -88,34 +159,72 @@ def run(
     try:
         settings = demo_settings()
         clock = SystemClock()
-        journal = Journal(settings.data_dir / "live" / "demo", clock)
+        journal = Journal(active_directory(settings), clock)
         with journal.locked():
             if dry_run:
                 journal = PreviewJournal(journal)
             notifier = Notifier(settings, journal)
             notifier.silent = dry_run
             client = BybitPrivateClient(settings, clock, on_error=journal.api_error)
-            client.read_only = dry_run
+            heartbeat = Heartbeat(journal, clock.monotonic_ms()) if not dry_run else None
+            gap = heartbeat.startup() if heartbeat else 0
+            retry = Retry()
+            retry.started_ms = journal.state.get("network_outage_start_ms")
+            if heartbeat:
+                heartbeat.start_writer(clock.monotonic_ms)
+            initialized = False
             try:
                 while True:
                     try:
-                        journal.require_running()
+                        if heartbeat and heartbeat.tick(clock.monotonic_ms()):
+                            initialized = False
+                        client.read_only = True
                         client.sync_time()
+                        if not initialized:
+                            validate_run(
+                                journal, settings, client, allow_code_change=allow_code_change
+                            )
+                            verified = verify_current(settings, client, journal, notifier)
+                            if gap > 120000 or retry.started_ms is not None:
+                                counts = verified["recovered"]
+                                downtime = max(
+                                    gap, clock.now_ms() - (retry.started_ms or clock.now_ms())
+                                )
+                                late = journal.state["last_decision_ms"] != decision_day(
+                                    client.now_ms()
+                                )
+                                notifier.send(
+                                    "Demo: восстановление после простоя "
+                                    f"{downtime / 60000:.1f} мин. "
+                                    f"Исполнений: {counts['executions']}. "
+                                    f"Стопов: {counts['stops']}. "
+                                    f"Транзакций: {counts['transactions']}. "
+                                    "Сверка пройдена. "
+                                    f"Запоздалое решение: {'да' if late else 'нет'}. "
+                                    "Прогон активен."
+                                )
+                            initialized, gap = True, 0
+                        journal.require_running()
+                        client.read_only = dry_run
                         executor = executor_for(client, journal, notifier)
                         if not dry_run:
+                            if (
+                                client.now_ms() - journal.state.get("recovery_through_ms", 0)
+                                >= 60000
+                            ):
+                                client.read_only = True
+                                recover(executor)
+                                client.read_only = False
                             if journal.state["pending_order"]:
                                 executor.recover_order()
                             supervise(settings, executor)
                         if dry_run or journal.state["last_decision_ms"] != decision_day(
                             client.now_ms()
                         ):
-                            typer.echo("Updating Demo market data...")
                             inputs = update_data(
                                 settings,
                                 decision_day(client.now_ms()),
-                                set(journal.state["positions"])
-                                | set(journal.state.get("shadow_book", {}).get("positions", {}))
-                                | set(journal.state.get("protected_reentries", {})),
+                                held_symbols(journal),
                                 client,
                             )
                             result = run_cycle(
@@ -126,40 +235,41 @@ def run(
                             typer.echo(
                                 "Daily decision already completed; positions and stops checked."
                             )
+                        retry.success(journal, clock.now_ms())
                         if once:
                             break
-                        time.sleep(10)
-                    except PrivateAPIError as exc:
-                        notifier.send(f"Demo: ошибка API Bybit, код {exc.code}.")
-                        if exc.code == 10002:
-                            journal.halt(
-                                "exchange time is not synchronized; exchange stops preserved"
-                            )
-                        if journal.state["halt"]:
-                            notifier.send(
-                                f"Остановка Demo: {reason_ru(journal.state['halt']['reason'])}."
-                            )
-                        if journal.state["halt"] or once:
-                            raise
-                        time.sleep(2)
-                    except Halted as exc:
-                        if not dry_run and not journal.state["halt"]:
-                            executor_for(client, journal, notifier).stop(str(exc))
-                        raise
+                        client.sleep(10)
                     except Exception as exc:
-                        if not dry_run:
-                            journal.halt(f"Demo runtime error: {safe_error(exc)}")
+                        if transient(exc) and loop:
+                            initialized = False
+                            delay, notice = retry.failure(journal, clock.now_ms())
+                            if notice:
+                                notifier.send(
+                                    "Demo: сеть недоступна больше часа; повторяем соединение. "
+                                    "Биржевые стопы сохранены."
+                                )
+                            # Heartbeat remains active even during the maximum five-minute backoff.
+                            while delay > 0:
+                                pause = min(30, delay)
+                                client.sleep(pause)
+                                delay -= pause
+                                if heartbeat:
+                                    heartbeat.tick(clock.monotonic_ms())
+                            continue
+                        code_refusal = "require --allow-code-change" in str(exc)
+                        if not dry_run and not transient(exc) and not code_refusal:
+                            journal.halt(safe_error(exc))
                             notifier.send(
                                 f"Остановка Demo: {reason_ru(safe_error(exc))}. "
-                                "Проверьте журнал перед возобновлением."
+                                "Биржевые стопы сохранены."
                             )
                         raise
             finally:
+                if heartbeat:
+                    heartbeat.stop_writer()
                 client.close()
     except Exception as exc:
-        # ValidationError / HTTP exception representations can contain secret input or URLs.
-        safe = safe_error(exc)
-        typer.echo(f"Demo stopped: {safe}", err=True)
+        typer.echo(f"Demo stopped: {safe_error(exc)}", err=True)
         raise typer.Exit(1) from None
 
 
@@ -206,7 +316,7 @@ def resume() -> None:
     try:
         settings = demo_settings()
         clock = SystemClock()
-        journal = Journal(settings.data_dir / "live" / "demo", clock)
+        journal = Journal(active_directory(settings), clock)
         with journal.locked():
             if not journal.state["halt"]:
                 typer.echo("Demo is not halted.")
@@ -218,6 +328,10 @@ def resume() -> None:
             notifier = Notifier(settings, journal)
             client = BybitPrivateClient(settings, clock, on_error=journal.api_error)
             try:
+                client.read_only = True
+                validate_run(journal, settings, client)
+                verify_current(settings, client, journal, notifier)
+                client.read_only = False
                 resume_checkpoint(settings, executor_for(client, journal, notifier))
             finally:
                 client.close()
@@ -229,12 +343,156 @@ def resume() -> None:
         raise typer.Exit(1) from None
 
 
+@run_app.command("start")
+def start(name: str = "demo-001", adopt_legacy: bool = False) -> None:
+    """Create an explicit run; adopting the existing T006a book requires a flag."""
+    from trending_basket.execution import capital
+    from trending_basket.execution.cycle import decide
+    from trending_basket.execution.ledger import atomic_json
+
+    try:
+        settings, clock = demo_settings(), SystemClock()
+        original = Journal(run_root(settings), clock)
+        with original.locked():
+            used = (run_root(settings) / "legacy_adopted.json").exists()
+            has_legacy = bool(original.state["orders"]) and not used
+            if has_legacy and not adopt_legacy:
+                raise Halted("existing T006a book found; use --adopt-legacy to preserve it")
+            if adopt_legacy and (
+                not has_legacy or original.state["pending"] or original.state["pending_order"]
+            ):
+                raise Halted("legacy adoption requires one unreconciled-free existing book")
+            preview = PreviewJournal(
+                original if has_legacy else Journal(run_root(settings) / "preflight", clock)
+            )
+            notifier = Notifier(settings, preview)
+            notifier.silent = True
+            client = BybitPrivateClient(settings, clock, on_error=preview.api_error)
+            client.read_only = True
+            try:
+                check_account(client, executor_for(client, preview, notifier))
+                bootstrap = None
+                if has_legacy:
+                    rows = [
+                        r
+                        for r in original.read_rows("decisions")
+                        if r.get("status") == "completed"
+                        and r["time_ms"] >= preview.state["capital"]["start_ms"]
+                    ]
+                    if len(rows) != 1:
+                        raise Halted(
+                            "legacy adoption requires exactly one allocated-capital decision"
+                        )
+                    inputs = update_data(
+                        settings, decision_day(client.now_ms()), held_symbols(preview), client
+                    )
+                    config, _, _ = risk_config(settings.demo_risk_file)
+                    context: dict[str, Any] = dict(
+                        positions={}, strategy_states={}, recent_exits=[]
+                    )
+                    _, states, _ = decide(
+                        config, inputs, rows[0]["decision_ms"], rows[0]["equity_usd"], context
+                    )
+                    if states != preview.state["strategy_states"]:
+                        raise Halted("legacy strategy differs from independent candle replay")
+                    bootstrap = dict(
+                        day_ms=rows[0]["decision_ms"],
+                        equity_usd=rows[0]["equity_usd"],
+                        context=context,
+                        result=states,
+                    )
+                journal = create_run(
+                    settings, clock, client, name, legacy=preview if has_legacy else None
+                )
+                if has_legacy:
+                    journal.state["recovery_through_ms"] = (
+                        original.state.get("last_poll_ms") or original.state["capital"]["start_ms"]
+                    )
+                capital.initialize(journal, settings.allocated_capital_usd, client.now_ms())
+                if bootstrap:
+                    journal.append("strategy", **bootstrap)
+                    assert journal.ledger is not None
+                    journal.state["strategy_steps"] = [journal.ledger.records[-1]["seq"]]
+                    journal.state["t006b_started_ms"] = rows[0]["time_ms"]
+                    atomic_json(
+                        run_root(settings) / "legacy_adopted.json",
+                        {"run_id": journal.state["run_id"]},
+                    )
+                journal.save()
+                typer.echo(f"Active run: {journal.state['run_id']}; no exchange mutations.")
+            finally:
+                client.close()
+    except Exception as exc:
+        typer.echo("Start refused: " + safe_error(exc), err=True)
+        raise typer.Exit(1) from None
+
+
+@run_app.command("verify")
+def verify(accept_gap: bool = False, allow_code_change: bool = False) -> None:
+    """Verify journal, recovered exchange book and independent strategy replay."""
+    try:
+        settings, clock = demo_settings(), SystemClock()
+        journal = Journal(active_directory(settings), clock)
+        with journal.locked():
+            if accept_gap:
+                typer.confirm(
+                    "Manually reviewed the gap; accept incomplete history and restart T006b count?",
+                    abort=True,
+                )
+            notifier = Notifier(settings, journal)
+            notifier.silent = True
+            client = BybitPrivateClient(settings, clock, on_error=journal.api_error)
+            client.read_only = True
+            try:
+                validate_run(journal, settings, client, allow_code_change=allow_code_change)
+                result = verify_current(settings, client, journal, notifier, accept_gap=accept_gap)
+                if accept_gap and (journal.state.get("halt") or {}).get("reason", "").startswith(
+                    "unrecoverable_gap"
+                ):
+                    journal.state["halt"] = None
+                    journal.save()
+                typer.echo(json.dumps(result, indent=2))
+            finally:
+                client.close()
+    except Exception as exc:
+        typer.echo("Verify failed: " + safe_error(exc), err=True)
+        raise typer.Exit(1) from None
+
+
+@run_app.command("close")
+def close() -> None:
+    """Archive the run only when no exchange exposure or pending intent remains."""
+    try:
+        settings, clock = demo_settings(), SystemClock()
+        journal = Journal(active_directory(settings), clock)
+        with journal.locked():
+            client = BybitPrivateClient(settings, clock, on_error=journal.api_error)
+            client.read_only = True
+            try:
+                notifier = Notifier(settings, journal)
+                notifier.silent = True
+                # A changed config may be closed; no strategy/order uses the new settings.
+                executor_for(client, journal, notifier).reconcile()
+                close_run(journal, settings)
+                typer.echo("Run closed; exchange orders were not changed.")
+            finally:
+                client.close()
+    except Exception as exc:
+        typer.echo("Close refused: " + safe_error(exc), err=True)
+        raise typer.Exit(1) from None
+
+
 @demo_app.command("check")
 def check() -> None:
     try:
         settings = demo_settings()
         clock = SystemClock()
-        journal = Journal(settings.data_dir / "live" / "demo", clock)
+        journal = Journal(
+            active_directory(settings)
+            if (run_root(settings) / "active_run").exists()
+            else run_root(settings),
+            clock,
+        )
         with journal.locked():
             preview = PreviewJournal(journal)
             notifier = Notifier(settings, preview)

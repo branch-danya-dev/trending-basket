@@ -45,6 +45,7 @@ class DemoAPI:
         self.foreign = False
         self.time_delay_ms = 0
         self.permissions = {
+            "userID": 123456,
             "readOnly": 0,
             "ips": ["192.0.2.1"],
             "permissions": {"ContractTrade": ["Order", "Position"]},
@@ -117,6 +118,8 @@ class DemoAPI:
             return self.response({"list": [wallet | self.wallet_override]})
         if path == "/v5/account/transaction-log":
             return self.response({"list": self.transactions, "nextPageCursor": ""})
+        if path == "/v5/position/closed-pnl":
+            return self.response({"list": [], "nextPageCursor": ""})
         if path == "/v5/user/query-api":
             return self.response(self.permissions)
         foreign_market = params.get("category") != "linear" or params.get("settleCoin") == "USDC"
@@ -144,6 +147,8 @@ class DemoAPI:
             elif params.get("orderLinkId"):
                 order = self.orders.get(params["orderLinkId"])
                 rows = [order] if order else []
+            elif path == "/v5/order/history":
+                rows = [*self.stops.values(), *self.orders.values()]
             else:
                 rows = [
                     *self.stops.values(),

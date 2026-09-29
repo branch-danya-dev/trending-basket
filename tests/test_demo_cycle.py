@@ -178,6 +178,11 @@ def test_cli_dry_run_is_read_only_and_does_not_create_checkpoint(tmp_path, monke
     monkeypatch.setattr("trending_basket.execution.cli.SystemClock", lambda: clock)
     monkeypatch.setattr("trending_basket.execution.cli.BybitPrivateClient", lambda *a, **kw: client)
     monkeypatch.setattr("trending_basket.execution.cli.update_data", lambda *a: inputs)
+    monkeypatch.setattr(
+        "trending_basket.execution.cli.active_directory", lambda s: journal.directory
+    )
+    monkeypatch.setattr("trending_basket.execution.cli.validate_run", lambda *a, **kw: None)
+    monkeypatch.setattr("trending_basket.execution.cli.verify_current", lambda *a, **kw: {})
     api.foreign = foreign
     result = CliRunner().invoke(app, ["run", "--mode", "demo", "--once", "--dry-run"])
     if foreign:

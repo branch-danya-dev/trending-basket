@@ -270,6 +270,9 @@ def test_resume_requires_confirmation_and_reconciliation(tmp_path, monkeypatch):
     settings, _, api, journal, _, executor = setup_demo(tmp_path)
     journal.halt("test reason")
     monkeypatch.setattr("trending_basket.execution.cli.demo_settings", lambda: settings)
+    monkeypatch.setattr(
+        "trending_basket.execution.cli.active_directory", lambda s: journal.directory
+    )
     result = CliRunner().invoke(app, ["run", "resume"], input="n\n")
     assert result.exit_code != 0 and "test reason" in result.output
     assert Journal(journal.directory, journal.clock).state["halt"]

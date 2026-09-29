@@ -242,7 +242,7 @@ class LiveExecutor:
             o["decision_ms"] // 86400000 == at_ms // 86400000 and o["symbol"] == symbol
             for o in state["orders"].values()
         )
-        digest = hashlib.sha256(symbol.encode()).hexdigest()[:10]
+        digest = hashlib.sha256((state.get("run_id", "") + symbol).encode()).hexdigest()[:10]
         link = f"tb-{at_ms // 86400000}-{digest}-{seq:04d}"
         params = dict(
             category="linear",
@@ -295,6 +295,12 @@ class LiveExecutor:
         existing = self.client.find_order(link, symbol)
         latest_day = (self.client.now_ms() - 180000) // 86400000 * 86400000
         if existing is None and state["orders"][link]["decision_ms"] < latest_day:
+            if self.journal.ledger is not None:
+                state["orders"][link]["status"] = "AbandonedUnobserved"
+                state["pending_order"] = None
+                self.journal.append("events", kind="stale_intent_abandoned", order_link_id=link)
+                self.journal.save()
+                return
             self.stop(
                 "unobserved previous-day intent; refusing to submit stale decision",
                 cancel_entries=False,

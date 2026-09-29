@@ -67,7 +67,7 @@ class BybitPrivateClient:
         return self.clock.now_ms() + self.offset_ms
 
     def _error(self, path: str, code: int, ambiguous: bool = False) -> PrivateAPIError:
-        if self.on_error:
+        if self.on_error and code not in {-1, 10000, 10006, 10016}:
             self.on_error()
         return PrivateAPIError(path, code, ambiguous=ambiguous)
 
@@ -158,6 +158,32 @@ class BybitPrivateClient:
     def key_permissions(self) -> dict[str, Any]:
         result = self.request("GET", "/v5/user/query-api", {})
         return {key: result.get(key) for key in ("readOnly", "permissions", "ips")}
+
+    def account_fingerprint(self, salt: str) -> str:
+        result = self.request("GET", "/v5/user/query-api", {})
+        uid = str(result.get("userID") or "")
+        if not uid:
+            raise ValueError("account identifier unavailable")
+        return hashlib.sha256(f"{salt}:bybit-demo:{uid}".encode()).hexdigest()
+
+    def history(self, start_ms: int, end_ms: int) -> dict[str, list[dict[str, Any]]]:
+        result: dict[str, list[dict[str, Any]]] = {
+            k: [] for k in ("executions", "orders", "closed_pnl", "transactions")
+        }
+        for start in range(start_ms, end_ms + 1, 7 * 86400000):
+            window = dict(startTime=start, endTime=min(end_ms, start + 7 * 86400000 - 1))
+            for key, path, extra in (
+                ("executions", "/v5/execution/list", {"limit": 100}),
+                ("orders", "/v5/order/history", {"limit": 50}),
+                ("closed_pnl", "/v5/position/closed-pnl", {"limit": 100}),
+                (
+                    "transactions",
+                    "/v5/account/transaction-log",
+                    {"limit": 50, "accountType": "UNIFIED", "currency": "USDT"},
+                ),
+            ):
+                result[key].extend(self.pages(path, category="linear", **window, **extra))
+        return result
 
     def positions(self) -> list[dict[str, Any]]:
         return self.pages("/v5/position/list", category="linear", settleCoin="USDT", limit=200)

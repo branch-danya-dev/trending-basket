@@ -15,6 +15,7 @@ import httpx
 
 from trending_basket.clock import Clock
 from trending_basket.config import Settings
+from trending_basket.execution.ledger import Ledger, LedgerError, atomic_json
 
 
 class Halted(RuntimeError):
@@ -26,6 +27,8 @@ class Journal:
         self.directory, self.clock = directory, clock
         directory.mkdir(parents=True, exist_ok=True)
         self.path = directory / "state.json"
+        self.ledger = Ledger(directory) if (directory / "manifest.json").exists() else None
+        self.recovered = False
         self.state: dict[str, Any] = (
             json.loads(self.path.read_text(encoding="utf-8"))
             if self.path.exists()
@@ -68,6 +71,8 @@ class Journal:
                 # State may have changed between construction and lock acquisition.
                 if self.path.exists():
                     self.state = json.loads(self.path.read_text(encoding="utf-8"))
+                if self.ledger is not None:
+                    self.prepare()
                 yield
             finally:
                 stream.seek(0)
@@ -77,6 +82,16 @@ class Journal:
                     fcntl.flock(stream.fileno(), fcntl.LOCK_UN)
 
     def save(self) -> None:
+        if self.ledger is not None:
+            clean = {
+                k: v for k, v in self.state.items() if k not in {"journal_seq", "journal_hash"}
+            }
+            row = self.ledger.append(
+                "checkpoints", self.clock.now_ms(), {"state": copy.deepcopy(clean)}
+            )
+            self.state.update(journal_seq=row["seq"], journal_hash=row["hash"])
+            atomic_json(self.path, self.state)
+            return
         temporary = self.path.with_suffix(".tmp")
         with temporary.open("w", encoding="utf-8") as stream:
             json.dump(self.state, stream, sort_keys=True, allow_nan=False)
@@ -86,6 +101,13 @@ class Journal:
         os.replace(temporary, self.path)
 
     def append(self, channel: str, **values: Any) -> None:
+        if self.ledger is not None:
+            # An exchange event can precede its checkpoint if power fails between them.
+            key = {"fills": "exec_id", "funding": "transaction_id"}.get(channel)
+            if key and any(r.get(key) == values.get(key) for r in self.read_rows(channel)):
+                return
+            self.ledger.append(channel, self.clock.now_ms(), dict(values, recovered=self.recovered))
+            return
         if channel not in {
             "decisions",
             "orders",
@@ -111,12 +133,35 @@ class Journal:
         finally:
             os.close(descriptor)
 
+    def prepare(self) -> None:
+        assert self.ledger is not None
+        try:
+            repaired = self.ledger.verify(self.clock.now_ms(), repair=True)
+            self.state = copy.deepcopy(self.ledger.restore(self.state))
+        except LedgerError as exc:
+            raise Halted(str(exc)) from None
+        if repaired:
+            self.append("events", kind="journal_tail_repaired", backup=repaired)
+        atomic_json(self.path, self.state)
+
+    def read_rows(self, channel: str) -> list[dict[str, Any]]:
+        if self.ledger is not None:
+            return [r for r in self.ledger.records if r["channel"] == channel]
+        path = self.directory / f"{channel}.jsonl"
+        return (
+            [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines()]
+            if path.exists()
+            else []
+        )
+
     def halt(self, reason: str) -> None:
         self.state["halt"] = dict(reason=reason, time_ms=self.clock.now_ms())
         self.save()
         self.append("events", kind="halt", reason=reason)
 
     def require_running(self) -> None:
+        if self.state.get("unrecoverable_gap"):
+            raise Halted("unrecoverable_gap requires explicit verification")
         if self.state["halt"]:
             raise Halted(str(self.state["halt"]["reason"]))
 
@@ -173,10 +218,15 @@ class PreviewJournal(Journal):
     def __init__(self, original: Journal) -> None:
         self.directory, self.path, self.clock = original.directory, original.path, original.clock
         self.state = copy.deepcopy(original.state)
+        self.ledger = copy.deepcopy(original.ledger)
+        self.recovered = False
         self.rows: list[dict[str, Any]] = []
 
     def save(self) -> None:
         pass
 
     def append(self, channel: str, **values: Any) -> None:
-        self.rows.append(dict(channel=channel, **values))
+        self.rows.append(dict(time_ms=self.clock.now_ms(), channel=channel, **values))
+
+    def read_rows(self, channel: str) -> list[dict[str, Any]]:
+        return super().read_rows(channel) + [r for r in self.rows if r["channel"] == channel]
