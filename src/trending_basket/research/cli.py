@@ -20,8 +20,10 @@ from trending_basket.research.decisions import (
     without_period,
     write_decision,
 )
+from trending_basket.research.risk import risk_level_cmd
 
 research_app = typer.Typer(help="Apply preregistered T005 rules to saved reports.")
+research_app.command("risk-level")(risk_level_cmd)
 
 
 @research_app.command("select")
