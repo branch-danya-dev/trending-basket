@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 from dataclasses import replace
 
 from pydantic import BaseModel, ConfigDict, Field
@@ -15,6 +16,33 @@ class PortfolioLimits(BaseModel):
     max_net_exposure: float = Field(default=1.5, gt=0)
     max_symbol_exposure: float = Field(default=0.5, gt=0)
     exit_on_universe_removal: bool = False
+
+
+def actual_exposures(notionals: Mapping[str, float], equity_usd: float) -> dict[str, float]:
+    """Exposures of executed quantities at one common set of market marks."""
+    denominator = equity_usd if equity_usd > 0 else 1.0
+    return {
+        "gross_exposure": sum(abs(n) for n in notionals.values()) / denominator,
+        "net_exposure": abs(sum(notionals.values())) / denominator,
+        "symbol_exposure": max((abs(n) for n in notionals.values()), default=0) / denominator,
+    }
+
+
+def limit_violations(
+    notionals: Mapping[str, float], equity_usd: float, limits: PortfolioLimits
+) -> list[str]:
+    if equity_usd <= 0 and any(notionals.values()):
+        return ["capital_depleted"]
+    values = actual_exposures(notionals, equity_usd)
+    return [key for key, value in values.items() if value > getattr(limits, f"max_{key}") + 1e-9]
+
+
+def assert_actual_limits(
+    notionals: Mapping[str, float], equity_usd: float, limits: PortfolioLimits
+) -> None:
+    exceeded = limit_violations(notionals, equity_usd, limits)
+    if exceeded:
+        raise ArithmeticError(f"post-rebalance exposure invariant failed: {exceeded}")
 
 
 def apply_limits(

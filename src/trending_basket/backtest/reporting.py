@@ -24,10 +24,14 @@ ASSUMPTIONS = [
     "OHLC cannot identify the exact touch time; earlier funding/delisting events take priority.",
     "Funding at a boundary is charged to carried positions before new orders. "
     "Exact 4h open is preferred; otherwise the containing daily open is used.",
-    "Funding coverage uses the union of actual timestamps and the latest snapshot's interval grid "
-    "while positions are open; historical schedule changes can lower measured coverage.",
+    "Funding intervals are inferred from consecutive historical timestamps per symbol. "
+    "Stable regime changes and phase bridges are not gaps. Isolated longer multiples within "
+    "a stable regime and extrapolated history edges are listed for API verification. "
+    "Coverage measures settlements while a position is open; insufficient history yields null.",
     "Gross PnL uses reference prices; fees and slippage are subtracted once; funding is signed.",
-    "Complete reduce-only exits bypass entry minima; partial changes enforce them. "
+    "Targets round toward zero; small reductions expand to an executable order or a full exit. "
+    "After fees and slippage actual exposures are reduced until every limit holds within 1e-9. "
+    "Each adjustment and post-rebalance exposure is logged. Limits may drift between decisions. "
     "Unknown Closed minNotionalValue is logged.",
     "End date is inclusive; terminal open positions are marked, without a fictitious liquidation.",
     "Margin and liquidations are not modelled. Survivorship bias remains despite Closed inclusion.",
@@ -38,18 +42,64 @@ ASSUMPTIONS = [
 ]
 
 
+def metric_label(key: str) -> str:
+    return {
+        "btc_price_return_frac": "btc_price_return_frac (BTC price only, no funding or costs)",
+        "btc_funding_paid_usd": "btc_funding_paid_usd (gross funding paid on BTC)",
+    }.get(key, key)
+
+
 def scalar_table(metrics: dict[str, Any]) -> str:
     lines = ["| Metric | Value |", "|---|---:|"]
     for key, value in metrics.items():
         if not isinstance(value, (dict, list)):
             rendered = f"{value:.8g}" if isinstance(value, float) else str(value)
-            lines.append(f"| {key} | {rendered} |")
+            lines.append(f"| {metric_label(key)} | {rendered} |")
     return "\n".join(lines)
 
 
 def report_markdown(name: str, metrics: dict[str, Any]) -> str:
     lines = [f"# {name}", "", scalar_table(metrics), "", "## Warnings", ""]
     lines.extend(f"- {w}" for w in metrics["warnings"])
+    lines += [
+        "",
+        "## Funding coverage by symbol",
+        "",
+        "Coverage refers to periods with an open position; no exposure or unknown interval = None.",
+        "",
+        "| Symbol | Intervals, h | Observed | Expected | Coverage | Paid, USD | Received, USD |",
+        "|---|---|---:|---:|---:|---:|---:|",
+    ]
+    for symbol, values in metrics["funding_coverage_by_symbol"].items():
+        periods = ", ".join(f"{p / 3600000:g}" for p in values["intervals_ms"]) or "unknown"
+        coverage = values["coverage_frac"]
+        rendered = f"{coverage:.6%}" if coverage is not None else "None"
+        lines.append(
+            f"| {symbol} | {periods} | {values['observed']} | {values['expected']} | "
+            f"{rendered} | {values['paid_usd']:.8g} | {values['received_usd']:.8g} |"
+        )
+    lines += [
+        "",
+        "## Missing funding ranges",
+        "",
+        "Ranges list absent settlements under the inferred historical schedule, while held. "
+        "API checks distinguish unavailable records from ambiguous schedule changes.",
+        "",
+    ]
+    if not metrics["funding_gaps"]:
+        lines.append("No missing settlements detected.")
+    else:
+        lines += [
+            "| Symbol | First missing UTC | Last missing UTC | Interval, h | Missing | Source |",
+            "|---|---|---|---:|---:|---|",
+        ]
+        for gap in metrics["funding_gaps"]:
+            first = datetime.fromtimestamp(gap["start_ms"] / 1000, UTC).isoformat()
+            last = datetime.fromtimestamp(gap["end_ms"] / 1000, UTC).isoformat()
+            lines.append(
+                f"| {gap['symbol']} | {first} | {last} | {gap['interval_ms'] / 3600000:g} | "
+                f"{gap['missing_count']} | {gap['source']} |"
+            )
     for title, key in (("Year attribution", "by_year"), ("Symbol attribution", "by_symbol")):
         lines.extend(["", f"## {title}", ""])
         rows = metrics[key]

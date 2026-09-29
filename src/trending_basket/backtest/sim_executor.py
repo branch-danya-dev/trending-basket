@@ -4,10 +4,16 @@ from __future__ import annotations
 
 import math
 from dataclasses import dataclass
-from decimal import ROUND_DOWN, Decimal
+from decimal import ROUND_CEILING, ROUND_DOWN, Decimal
 from typing import Any
 
 from trending_basket.backtest.config import Costs
+from trending_basket.portfolio.limits import (
+    PortfolioLimits,
+    actual_exposures,
+    assert_actual_limits,
+    limit_violations,
+)
 from trending_basket.strategies.base import PositionView, TargetPosition
 
 
@@ -26,6 +32,10 @@ class InstrumentRules:
         raw = Decimal(str(abs(notional_usd))) / Decimal(str(price))
         rounded = (raw / self.qty_step).to_integral_value(rounding=ROUND_DOWN) * self.qty_step
         return float(rounded)
+
+    def minimum_quantity(self, price: float) -> Decimal:
+        raw = max(self.min_order_qty, (self.min_notional_value or Decimal(0)) / Decimal(str(price)))
+        return (raw / self.qty_step).to_integral_value(rounding=ROUND_CEILING) * self.qty_step
 
 
 @dataclass
@@ -147,7 +157,7 @@ class SimExecutor:
                 abs(position.quantity) * position.average_reference_price
                 + abs(quantity) * base_price
             ) / total
-            position.quantity += quantity
+            position.quantity = float(Decimal(str(position.quantity)) + Decimal(str(quantity)))
         else:
             if abs(quantity) > abs(position.quantity) + 1e-10:
                 raise ArithmeticError("a reversal must be split at zero")
@@ -158,7 +168,7 @@ class SimExecutor:
             )
             position.gross_pnl_usd += realized
             self.realized_pnl_usd += realized
-            position.quantity += quantity
+            position.quantity = float(Decimal(str(position.quantity)) + Decimal(str(quantity)))
         position.fees_usd += fee
         position.slippage_usd += slip
         self.fills.append(
@@ -231,6 +241,8 @@ class SimExecutor:
         open_price: float,
         time_ms: int,
         reason: str = "signal",
+        *,
+        allow_increase: bool = True,
     ) -> None:
         current = self.positions.get(symbol)
         if target.notional_usd == 0:
@@ -246,13 +258,21 @@ class SimExecutor:
             current.stop_price = target.stop_price
         if abs(notional_delta) < 1e-8:
             return
-        sign = math.copysign(1, notional_delta)
+        direction = target.notional_usd - (current.quantity * open_price if current else 0.0)
+        sign = math.copysign(1, direction)
         fill_price = open_price * (1 + sign * self.costs.slippage_bps / 10000)
         rules = self.rules[symbol]
-        quantity = rules.quantity(notional_delta, fill_price)
-        reducing = current is not None and current.quantity * sign < 0
-        if reducing and current is not None:
-            quantity = min(quantity, abs(current.quantity))
+        # Quantize the TARGET position, not its delta: a rounded reduction must not
+        # leave an executed position larger than the target. Exact holds above do not drift.
+        target_quantity = rules.quantity(target.notional_usd, fill_price)
+        held = abs(current.quantity) if current else 0.0
+        if not allow_increase:
+            target_quantity = min(target_quantity, held)
+        if current and target_quantity < held:
+            self.reduce_to(symbol, target_quantity, open_price, time_ms, reason)
+            return
+        quantity = float(Decimal(str(target_quantity)) - Decimal(str(held)))
+        sign = math.copysign(1, target.notional_usd)
         if (
             quantity == 0
             or Decimal(str(quantity)) < rules.min_order_qty
@@ -274,6 +294,114 @@ class SimExecutor:
             target,
             self.costs.slippage_bps,
             fee,
+        )
+
+    def reduce_to(
+        self, symbol: str, target_quantity: float, open_price: float, time_ms: int, reason: str
+    ) -> None:
+        """Meet an absolute quantity ceiling, expanding a too-small reduce-only order."""
+        current = self.positions[symbol]
+        rules = self.rules[symbol]
+        held = Decimal(str(abs(current.quantity)))
+        target = Decimal(str(target_quantity))
+        if target >= held:
+            return
+        sign = -math.copysign(1, current.quantity)
+        price = open_price * (1 + sign * self.costs.slippage_bps / 10000)
+        requested = held - target
+        lots = (requested / rules.qty_step).to_integral_value(rounding=ROUND_CEILING)
+        quantity = min(held, max(lots * rules.qty_step, rules.minimum_quantity(price)))
+        if quantity > requested:
+            self.event(
+                time_ms,
+                "reduction_minimum_adjustment",
+                symbol,
+                requested_quantity=float(requested),
+                executed_quantity=float(quantity),
+                target_quantity=target_quantity,
+                remaining_quantity=float(held - quantity),
+            )
+        if quantity == held:
+            self.close(symbol, open_price, time_ms, reason)
+        else:
+            fee = (
+                self.costs.taker_fee_bps
+                if self.costs.rebalance_fill == "taker"
+                else self.costs.maker_fee_bps
+            )
+            self._fill(
+                symbol,
+                sign * float(quantity),
+                open_price,
+                time_ms,
+                reason,
+                TargetPosition(0),
+                self.costs.slippage_bps,
+                fee,
+            )
+
+    def enforce_limits(
+        self, marks: dict[str, float], time_ms: int, limits: PortfolioLimits
+    ) -> None:
+        """Reduce executed risk until all limits hold AFTER fees, slippage and rounding."""
+        repairs, accelerated_after = 0, 4 * len(self.positions) + 16
+        while True:
+            notionals = {s: p.quantity * marks[s] for s, p in self.positions.items()}
+            equity = self.equity(marks)
+            exceeded = limit_violations(notionals, equity, limits)
+            if not exceeded:
+                break
+            # A net violation is repaired only on the side contributing to its sign.
+            net = sum(notionals.values())
+            kind = "net_exposure" if "net_exposure" in exceeded else exceeded[0]
+            eligible = [s for s, n in notionals.items() if kind != "net_exposure" or n * net > 0]
+            symbol = min(eligible, key=lambda s: (-abs(notionals[s]), s))
+            position = self.positions[symbol]
+            before_qty = abs(position.quantity)
+            target_qty = 0.0
+            if kind != "capital_depleted" and repairs < accelerated_after:
+                cap = float(getattr(limits, f"max_{kind}"))
+                measure = (
+                    abs(net)
+                    if kind == "net_exposure"
+                    else sum(abs(n) for n in notionals.values())
+                    if kind == "gross_exposure"
+                    else abs(notionals[symbol])
+                )
+                fee = (
+                    self.costs.taker_fee_bps
+                    if self.costs.rebalance_fill == "taker"
+                    else self.costs.maker_fee_bps
+                )
+                slip = self.costs.slippage_bps / 10000
+                # Closing notional x costs c*x, so x >= (measure-cap*E)/(1-cap*c).
+                cost_frac = slip + fee / 10000 * (1 - math.copysign(slip, position.quantity))
+                denominator = 1 - cap * cost_frac
+                if denominator > 0:
+                    reduction = (measure - cap * equity) / denominator / marks[symbol]
+                    target_qty = max(0.0, before_qty - reduction)
+            before_equity = equity
+            self.reduce_to(symbol, target_qty, marks[symbol], time_ms, "limit")
+            after_qty = abs(self.positions[symbol].quantity) if symbol in self.positions else 0.0
+            if after_qty >= before_qty:
+                raise ArithmeticError("exposure repair made no progress")
+            self.event(
+                time_ms,
+                "actual_limit_reduction",
+                symbol,
+                limit=kind,
+                before_quantity=before_qty,
+                after_quantity=after_qty,
+                equity_before_usd=before_equity,
+                equity_after_usd=self.equity(marks),
+                full_close_fallback=repairs >= accelerated_after,
+            )
+            repairs += 1
+        notionals = {s: p.quantity * marks[s] for s, p in self.positions.items()}
+        equity = self.equity(marks)
+        assert_actual_limits(notionals, equity, limits)
+        self.event(
+            time_ms, "post_rebalance", "", equity_usd=equity, **actual_exposures(notionals, equity)
         )
 
     def funding(

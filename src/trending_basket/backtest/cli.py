@@ -12,7 +12,7 @@ from trending_basket.backtest.config import load_experiment
 from trending_basket.backtest.engine import BacktestEngine
 from trending_basket.backtest.inputs import load_inputs
 from trending_basket.backtest.metrics import calculate_metrics
-from trending_basket.backtest.reporting import save_report, scalar_table
+from trending_basket.backtest.reporting import metric_label, save_report, scalar_table
 from trending_basket.clock import SystemClock
 from trending_basket.config import load_settings
 from trending_basket.strategies.benchmarks import make_strategy
@@ -65,7 +65,9 @@ def compare_cmd(run_dirs: Annotated[list[Path], typer.Argument()]) -> None:
         typer.echo("| Metric | " + " | ".join(d.name for d in run_dirs) + " |")
         typer.echo("|---|" + "---:|" * len(run_dirs))
         for key in keys:
-            typer.echo(f"| {key} | " + " | ".join(str(m.get(key)) for m in metrics) + " |")
+            typer.echo(
+                f"| {metric_label(key)} | " + " | ".join(str(m.get(key)) for m in metrics) + " |"
+            )
     except (OSError, ValueError) as exc:
         typer.echo(str(exc), err=True)
         raise typer.Exit(1) from exc

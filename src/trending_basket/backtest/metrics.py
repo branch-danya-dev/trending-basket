@@ -42,8 +42,62 @@ def calculate_metrics(result: BacktestResult) -> dict[str, Any]:
     losers = [p for p in closed if p["net_pnl_usd"] < 0]
     funding = [e for e in result.events if e["kind"] == "funding"]
     observed = sum(e["observed"] for e in funding)
-    coverage = observed / len(funding) if funding else None
+    held_symbols = {p["symbol"] for p in result.positions}
+    unknown_symbols = sorted(
+        s
+        for s in held_symbols
+        if s in result.funding_diagnostics and not result.funding_diagnostics[s]["interval_known"]
+    )
+    coverage = observed / len(funding) if funding and not unknown_symbols else None
+    funding_by_symbol: dict[str, dict[str, Any]] = {}
+    gaps: list[dict[str, Any]] = []
+    for symbol in sorted(set(result.funding_diagnostics) | held_symbols):
+        events = [e for e in funding if e["symbol"] == symbol]
+        count = sum(e["observed"] for e in events)
+        metadata = result.funding_diagnostics.get(symbol, {})
+        funding_by_symbol[symbol] = {
+            "observed": count,
+            "expected": len(events),
+            "coverage_frac": count / len(events)
+            if events and symbol not in unknown_symbols
+            else None,
+            "intervals_ms": metadata.get("intervals_ms", []),
+            "interval_known": metadata.get("interval_known", True),
+            "paid_usd": sum(max(0.0, -e["payment_usd"]) for e in events),
+            "received_usd": sum(max(0.0, e["payment_usd"]) for e in events),
+        }
+        for event in sorted((e for e in events if not e["observed"]), key=lambda e: e["time_ms"]):
+            period = event["interval_ms"]
+            if (
+                gaps
+                and gaps[-1]["symbol"] == symbol
+                and gaps[-1]["interval_ms"] == period
+                and gaps[-1]["end_ms"] + period == event["time_ms"]
+                and gaps[-1]["source"] == event["gap_source"]
+            ):
+                gaps[-1]["end_ms"] = event["time_ms"]
+                gaps[-1]["missing_count"] += 1
+            else:
+                gaps.append(
+                    {
+                        "symbol": symbol,
+                        "start_ms": event["time_ms"],
+                        "end_ms": event["time_ms"],
+                        "interval_ms": period,
+                        "missing_count": 1,
+                        "source": event["gap_source"],
+                    }
+                )
     warnings = []
+    if unknown_symbols:
+        warnings.append(
+            "Funding interval cannot be inferred from fewer than two records: "
+            + ", ".join(unknown_symbols)
+        )
+    if gaps:
+        warnings.append(
+            "Funding gaps detected from history; verify the listed ranges with the API."
+        )
     if coverage is not None and coverage < 0.99:
         warnings.append("Funding coverage below 99%; absent rates are zero.")
     if any(e["kind"] == "unknown_min_notional" for e in result.events):
@@ -127,6 +181,21 @@ def calculate_metrics(result: BacktestResult) -> dict[str, Any]:
         "funding_coverage_frac": coverage,
         "funding_observed": observed,
         "funding_expected": len(funding),
+        "funding_coverage_by_symbol": funding_by_symbol,
+        "funding_gaps": gaps,
+        "funding_unknown_symbols": unknown_symbols,
+        "funding_regimes": result.funding_diagnostics,
+        "funding_paid_usd": sum(max(0.0, -e["payment_usd"]) for e in funding),
+        "funding_received_usd": sum(max(0.0, e["payment_usd"]) for e in funding),
+        "btc_funding_paid_usd": sum(
+            max(0.0, -e["payment_usd"]) for e in funding if e["symbol"] == "BTCUSDT"
+        ),
+        "actual_limit_reductions": sum(
+            e["kind"] == "actual_limit_reduction" for e in result.events
+        ),
+        "reduction_minimum_adjustments": sum(
+            e["kind"] == "reduction_minimum_adjustment" for e in result.events
+        ),
         "funding_price_sources": {
             source: sum(e["price_source"] == source for e in funding)
             for source in sorted({e["price_source"] for e in funding})
@@ -142,6 +211,11 @@ def calculate_metrics(result: BacktestResult) -> dict[str, Any]:
         values = exposures[f"{kind}_exposure"]
         metrics[f"average_{kind}_exposure"] = float(values.mean())
         metrics[f"max_{kind}_exposure"] = float(values.max())
+    rebalances = [e for e in result.events if e["kind"] == "post_rebalance"]
+    for kind in ("gross", "net", "symbol"):
+        metrics[f"max_post_rebalance_{kind}_exposure"] = max(
+            (e[f"{kind}_exposure"] for e in rebalances), default=None
+        )
     metrics["max_abs_net_exposure"] = float(exposures["net_exposure"].abs().max())
     for key in ("fees_usd", "slippage_usd", "funding_usd"):
         metrics[key] = last[key]

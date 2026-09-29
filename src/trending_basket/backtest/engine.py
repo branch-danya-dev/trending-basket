@@ -2,14 +2,14 @@
 
 from __future__ import annotations
 
-from bisect import bisect_left
-from dataclasses import dataclass, replace
+from dataclasses import dataclass, field, replace
 from types import MappingProxyType
 from typing import Any
 
 from trending_basket.backtest.config import Experiment
 from trending_basket.backtest.market import DataStore
 from trending_basket.backtest.sim_executor import InstrumentRules, SimExecutor
+from trending_basket.data.funding_schedule import FundingSchedule
 from trending_basket.domain.types import Candle
 from trending_basket.portfolio.limits import apply_limits
 from trending_basket.strategies.base import DecisionContext, Strategy, TargetPosition
@@ -23,6 +23,7 @@ class BacktestResult:
     equity: list[dict[str, Any]]
     events: list[dict[str, Any]]
     btc_price_return: float | None
+    funding_diagnostics: dict[str, dict[str, Any]] = field(default_factory=dict)
 
 
 class BacktestEngine:
@@ -36,7 +37,22 @@ class BacktestEngine:
     ) -> None:
         self.config, self.data, self.universe = experiment, data, universe
         self.rules, self.funding = rules, funding
-        self.funding_times = {s: sorted(values) for s, values in funding.items()}
+        self.funding_schedules = {
+            s: FundingSchedule(
+                funding.get(s, {}),
+                max(
+                    experiment.run.start_ms,
+                    universe.metadata["trading_periods"][s]["listed_from_ms"]
+                    or experiment.run.start_ms,
+                ),
+                min(
+                    experiment.run.end_ms,
+                    universe.metadata["trading_periods"][s]["listed_until_ms"]
+                    or experiment.run.end_ms,
+                ),
+            )
+            for s in rules
+        }
         self.book = SimExecutor(experiment.run.initial_capital_usd, rules, experiment.costs)
         self.marks: dict[str, float] = {}
 
@@ -53,25 +69,21 @@ class BacktestEngine:
         rate = self.funding.get(symbol, {}).get(at_ms)
         if rate is None:
             self.book.funding(symbol, at_ms, None, 0.0, "missing_rate")
+            gap = self.funding_schedules[symbol].missing[at_ms]
+            self.book.events[-1].update(interval_ms=gap.interval_ms, gap_source=gap.source)
         else:
             price, source = self.data.funding_price(symbol, at_ms)
             self.book.funding(symbol, at_ms, rate, price, source)
 
     def _fund_boundary(self, at_ms: int) -> None:
         for symbol in sorted(self.book.positions):
-            if at_ms % self.rules[symbol].funding_interval_ms == 0 or at_ms in self.funding.get(
-                symbol, {}
-            ):
+            if self.funding_schedules[symbol].contains(at_ms):
                 self._fund(symbol, at_ms)
 
     def _intrabar_events(self, at_ms: int, end_ms: int) -> None:
         events: set[tuple[int, int, str]] = set()
         for symbol in self.book.positions:
-            period = self.rules[symbol].funding_interval_ms
-            for time_ms in range((at_ms // period + 1) * period, end_ms, period):
-                events.add((time_ms, 1, symbol))
-            times = self.funding_times.get(symbol, [])
-            for time_ms in times[bisect_left(times, at_ms + 1) : bisect_left(times, end_ms)]:
+            for time_ms in self.funding_schedules[symbol].between(at_ms + 1, end_ms):
                 events.add((time_ms, 1, symbol))
             until = self.universe.metadata["trading_periods"][symbol]["listed_until_ms"]
             if until is not None and at_ms < until <= end_ms:
@@ -140,6 +152,9 @@ class BacktestEngine:
                 s,
             ),
         )
+        # Revalue all carried positions at the SAME execution boundary before risk repair.
+        # These opens are never passed to the strategy's closed-only context.
+        opening_prices: dict[str, float] = {}
         for symbol in ordered:
             target = limited.get(symbol, TargetPosition(0))
             if not target.notional_usd and symbol not in self.book.positions:
@@ -149,6 +164,7 @@ class BacktestEngine:
                 raise ValueError(f"missing execution bar: {symbol} at {at_ms}")
             if symbol not in self.rules:
                 raise ValueError(f"missing instrument rules: {symbol}")
+            opening_prices[symbol] = bar.open
             reason = (
                 "universe_removal"
                 if symbol in removal
@@ -157,9 +173,17 @@ class BacktestEngine:
                 else "signal"
             )
             self.book.rebalance(
-                symbol, target, self.marks.get(symbol, bar.open), bar.open, at_ms, reason
+                symbol,
+                target,
+                self.marks.get(symbol, bar.open),
+                bar.open,
+                at_ms,
+                reason,
+                allow_increase=symbol in allowed,
             )
             self.marks[symbol] = bar.open
+        self.marks.update(opening_prices)
+        self.book.enforce_limits(self.marks, at_ms, self.config.limits)
 
     def _stop(self, symbol: str, bar: Candle, time_ms: int, gap_only: bool) -> None:
         position = self.book.positions.get(symbol)
@@ -209,4 +233,11 @@ class BacktestEngine:
             coverage = sum(e["observed"] for e in funding_events) / len(funding_events)
             if coverage < 0.99:
                 self.book.event(run.end_ms, "funding_coverage_warning", coverage_frac=coverage)
-        return BacktestResult(self.book.fills, positions, equity, self.book.events, btc_return)
+        return BacktestResult(
+            self.book.fills,
+            positions,
+            equity,
+            self.book.events,
+            btc_return,
+            {s: schedule.metadata() for s, schedule in self.funding_schedules.items()},
+        )

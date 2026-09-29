@@ -52,7 +52,8 @@ def test_four_bar_hand_calculation():
     assert result.equity[-1]["funding_usd"] == pytest.approx(-4.8, abs=1e-9, rel=0)
     assert result.positions[0]["return_r"] == pytest.approx(-1.41892, abs=1e-9, rel=0)
     metrics = calculate_metrics(result)
-    assert metrics["funding_coverage_frac"] == 1 / 8
+    # One observed payment cannot establish an interval: coverage must be unknown.
+    assert metrics["funding_coverage_frac"] is None
     assert metrics["warnings"]
     assert sum(s["net_pnl_usd"] for s in metrics["by_symbol"].values()) == pytest.approx(-56.7568)
 
@@ -100,7 +101,7 @@ def test_funding_sign_price_and_coverage(amount, expected, four_hour, price, sou
     event = next(e for e in result.events if e["kind"] == "funding" and e["observed"])
     assert event["price_source"] == source
     assert event["payment_usd"] == pytest.approx(expected * price / 120)
-    assert calculate_metrics(result)["funding_coverage_frac"] == 0.5
+    assert calculate_metrics(result)["funding_coverage_frac"] is None
 
 
 def test_market_view_owns_only_closed_immutable_prefixes():
@@ -300,13 +301,13 @@ def test_off_grid_funding_and_boundary_ownership():
     assert observed[0]["price_source"] == "1d_open_fallback"
 
 
-def test_partial_reduction_below_minimum_is_logged_and_skipped():
+def test_partial_reduction_below_minimum_is_expanded_and_logged():
     rule = InstrumentRules(Decimal(".1"), Decimal(".2"), Decimal("25"), 2 * H4)
     book = SimExecutor(1000, {"X": rule}, ZERO)
     book.rebalance("X", TargetPosition(100), 100, 100, 0)
     book.rebalance("X", TargetPosition(90), 100, 100, 1)
-    assert book.positions["X"].quantity == 1
-    assert book.events[-1]["kind"] == "minimum_order_skip"
+    assert book.positions["X"].quantity == 0.7
+    assert book.events[-1]["kind"] == "reduction_minimum_adjustment"
 
 
 def test_missing_execution_bar_fails_instead_of_silently_holding_stale_price():

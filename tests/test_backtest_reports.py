@@ -91,6 +91,11 @@ def test_cli_roundtrip_identical_parquets_and_metrics(tmp_path, monkeypatch):
     assert "funding_coverage_frac" in runner.invoke(app, ["backtest", "show", str(a)]).output
     compare = runner.invoke(app, ["backtest", "compare", str(a), str(b)])
     assert compare.exit_code == 0 and a.name in compare.output and b.name in compare.output
+    for label in ("BTC price only, no funding or costs", "gross funding paid on BTC"):
+        assert label in compare.output
+        assert label in (a / "report.md").read_text()
+    assert "Funding coverage by symbol" in (a / "report.md").read_text()
+    assert "Missing funding ranges" in (a / "report.md").read_text()
     duplicate = runner.invoke(app, ["backtest", "run", str(toml)])
     assert duplicate.exit_code == 0  # clock now points to a third timestamp
     duplicate = runner.invoke(app, ["backtest", "run", str(toml)])
