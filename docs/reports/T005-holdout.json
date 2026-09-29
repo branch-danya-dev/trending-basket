@@ -1,0 +1,4227 @@
+{
+  "btc": {
+    "directory": "reports/bh_btc-20260929T023450Z",
+    "git": {
+      "commit": "f56856127822c79cc2faefd06efc78cf14bfe6bb",
+      "dirty": false
+    },
+    "id": "bh_btc",
+    "manifest_sha256": "dcb9e2716b7cecde88430020a0af8016dd4bd5ae282f13c60550e90ee5c3eb05",
+    "metrics": {
+      "actual_limit_reductions": 0,
+      "annual_turnover": 1.4593184984378254,
+      "annual_volatility_frac": 0.45863165387683863,
+      "average_fill_notional_usd": 10000.0,
+      "average_gross_exposure": 1.018120745584931,
+      "average_loss_r": null,
+      "average_net_exposure": 1.018120745584931,
+      "average_position_notional_usd": 6996.8630338574185,
+      "average_win_r": null,
+      "btc_funding_paid_usd": 261.0897623091381,
+      "btc_price_return_frac": -0.267995628599345,
+      "by_direction": {
+        "long": {
+          "fees_pct_gross_profit": null,
+          "fees_usd": 5.5,
+          "funding_paid_usd": 261.0897623091381,
+          "funding_pct_gross_profit": null,
+          "funding_received_usd": 58.10502519059785,
+          "funding_usd": -202.98473711854,
+          "gross_profit_usd": 0.0,
+          "positions": 1,
+          "slippage_pct_gross_profit": null,
+          "slippage_usd": 1.9996000799832487
+        },
+        "short": {
+          "fees_pct_gross_profit": null,
+          "fees_usd": 0,
+          "funding_paid_usd": 0,
+          "funding_pct_gross_profit": null,
+          "funding_received_usd": 0,
+          "funding_usd": 0,
+          "gross_profit_usd": 0,
+          "positions": 0,
+          "slippage_pct_gross_profit": null,
+          "slippage_usd": 0
+        }
+      },
+      "by_symbol": {
+        "BTCUSDT": {
+          "fees_usd": 5.5,
+          "funding_usd": -202.98473711854,
+          "gross_pnl_usd": -2679.4204019130675,
+          "net_pnl_usd": -2889.904739111591,
+          "positions": 1,
+          "slippage_usd": 1.9996000799832487
+        }
+      },
+      "by_year": {
+        "2025": {
+          "end_equity_usd": 7589.8905363065205,
+          "fees_usd": 5.5,
+          "funding_usd": -85.9063350454899,
+          "net_pnl_usd": -2410.1094636934795,
+          "return_frac": -0.24101094636934794,
+          "slippage_usd": 1.9996000799832487,
+          "start_equity_usd": 10000.0
+        },
+        "2026": {
+          "end_equity_usd": 7110.09526088841,
+          "fees_usd": 0.0,
+          "funding_usd": -117.07840207305011,
+          "net_pnl_usd": -479.7952754181106,
+          "return_frac": -0.06321504547700552,
+          "slippage_usd": 0.0,
+          "start_equity_usd": 7589.8905363065205
+        }
+      },
+      "cagr_frac": -0.2903253274572777,
+      "calmar": -0.5364762603017538,
+      "closed_positions": 0,
+      "delisting_exits": 0,
+      "drawdown_duration_days": 357.0,
+      "fees_pct_gross_profit": null,
+      "fees_usd": 5.5,
+      "final_equity_usd": 7110.09526088841,
+      "funding_coverage_by_symbol": {
+        "BTCUSDT": {
+          "coverage_frac": 1.0,
+          "expected": 1088,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "observed": 1088,
+          "paid_usd": 261.0897623091381,
+          "received_usd": 58.10502519059785
+        }
+      },
+      "funding_coverage_frac": 1.0,
+      "funding_expected": 1088,
+      "funding_gaps": [],
+      "funding_observed": 1088,
+      "funding_paid_usd": 261.0897623091381,
+      "funding_pct_gross_profit": null,
+      "funding_price_sources": {
+        "4h_open": 1088
+      },
+      "funding_received_usd": 58.10502519059785,
+      "funding_regimes": {
+        "BTCUSDT": {
+          "history_first_ms": 1609459200000,
+          "history_last_ms": 1790611200000,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1790611200000,
+              "interval_ms": 28800000,
+              "observed_steps": 6290,
+              "start_ms": 1609459200000
+            }
+          ],
+          "transitions": []
+        }
+      },
+      "funding_unknown_symbols": [],
+      "funding_usd": -202.98473711854,
+      "gross_profit_usd": 0.0,
+      "initial_capital_usd": 10000.0,
+      "max_abs_net_exposure": 1.0307424203408408,
+      "max_drawdown_frac": -0.5411708754716887,
+      "max_gross_exposure": 1.0307424203408408,
+      "max_net_exposure": 1.0307424203408408,
+      "max_post_rebalance_gross_exposure": 1.0307493899283542,
+      "max_post_rebalance_net_exposure": 1.0307493899283542,
+      "max_post_rebalance_symbol_exposure": 1.0307493899283542,
+      "minimum_order_skips": 0,
+      "open_positions": 1,
+      "quantity_mode": "exact",
+      "r_distribution": {
+        "best_five": [],
+        "count": 0,
+        "quantiles": {},
+        "worst_five": []
+      },
+      "reduction_minimum_adjustments": 0,
+      "sharpe": -0.5181443889816241,
+      "sharpe_standard_error": 1.0679354112050232,
+      "slippage_pct_gross_profit": null,
+      "slippage_usd": 1.9996000799832487,
+      "sortino": -0.7309155429214163,
+      "total_return_frac": -0.28899047391115895,
+      "warnings": [],
+      "win_rate_frac": null
+    },
+    "metrics_sha256": "dcafed3c2a4937b6747033a2e6660754bf042358e2b68c2688a82095656c6a89",
+    "resolved_config": {
+      "costs": {
+        "delist_slippage_bps": 200.0,
+        "maker_fee_bps": 2.0,
+        "rebalance_fill": "taker",
+        "slippage_bps": 2.0,
+        "stop_slippage_bps": 5.0,
+        "taker_fee_bps": 5.5
+      },
+      "execution": {
+        "quantity_mode": "exact"
+      },
+      "limits": {
+        "enabled": false,
+        "exit_on_universe_removal": false,
+        "max_gross_exposure": 2.0,
+        "max_net_exposure": 1.5,
+        "max_symbol_exposure": 1.0
+      },
+      "run": {
+        "end": "2026-09-28",
+        "initial_capital_usd": 10000.0,
+        "interval": "1d",
+        "name": "bh_btc",
+        "period": "holdout",
+        "start": "2025-10-01",
+        "strategy": "buy_and_hold_btc",
+        "symbols": null,
+        "universe": "core15"
+      },
+      "strategy_params": {}
+    }
+  },
+  "candidate": {
+    "directory": "reports/V1x-20260929T023448Z",
+    "git": {
+      "commit": "f56856127822c79cc2faefd06efc78cf14bfe6bb",
+      "dirty": false
+    },
+    "id": "V1x",
+    "manifest_sha256": "6a77fe5935f754bd3cfd745c021985135163548b0dd8e3f238f55572bfaef442",
+    "metrics": {
+      "actual_limit_reductions": 0,
+      "annual_turnover": 2.6791821779957883,
+      "annual_volatility_frac": 0.0668761035862981,
+      "average_fill_notional_usd": 126.3198168407189,
+      "average_gross_exposure": 0.06199167303217524,
+      "average_loss_r": -0.5597104645827975,
+      "average_net_exposure": 0.06199167303217524,
+      "average_position_notional_usd": 186.17894543824693,
+      "average_win_r": 0.966820828375689,
+      "btc_funding_paid_usd": 4.617543247135807,
+      "btc_price_return_frac": -0.267995628599345,
+      "by_direction": {
+        "long": {
+          "fees_pct_gross_profit": 1.2185430537149609,
+          "fees_usd": 14.589938845103033,
+          "funding_paid_usd": 35.760830512877234,
+          "funding_pct_gross_profit": 3.071068555850721,
+          "funding_received_usd": 72.53154803687372,
+          "funding_usd": 36.77071752399649,
+          "gross_profit_usd": 1197.3264958199732,
+          "positions": 80,
+          "slippage_pct_gross_profit": 0.5933849542722186,
+          "slippage_usd": 7.1047552797105045
+        },
+        "short": {
+          "fees_pct_gross_profit": null,
+          "fees_usd": 0,
+          "funding_paid_usd": 0,
+          "funding_pct_gross_profit": null,
+          "funding_received_usd": 0,
+          "funding_usd": 0,
+          "gross_profit_usd": 0,
+          "positions": 0,
+          "slippage_pct_gross_profit": null,
+          "slippage_usd": 0
+        }
+      },
+      "by_symbol": {
+        "1000PEPEUSDT": {
+          "fees_usd": 0.7921599339117379,
+          "funding_usd": -1.4743641445686397,
+          "gross_pnl_usd": 3.8160015086807952,
+          "net_pnl_usd": 1.1399609267741653,
+          "positions": 4,
+          "slippage_usd": 0.4095165034262466
+        },
+        "AAVEUSDT": {
+          "fees_usd": 0.10525800863377507,
+          "funding_usd": -0.021227680747298257,
+          "gross_pnl_usd": -12.038218817205111,
+          "net_pnl_usd": -12.202979664560614,
+          "positions": 1,
+          "slippage_usd": 0.03827515797442806
+        },
+        "ADAUSDT": {
+          "fees_usd": 0.8176294439233329,
+          "funding_usd": -0.7795459564364189,
+          "gross_pnl_usd": -90.14422589145713,
+          "net_pnl_usd": -92.14956138800129,
+          "positions": 6,
+          "slippage_usd": 0.4081600961844197
+        },
+        "AKEUSDT": {
+          "fees_usd": 0.13149557267102402,
+          "funding_usd": -0.47492061906440236,
+          "gross_pnl_usd": 14.431296872394315,
+          "net_pnl_usd": 13.755223075852637,
+          "positions": 1,
+          "slippage_usd": 0.06965760480625147
+        },
+        "BEATUSDT": {
+          "fees_usd": 0.030753854473330552,
+          "funding_usd": -0.06592843593899397,
+          "gross_pnl_usd": -3.522257082942241,
+          "net_pnl_usd": -3.634611003307404,
+          "positions": 1,
+          "slippage_usd": 0.015671629952838974
+        },
+        "BNBUSDT": {
+          "fees_usd": 0.656816704859965,
+          "funding_usd": -0.2746987165267934,
+          "gross_pnl_usd": 34.54160049561375,
+          "net_pnl_usd": 33.26258960997518,
+          "positions": 2,
+          "slippage_usd": 0.3474954642518167
+        },
+        "BTCUSDT": {
+          "fees_usd": 1.8986651872168994,
+          "funding_usd": -3.6095557760320514,
+          "gross_pnl_usd": 37.34859343324128,
+          "net_pnl_usd": 30.90911084445878,
+          "positions": 5,
+          "slippage_usd": 0.9312616255335487
+        },
+        "DOGEUSDT": {
+          "fees_usd": 0.8099460890839653,
+          "funding_usd": -1.4816612434102607,
+          "gross_pnl_usd": 6.211862320912896,
+          "net_pnl_usd": 3.525408565062664,
+          "positions": 4,
+          "slippage_usd": 0.39484642335600806
+        },
+        "ENAUSDT": {
+          "fees_usd": 0.35935762716239067,
+          "funding_usd": -0.8230087119084606,
+          "gross_pnl_usd": 23.33496832870096,
+          "net_pnl_usd": 22.021936759347206,
+          "positions": 4,
+          "slippage_usd": 0.13066523028289703
+        },
+        "ETHUSDT": {
+          "fees_usd": 1.4097668910547476,
+          "funding_usd": -2.8985481870988563,
+          "gross_pnl_usd": -34.64102385263483,
+          "net_pnl_usd": -39.58011582953119,
+          "positions": 7,
+          "slippage_usd": 0.6307768987427376
+        },
+        "FARTCOINUSDT": {
+          "fees_usd": 0.3491743545086008,
+          "funding_usd": -1.0290679301751573,
+          "gross_pnl_usd": -63.68666752228262,
+          "net_pnl_usd": -65.25340003468918,
+          "positions": 4,
+          "slippage_usd": 0.18849022772280077
+        },
+        "HYPEUSDT": {
+          "fees_usd": 1.3183255192586736,
+          "funding_usd": -2.593217832543618,
+          "gross_pnl_usd": 78.86616530865446,
+          "net_pnl_usd": 74.27314016345136,
+          "positions": 5,
+          "slippage_usd": 0.6814817934008075
+        },
+        "LABUSDT": {
+          "fees_usd": 0.16744766306640657,
+          "funding_usd": 51.020188547574705,
+          "gross_pnl_usd": 37.73552999477442,
+          "net_pnl_usd": 88.49278033806434,
+          "positions": 1,
+          "slippage_usd": 0.09549054121838704
+        },
+        "LINKUSDT": {
+          "fees_usd": 0.9102055165813692,
+          "funding_usd": -0.741077746751713,
+          "gross_pnl_usd": -35.02461454264668,
+          "net_pnl_usd": -37.13647724824897,
+          "positions": 5,
+          "slippage_usd": 0.4605794422692175
+        },
+        "NEARUSDT": {
+          "fees_usd": 0.3236104811112964,
+          "funding_usd": -1.1316366633650874,
+          "gross_pnl_usd": 173.95614110637004,
+          "net_pnl_usd": 172.35477202835466,
+          "positions": 2,
+          "slippage_usd": 0.14612193353899153
+        },
+        "ONDOUSDT": {
+          "fees_usd": 0.10574929185558185,
+          "funding_usd": -0.02524709196682336,
+          "gross_pnl_usd": -17.032582145511512,
+          "net_pnl_usd": -17.228326654880796,
+          "positions": 1,
+          "slippage_usd": 0.06474812554688103
+        },
+        "PUMPFUNUSDT": {
+          "fees_usd": 0.03617782500533827,
+          "funding_usd": -0.016043474174054925,
+          "gross_pnl_usd": -2.910959821490149,
+          "net_pnl_usd": -2.976334062810328,
+          "positions": 1,
+          "slippage_usd": 0.013152942140786049
+        },
+        "RIVERUSDT": {
+          "fees_usd": 0.02380550110300943,
+          "funding_usd": 3.44663806082416,
+          "gross_pnl_usd": -6.840864645381649,
+          "net_pnl_usd": -3.4266883578815497,
+          "positions": 1,
+          "slippage_usd": 0.00865627222105159
+        },
+        "SOLUSDT": {
+          "fees_usd": 1.0710676206809966,
+          "funding_usd": -1.3269291456267358,
+          "gross_pnl_usd": 58.597624629117554,
+          "net_pnl_usd": 55.726812612625,
+          "positions": 5,
+          "slippage_usd": 0.47281525018482584
+        },
+        "SUIUSDT": {
+          "fees_usd": 0.7725730844689951,
+          "funding_usd": -0.8442052913456037,
+          "gross_pnl_usd": -34.46177652742817,
+          "net_pnl_usd": -36.47133931767114,
+          "positions": 5,
+          "slippage_usd": 0.3927844144283751
+        },
+        "TAOUSDT": {
+          "fees_usd": 0.08759055952682099,
+          "funding_usd": -0.1997450107022242,
+          "gross_pnl_usd": -3.817839655423643,
+          "net_pnl_usd": -4.137026185494302,
+          "positions": 1,
+          "slippage_usd": 0.03185095984161402
+        },
+        "WLDUSDT": {
+          "fees_usd": 0.22613751703467438,
+          "funding_usd": -0.25823159757685027,
+          "gross_pnl_usd": -23.06718217392865,
+          "net_pnl_usd": -23.67121002655083,
+          "positions": 2,
+          "slippage_usd": 0.11965873801065452
+        },
+        "XRPUSDT": {
+          "fees_usd": 0.9582475298724973,
+          "funding_usd": -1.1612206242564354,
+          "gross_pnl_usd": 9.105067504383644,
+          "net_pnl_usd": 6.535256590569294,
+          "positions": 6,
+          "slippage_usd": 0.4503427596854155
+        },
+        "ZECUSDT": {
+          "fees_usd": 1.227977068037604,
+          "funding_usd": 3.5339727958141047,
+          "gross_pnl_usd": 290.77839614745517,
+          "net_pnl_usd": 292.4821366302421,
+          "positions": 6,
+          "slippage_usd": 0.602255244989504
+        }
+      },
+      "by_year": {
+        "2025": {
+          "end_equity_usd": 10051.378405628613,
+          "fees_usd": 1.3269715115007497,
+          "funding_usd": 6.3449903372622485,
+          "net_pnl_usd": 51.37840562861311,
+          "return_frac": 0.005137840562861262,
+          "slippage_usd": 0.7421939101686067,
+          "start_equity_usd": 10000.0
+        },
+        "2026": {
+          "end_equity_usd": 10456.611058371138,
+          "fees_usd": 13.262967333602285,
+          "funding_usd": 30.425727186734278,
+          "net_pnl_usd": 405.2326527425248,
+          "return_frac": 0.040316127439357086,
+          "slippage_usd": 6.3625613695419005,
+          "start_equity_usd": 10051.378405628613
+        }
+      },
+      "cagr_frac": 0.04591837197010151,
+      "calmar": 1.0859005005866278,
+      "closed_positions": 66,
+      "delisting_exits": 0,
+      "drawdown_duration_days": 227.0,
+      "fees_pct_gross_profit": 1.2185430537149609,
+      "fees_usd": 14.589938845103035,
+      "final_equity_usd": 10456.611058371138,
+      "funding_coverage_by_symbol": {
+        "1000BONKUSDT": {
+          "coverage_frac": null,
+          "expected": 0,
+          "interval_known": true,
+          "intervals_ms": [
+            14400000,
+            28800000
+          ],
+          "observed": 0,
+          "paid_usd": 0,
+          "received_usd": 0
+        },
+        "1000FLOKIUSDT": {
+          "coverage_frac": null,
+          "expected": 0,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "observed": 0,
+          "paid_usd": 0,
+          "received_usd": 0
+        },
+        "1000PEPEUSDT": {
+          "coverage_frac": 1.0,
+          "expected": 173,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "observed": 173,
+          "paid_usd": 1.945915528995592,
+          "received_usd": 0.4715513844269523
+        },
+        "1000RATSUSDT": {
+          "coverage_frac": null,
+          "expected": 0,
+          "interval_known": true,
+          "intervals_ms": [
+            14400000,
+            28800000
+          ],
+          "observed": 0,
+          "paid_usd": 0,
+          "received_usd": 0
+        },
+        "AAVEUSDT": {
+          "coverage_frac": 1.0,
+          "expected": 18,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "observed": 18,
+          "paid_usd": 0.0689483058317437,
+          "received_usd": 0.04772062508444543
+        },
+        "ADAUSDT": {
+          "coverage_frac": 1.0,
+          "expected": 173,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "observed": 173,
+          "paid_usd": 1.186830244555134,
+          "received_usd": 0.4072842881187152
+        },
+        "AERGOUSDT": {
+          "coverage_frac": null,
+          "expected": 0,
+          "interval_known": true,
+          "intervals_ms": [
+            7200000,
+            14400000,
+            28800000
+          ],
+          "observed": 0,
+          "paid_usd": 0,
+          "received_usd": 0
+        },
+        "AKEUSDT": {
+          "coverage_frac": 1.0,
+          "expected": 77,
+          "interval_known": true,
+          "intervals_ms": [
+            3600000,
+            14400000
+          ],
+          "observed": 77,
+          "paid_usd": 0.6766798418493816,
+          "received_usd": 0.20175922278497904
+        },
+        "APEUSDT": {
+          "coverage_frac": null,
+          "expected": 0,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "observed": 0,
+          "paid_usd": 0,
+          "received_usd": 0
+        },
+        "APTUSDT": {
+          "coverage_frac": null,
+          "expected": 0,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "observed": 0,
+          "paid_usd": 0,
+          "received_usd": 0
+        },
+        "ARBUSDT": {
+          "coverage_frac": null,
+          "expected": 0,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "observed": 0,
+          "paid_usd": 0,
+          "received_usd": 0
+        },
+        "ATOMUSDT": {
+          "coverage_frac": null,
+          "expected": 0,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "observed": 0,
+          "paid_usd": 0,
+          "received_usd": 0
+        },
+        "AUCTIONUSDT": {
+          "coverage_frac": null,
+          "expected": 0,
+          "interval_known": true,
+          "intervals_ms": [
+            3600000,
+            14400000,
+            28800000
+          ],
+          "observed": 0,
+          "paid_usd": 0,
+          "received_usd": 0
+        },
+        "AVAXUSDT": {
+          "coverage_frac": null,
+          "expected": 0,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "observed": 0,
+          "paid_usd": 0,
+          "received_usd": 0
+        },
+        "AXSUSDT": {
+          "coverage_frac": null,
+          "expected": 0,
+          "interval_known": true,
+          "intervals_ms": [
+            3600000,
+            28800000
+          ],
+          "observed": 0,
+          "paid_usd": 0,
+          "received_usd": 0
+        },
+        "BCHUSDT": {
+          "coverage_frac": null,
+          "expected": 0,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "observed": 0,
+          "paid_usd": 0,
+          "received_usd": 0
+        },
+        "BEATUSDT": {
+          "coverage_frac": 1.0,
+          "expected": 77,
+          "interval_known": true,
+          "intervals_ms": [
+            3600000,
+            14400000
+          ],
+          "observed": 77,
+          "paid_usd": 0.10853925974619096,
+          "received_usd": 0.04261082380719698
+        },
+        "BITUSDT": {
+          "coverage_frac": null,
+          "expected": 0,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "observed": 0,
+          "paid_usd": 0,
+          "received_usd": 0
+        },
+        "BLURUSDT": {
+          "coverage_frac": null,
+          "expected": 0,
+          "interval_known": true,
+          "intervals_ms": [
+            3600000,
+            28800000
+          ],
+          "observed": 0,
+          "paid_usd": 0,
+          "received_usd": 0
+        },
+        "BLZUSDT": {
+          "coverage_frac": null,
+          "expected": 0,
+          "interval_known": true,
+          "intervals_ms": [
+            14400000,
+            28800000
+          ],
+          "observed": 0,
+          "paid_usd": 0,
+          "received_usd": 0
+        },
+        "BNBUSDT": {
+          "coverage_frac": 1.0,
+          "expected": 74,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "observed": 74,
+          "paid_usd": 0.9792010195726533,
+          "received_usd": 0.7045023030458598
+        },
+        "BTCUSDT": {
+          "coverage_frac": 1.0,
+          "expected": 470,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "observed": 470,
+          "paid_usd": 4.617543247135807,
+          "received_usd": 1.0079874711037577
+        },
+        "CHZUSDT": {
+          "coverage_frac": null,
+          "expected": 0,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "observed": 0,
+          "paid_usd": 0,
+          "received_usd": 0
+        },
+        "COMPUSDT": {
+          "coverage_frac": null,
+          "expected": 0,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "observed": 0,
+          "paid_usd": 0,
+          "received_usd": 0
+        },
+        "DOGEUSDT": {
+          "coverage_frac": 1.0,
+          "expected": 210,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "observed": 210,
+          "paid_usd": 1.7724458078884806,
+          "received_usd": 0.29078456447821965
+        },
+        "DOTUSDT": {
+          "coverage_frac": null,
+          "expected": 0,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "observed": 0,
+          "paid_usd": 0,
+          "received_usd": 0
+        },
+        "DYDXUSDT": {
+          "coverage_frac": null,
+          "expected": 0,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "observed": 0,
+          "paid_usd": 0,
+          "received_usd": 0
+        },
+        "ENAUSDT": {
+          "coverage_frac": 1.0,
+          "expected": 197,
+          "interval_known": true,
+          "intervals_ms": [
+            14400000,
+            28800000
+          ],
+          "observed": 197,
+          "paid_usd": 0.9758309914844747,
+          "received_usd": 0.15282227957601402
+        },
+        "EOSUSDT": {
+          "coverage_frac": null,
+          "expected": 0,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "observed": 0,
+          "paid_usd": 0,
+          "received_usd": 0
+        },
+        "ETCUSDT": {
+          "coverage_frac": null,
+          "expected": 0,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "observed": 0,
+          "paid_usd": 0,
+          "received_usd": 0
+        },
+        "ETHUSDT": {
+          "coverage_frac": 1.0,
+          "expected": 389,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "observed": 389,
+          "paid_usd": 3.726828702936267,
+          "received_usd": 0.82828051583741
+        },
+        "FARTCOINUSDT": {
+          "coverage_frac": 1.0,
+          "expected": 316,
+          "interval_known": true,
+          "intervals_ms": [
+            14400000,
+            28800000
+          ],
+          "observed": 316,
+          "paid_usd": 1.0597330428564538,
+          "received_usd": 0.030665112681296215
+        },
+        "FETUSDT": {
+          "coverage_frac": null,
+          "expected": 0,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "observed": 0,
+          "paid_usd": 0,
+          "received_usd": 0
+        },
+        "FILUSDT": {
+          "coverage_frac": null,
+          "expected": 0,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "observed": 0,
+          "paid_usd": 0,
+          "received_usd": 0
+        },
+        "FTMUSDT": {
+          "coverage_frac": null,
+          "expected": 0,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "observed": 0,
+          "paid_usd": 0,
+          "received_usd": 0
+        },
+        "GALAUSDT": {
+          "coverage_frac": null,
+          "expected": 0,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "observed": 0,
+          "paid_usd": 0,
+          "received_usd": 0
+        },
+        "GMTUSDT": {
+          "coverage_frac": null,
+          "expected": 0,
+          "interval_known": true,
+          "intervals_ms": [
+            3600000,
+            28800000
+          ],
+          "observed": 0,
+          "paid_usd": 0,
+          "received_usd": 0
+        },
+        "HBARUSDT": {
+          "coverage_frac": null,
+          "expected": 0,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "observed": 0,
+          "paid_usd": 0,
+          "received_usd": 0
+        },
+        "HUSDT": {
+          "coverage_frac": null,
+          "expected": 0,
+          "interval_known": true,
+          "intervals_ms": [
+            3600000,
+            14400000
+          ],
+          "observed": 0,
+          "paid_usd": 0,
+          "received_usd": 0
+        },
+        "HYPEUSDT": {
+          "coverage_frac": 1.0,
+          "expected": 370,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "observed": 370,
+          "paid_usd": 4.646369279102951,
+          "received_usd": 2.053151446559333
+        },
+        "ICPUSDT": {
+          "coverage_frac": null,
+          "expected": 0,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "observed": 0,
+          "paid_usd": 0,
+          "received_usd": 0
+        },
+        "INJUSDT": {
+          "coverage_frac": null,
+          "expected": 0,
+          "interval_known": true,
+          "intervals_ms": [
+            3600000,
+            28800000
+          ],
+          "observed": 0,
+          "paid_usd": 0,
+          "received_usd": 0
+        },
+        "KNCUSDT": {
+          "coverage_frac": null,
+          "expected": 0,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "observed": 0,
+          "paid_usd": 0,
+          "received_usd": 0
+        },
+        "LABUSDT": {
+          "coverage_frac": 1.0,
+          "expected": 44,
+          "interval_known": true,
+          "intervals_ms": [
+            3600000,
+            14400000
+          ],
+          "observed": 44,
+          "paid_usd": 0.0705238569311367,
+          "received_usd": 51.09071240450583
+        },
+        "LDOUSDT": {
+          "coverage_frac": null,
+          "expected": 0,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "observed": 0,
+          "paid_usd": 0,
+          "received_usd": 0
+        },
+        "LINAUSDT": {
+          "coverage_frac": null,
+          "expected": 0,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "observed": 0,
+          "paid_usd": 0,
+          "received_usd": 0
+        },
+        "LINKUSDT": {
+          "coverage_frac": 1.0,
+          "expected": 171,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "observed": 171,
+          "paid_usd": 1.0724253816362177,
+          "received_usd": 0.33134763488450464
+        },
+        "LPTUSDT": {
+          "coverage_frac": null,
+          "expected": 0,
+          "interval_known": true,
+          "intervals_ms": [
+            3600000,
+            14400000,
+            28800000
+          ],
+          "observed": 0,
+          "paid_usd": 0,
+          "received_usd": 0
+        },
+        "LTCUSDT": {
+          "coverage_frac": null,
+          "expected": 0,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "observed": 0,
+          "paid_usd": 0,
+          "received_usd": 0
+        },
+        "LUNA2USDT": {
+          "coverage_frac": null,
+          "expected": 0,
+          "interval_known": true,
+          "intervals_ms": [
+            3600000,
+            28800000
+          ],
+          "observed": 0,
+          "paid_usd": 0,
+          "received_usd": 0
+        },
+        "LUNAUSDT": {
+          "coverage_frac": null,
+          "expected": 0,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "observed": 0,
+          "paid_usd": 0,
+          "received_usd": 0
+        },
+        "MASKUSDT": {
+          "coverage_frac": null,
+          "expected": 0,
+          "interval_known": true,
+          "intervals_ms": [
+            3600000,
+            14400000,
+            28800000
+          ],
+          "observed": 0,
+          "paid_usd": 0,
+          "received_usd": 0
+        },
+        "MATICUSDT": {
+          "coverage_frac": null,
+          "expected": 0,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "observed": 0,
+          "paid_usd": 0,
+          "received_usd": 0
+        },
+        "MNTUSDT": {
+          "coverage_frac": null,
+          "expected": 0,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "observed": 0,
+          "paid_usd": 0,
+          "received_usd": 0
+        },
+        "MOODENGUSDT": {
+          "coverage_frac": null,
+          "expected": 0,
+          "interval_known": true,
+          "intervals_ms": [
+            3600000,
+            14400000,
+            28800000
+          ],
+          "observed": 0,
+          "paid_usd": 0,
+          "received_usd": 0
+        },
+        "NEARUSDT": {
+          "coverage_frac": 1.0,
+          "expected": 73,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "observed": 73,
+          "paid_usd": 1.3011112595168008,
+          "received_usd": 0.16947459615171345
+        },
+        "ONDOUSDT": {
+          "coverage_frac": 1.0,
+          "expected": 5,
+          "interval_known": true,
+          "intervals_ms": [
+            14400000,
+            28800000
+          ],
+          "observed": 5,
+          "paid_usd": 0.025247091966823364,
+          "received_usd": 0.0
+        },
+        "OPUSDT": {
+          "coverage_frac": null,
+          "expected": 0,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "observed": 0,
+          "paid_usd": 0,
+          "received_usd": 0
+        },
+        "ORDIUSDT": {
+          "coverage_frac": null,
+          "expected": 0,
+          "interval_known": true,
+          "intervals_ms": [
+            14400000,
+            28800000
+          ],
+          "observed": 0,
+          "paid_usd": 0,
+          "received_usd": 0
+        },
+        "PENGUUSDT": {
+          "coverage_frac": null,
+          "expected": 0,
+          "interval_known": true,
+          "intervals_ms": [
+            14400000
+          ],
+          "observed": 0,
+          "paid_usd": 0,
+          "received_usd": 0
+        },
+        "PEOPLEUSDT": {
+          "coverage_frac": null,
+          "expected": 0,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "observed": 0,
+          "paid_usd": 0,
+          "received_usd": 0
+        },
+        "PIPPINUSDT": {
+          "coverage_frac": null,
+          "expected": 0,
+          "interval_known": true,
+          "intervals_ms": [
+            3600000,
+            14400000,
+            28800000
+          ],
+          "observed": 0,
+          "paid_usd": 0,
+          "received_usd": 0
+        },
+        "POPCATUSDT": {
+          "coverage_frac": null,
+          "expected": 0,
+          "interval_known": true,
+          "intervals_ms": [
+            14400000,
+            28800000
+          ],
+          "observed": 0,
+          "paid_usd": 0,
+          "received_usd": 0
+        },
+        "PUMPFUNUSDT": {
+          "coverage_frac": 1.0,
+          "expected": 5,
+          "interval_known": true,
+          "intervals_ms": [
+            14400000
+          ],
+          "observed": 5,
+          "paid_usd": 0.016043474174054925,
+          "received_usd": 0.0
+        },
+        "RAREUSDT": {
+          "coverage_frac": null,
+          "expected": 0,
+          "interval_known": true,
+          "intervals_ms": [
+            14400000,
+            28800000
+          ],
+          "observed": 0,
+          "paid_usd": 0,
+          "received_usd": 0
+        },
+        "RAVEUSDT": {
+          "coverage_frac": null,
+          "expected": 0,
+          "interval_known": true,
+          "intervals_ms": [
+            3600000,
+            14400000
+          ],
+          "observed": 0,
+          "paid_usd": 0,
+          "received_usd": 0
+        },
+        "REEFUSDT": {
+          "coverage_frac": null,
+          "expected": 0,
+          "interval_known": true,
+          "intervals_ms": [
+            14400000,
+            28800000
+          ],
+          "observed": 0,
+          "paid_usd": 0,
+          "received_usd": 0
+        },
+        "RIVERUSDT": {
+          "coverage_frac": 1.0,
+          "expected": 93,
+          "interval_known": true,
+          "intervals_ms": [
+            3600000,
+            14400000
+          ],
+          "observed": 93,
+          "paid_usd": 0.13431632891438416,
+          "received_usd": 3.580954389738545
+        },
+        "RNDRUSDT": {
+          "coverage_frac": null,
+          "expected": 0,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "observed": 0,
+          "paid_usd": 0,
+          "received_usd": 0
+        },
+        "RUNEUSDT": {
+          "coverage_frac": null,
+          "expected": 0,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "observed": 0,
+          "paid_usd": 0,
+          "received_usd": 0
+        },
+        "SANDUSDT": {
+          "coverage_frac": null,
+          "expected": 0,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "observed": 0,
+          "paid_usd": 0,
+          "received_usd": 0
+        },
+        "SEIUSDT": {
+          "coverage_frac": null,
+          "expected": 0,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "observed": 0,
+          "paid_usd": 0,
+          "received_usd": 0
+        },
+        "SHIB1000USDT": {
+          "coverage_frac": null,
+          "expected": 0,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "observed": 0,
+          "paid_usd": 0,
+          "received_usd": 0
+        },
+        "SOLUSDT": {
+          "coverage_frac": 1.0,
+          "expected": 319,
+          "interval_known": true,
+          "intervals_ms": [
+            7200000,
+            28800000
+          ],
+          "observed": 319,
+          "paid_usd": 2.833418778248575,
+          "received_usd": 1.5064896326218387
+        },
+        "STXUSDT": {
+          "coverage_frac": null,
+          "expected": 0,
+          "interval_known": true,
+          "intervals_ms": [
+            3600000,
+            28800000
+          ],
+          "observed": 0,
+          "paid_usd": 0,
+          "received_usd": 0
+        },
+        "SUIUSDT": {
+          "coverage_frac": 1.0,
+          "expected": 133,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "observed": 133,
+          "paid_usd": 1.0188123940212428,
+          "received_usd": 0.17460710267563892
+        },
+        "SUSHIUSDT": {
+          "coverage_frac": null,
+          "expected": 0,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "observed": 0,
+          "paid_usd": 0,
+          "received_usd": 0
+        },
+        "SXPUSDT": {
+          "coverage_frac": null,
+          "expected": 0,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "observed": 0,
+          "paid_usd": 0,
+          "received_usd": 0
+        },
+        "TAOUSDT": {
+          "coverage_frac": 1.0,
+          "expected": 84,
+          "interval_known": true,
+          "intervals_ms": [
+            14400000,
+            28800000
+          ],
+          "observed": 84,
+          "paid_usd": 0.29281948898504256,
+          "received_usd": 0.09307447828281831
+        },
+        "TIAUSDT": {
+          "coverage_frac": null,
+          "expected": 0,
+          "interval_known": true,
+          "intervals_ms": [
+            14400000,
+            28800000
+          ],
+          "observed": 0,
+          "paid_usd": 0,
+          "received_usd": 0
+        },
+        "TOMOUSDT": {
+          "coverage_frac": null,
+          "expected": 0,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "observed": 0,
+          "paid_usd": 0,
+          "received_usd": 0
+        },
+        "TONUSDT": {
+          "coverage_frac": null,
+          "expected": 0,
+          "interval_known": true,
+          "intervals_ms": [
+            14400000,
+            28800000
+          ],
+          "observed": 0,
+          "paid_usd": 0,
+          "received_usd": 0
+        },
+        "TRBUSDT": {
+          "coverage_frac": null,
+          "expected": 0,
+          "interval_known": true,
+          "intervals_ms": [
+            7200000,
+            14400000,
+            28800000
+          ],
+          "observed": 0,
+          "paid_usd": 0,
+          "received_usd": 0
+        },
+        "TRUMPUSDT": {
+          "coverage_frac": null,
+          "expected": 0,
+          "interval_known": true,
+          "intervals_ms": [
+            14400000
+          ],
+          "observed": 0,
+          "paid_usd": 0,
+          "received_usd": 0
+        },
+        "TRXUSDT": {
+          "coverage_frac": null,
+          "expected": 0,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "observed": 0,
+          "paid_usd": 0,
+          "received_usd": 0
+        },
+        "UNFIUSDT": {
+          "coverage_frac": null,
+          "expected": 0,
+          "interval_known": true,
+          "intervals_ms": [
+            14400000,
+            28800000
+          ],
+          "observed": 0,
+          "paid_usd": 0,
+          "received_usd": 0
+        },
+        "VIRTUALUSDT": {
+          "coverage_frac": null,
+          "expected": 0,
+          "interval_known": true,
+          "intervals_ms": [
+            14400000,
+            28800000
+          ],
+          "observed": 0,
+          "paid_usd": 0,
+          "received_usd": 0
+        },
+        "WAVESUSDT": {
+          "coverage_frac": null,
+          "expected": 0,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "observed": 0,
+          "paid_usd": 0,
+          "received_usd": 0
+        },
+        "WIFUSDT": {
+          "coverage_frac": null,
+          "expected": 0,
+          "interval_known": true,
+          "intervals_ms": [
+            14400000,
+            28800000
+          ],
+          "observed": 0,
+          "paid_usd": 0,
+          "received_usd": 0
+        },
+        "WLDUSDT": {
+          "coverage_frac": 1.0,
+          "expected": 79,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "observed": 79,
+          "paid_usd": 0.44392275537435893,
+          "received_usd": 0.18569115779750864
+        },
+        "XRPUSDT": {
+          "coverage_frac": 1.0,
+          "expected": 216,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "observed": 216,
+          "paid_usd": 1.576918208878517,
+          "received_usd": 0.4156975846220818
+        },
+        "XTZUSDT": {
+          "coverage_frac": null,
+          "expected": 0,
+          "interval_known": true,
+          "intervals_ms": [
+            3600000,
+            14400000,
+            28800000
+          ],
+          "observed": 0,
+          "paid_usd": 0,
+          "received_usd": 0
+        },
+        "YGGUSDT": {
+          "coverage_frac": null,
+          "expected": 0,
+          "interval_known": true,
+          "intervals_ms": [
+            7200000,
+            14400000,
+            28800000
+          ],
+          "observed": 0,
+          "paid_usd": 0,
+          "received_usd": 0
+        },
+        "ZECUSDT": {
+          "coverage_frac": 1.0,
+          "expected": 419,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "observed": 419,
+          "paid_usd": 5.210406222274949,
+          "received_usd": 8.744379018089054
+        }
+      },
+      "funding_coverage_frac": 1.0,
+      "funding_expected": 4185,
+      "funding_gaps": [],
+      "funding_observed": 4185,
+      "funding_paid_usd": 35.760830512877234,
+      "funding_pct_gross_profit": 3.071068555850724,
+      "funding_price_sources": {
+        "1d_open_fallback": 54,
+        "4h_open": 4131
+      },
+      "funding_received_usd": 72.53154803687372,
+      "funding_regimes": {
+        "1000BONKUSDT": {
+          "history_first_ms": 1672992000000,
+          "history_last_ms": 1790625600000,
+          "interval_known": true,
+          "intervals_ms": [
+            14400000,
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1736928000000,
+              "interval_ms": 28800000,
+              "observed_steps": 2220,
+              "start_ms": 1672992000000
+            },
+            {
+              "end_ms": 1790625600000,
+              "interval_ms": 14400000,
+              "observed_steps": 3729,
+              "start_ms": 1736928000000
+            }
+          ],
+          "transitions": []
+        },
+        "1000FLOKIUSDT": {
+          "history_first_ms": 1677225600000,
+          "history_last_ms": 1790611200000,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1790611200000,
+              "interval_ms": 28800000,
+              "observed_steps": 3937,
+              "start_ms": 1677225600000
+            }
+          ],
+          "transitions": []
+        },
+        "1000PEPEUSDT": {
+          "history_first_ms": 1683100800000,
+          "history_last_ms": 1790611200000,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1790611200000,
+              "interval_ms": 28800000,
+              "observed_steps": 3733,
+              "start_ms": 1683100800000
+            }
+          ],
+          "transitions": []
+        },
+        "1000RATSUSDT": {
+          "history_first_ms": 1700640000000,
+          "history_last_ms": 1790625600000,
+          "interval_known": true,
+          "intervals_ms": [
+            14400000,
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1736928000000,
+              "interval_ms": 28800000,
+              "observed_steps": 1260,
+              "start_ms": 1700640000000
+            },
+            {
+              "end_ms": 1790625600000,
+              "interval_ms": 14400000,
+              "observed_steps": 3729,
+              "start_ms": 1736928000000
+            }
+          ],
+          "transitions": []
+        },
+        "AAVEUSDT": {
+          "history_first_ms": 1620921600000,
+          "history_last_ms": 1790611200000,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1790611200000,
+              "interval_ms": 28800000,
+              "observed_steps": 5892,
+              "start_ms": 1620921600000
+            }
+          ],
+          "transitions": []
+        },
+        "ADAUSDT": {
+          "history_first_ms": 1616054400000,
+          "history_last_ms": 1790611200000,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1790611200000,
+              "interval_ms": 28800000,
+              "observed_steps": 6061,
+              "start_ms": 1616054400000
+            }
+          ],
+          "transitions": []
+        },
+        "AERGOUSDT": {
+          "history_first_ms": 1700121600000,
+          "history_last_ms": 1784966400000,
+          "interval_known": true,
+          "intervals_ms": [
+            7200000,
+            14400000,
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1736928000000,
+              "interval_ms": 28800000,
+              "observed_steps": 1278,
+              "start_ms": 1700121600000
+            },
+            {
+              "end_ms": 1744948800000,
+              "interval_ms": 14400000,
+              "observed_steps": 557,
+              "start_ms": 1736928000000
+            },
+            {
+              "end_ms": 1745582400000,
+              "interval_ms": 7200000,
+              "observed_steps": 88,
+              "start_ms": 1744948800000
+            },
+            {
+              "end_ms": 1784966400000,
+              "interval_ms": 14400000,
+              "observed_steps": 2735,
+              "start_ms": 1745582400000
+            }
+          ],
+          "transitions": []
+        },
+        "AKEUSDT": {
+          "history_first_ms": 1758888000000,
+          "history_last_ms": 1790625600000,
+          "interval_known": true,
+          "intervals_ms": [
+            3600000,
+            14400000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1789891200000,
+              "interval_ms": 14400000,
+              "observed_steps": 2153,
+              "start_ms": 1758888000000
+            },
+            {
+              "end_ms": 1790096400000,
+              "interval_ms": 3600000,
+              "observed_steps": 57,
+              "start_ms": 1789891200000
+            },
+            {
+              "end_ms": 1790625600000,
+              "interval_ms": 14400000,
+              "observed_steps": 36,
+              "start_ms": 1790107200000
+            }
+          ],
+          "transitions": [
+            {
+              "after_interval_ms": 14400000,
+              "before_interval_ms": 3600000,
+              "end_ms": 1790107200000,
+              "start_ms": 1790096400000
+            }
+          ]
+        },
+        "APEUSDT": {
+          "history_first_ms": 1647590400000,
+          "history_last_ms": 1790611200000,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1790611200000,
+              "interval_ms": 28800000,
+              "observed_steps": 4966,
+              "start_ms": 1647590400000
+            }
+          ],
+          "transitions": []
+        },
+        "APTUSDT": {
+          "history_first_ms": 1666137600000,
+          "history_last_ms": 1790611200000,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1790611200000,
+              "interval_ms": 28800000,
+              "observed_steps": 4322,
+              "start_ms": 1666137600000
+            }
+          ],
+          "transitions": []
+        },
+        "ARBUSDT": {
+          "history_first_ms": 1679558400000,
+          "history_last_ms": 1790611200000,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1790611200000,
+              "interval_ms": 28800000,
+              "observed_steps": 3856,
+              "start_ms": 1679558400000
+            }
+          ],
+          "transitions": []
+        },
+        "ATOMUSDT": {
+          "history_first_ms": 1633939200000,
+          "history_last_ms": 1790611200000,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1790611200000,
+              "interval_ms": 28800000,
+              "observed_steps": 5440,
+              "start_ms": 1633939200000
+            }
+          ],
+          "transitions": []
+        },
+        "AUCTIONUSDT": {
+          "history_first_ms": 1690502400000,
+          "history_last_ms": 1790625600000,
+          "interval_known": true,
+          "intervals_ms": [
+            3600000,
+            14400000,
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1702828800000,
+              "interval_ms": 28800000,
+              "observed_steps": 428,
+              "start_ms": 1690502400000
+            },
+            {
+              "end_ms": 1769356800000,
+              "interval_ms": 14400000,
+              "observed_steps": 4620,
+              "start_ms": 1702828800000
+            },
+            {
+              "end_ms": 1772128800000,
+              "interval_ms": 3600000,
+              "observed_steps": 770,
+              "start_ms": 1769356800000
+            },
+            {
+              "end_ms": 1790625600000,
+              "interval_ms": 14400000,
+              "observed_steps": 1284,
+              "start_ms": 1772136000000
+            }
+          ],
+          "transitions": [
+            {
+              "after_interval_ms": 14400000,
+              "before_interval_ms": 3600000,
+              "end_ms": 1772136000000,
+              "start_ms": 1772128800000
+            }
+          ]
+        },
+        "AVAXUSDT": {
+          "history_first_ms": 1631721600000,
+          "history_last_ms": 1790611200000,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1790611200000,
+              "interval_ms": 28800000,
+              "observed_steps": 5517,
+              "start_ms": 1631721600000
+            }
+          ],
+          "transitions": []
+        },
+        "AXSUSDT": {
+          "history_first_ms": 1630425600000,
+          "history_last_ms": 1790611200000,
+          "interval_known": true,
+          "intervals_ms": [
+            3600000,
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1768377600000,
+              "interval_ms": 28800000,
+              "observed_steps": 4790,
+              "start_ms": 1630425600000
+            },
+            {
+              "end_ms": 1772467200000,
+              "interval_ms": 3600000,
+              "observed_steps": 1136,
+              "start_ms": 1768377600000
+            },
+            {
+              "end_ms": 1790611200000,
+              "interval_ms": 28800000,
+              "observed_steps": 630,
+              "start_ms": 1772467200000
+            }
+          ],
+          "transitions": []
+        },
+        "BCHUSDT": {
+          "history_first_ms": 1609459200000,
+          "history_last_ms": 1790611200000,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1790611200000,
+              "interval_ms": 28800000,
+              "observed_steps": 6290,
+              "start_ms": 1609459200000
+            }
+          ],
+          "transitions": []
+        },
+        "BEATUSDT": {
+          "history_first_ms": 1763712000000,
+          "history_last_ms": 1790625600000,
+          "interval_known": true,
+          "intervals_ms": [
+            3600000,
+            14400000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1765641600000,
+              "interval_ms": 14400000,
+              "observed_steps": 134,
+              "start_ms": 1763712000000
+            },
+            {
+              "end_ms": 1772128800000,
+              "interval_ms": 3600000,
+              "observed_steps": 1802,
+              "start_ms": 1765641600000
+            },
+            {
+              "end_ms": 1790625600000,
+              "interval_ms": 14400000,
+              "observed_steps": 1284,
+              "start_ms": 1772136000000
+            }
+          ],
+          "transitions": [
+            {
+              "after_interval_ms": 14400000,
+              "before_interval_ms": 3600000,
+              "end_ms": 1772136000000,
+              "start_ms": 1772128800000
+            }
+          ]
+        },
+        "BITUSDT": {
+          "history_first_ms": 1633939200000,
+          "history_last_ms": 1688428800000,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1688428800000,
+              "interval_ms": 28800000,
+              "observed_steps": 1892,
+              "start_ms": 1633939200000
+            }
+          ],
+          "transitions": []
+        },
+        "BLURUSDT": {
+          "history_first_ms": 1676419200000,
+          "history_last_ms": 1790611200000,
+          "interval_known": true,
+          "intervals_ms": [
+            3600000,
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1768406400000,
+              "interval_ms": 28800000,
+              "observed_steps": 3194,
+              "start_ms": 1676419200000
+            },
+            {
+              "end_ms": 1772128800000,
+              "interval_ms": 3600000,
+              "observed_steps": 1034,
+              "start_ms": 1768406400000
+            },
+            {
+              "end_ms": 1775030400000,
+              "interval_ms": 28800000,
+              "observed_steps": 100,
+              "start_ms": 1772150400000
+            },
+            {
+              "end_ms": 1775232000000,
+              "interval_ms": 3600000,
+              "observed_steps": 56,
+              "start_ms": 1775030400000
+            },
+            {
+              "end_ms": 1775692800000,
+              "interval_ms": 28800000,
+              "observed_steps": 16,
+              "start_ms": 1775232000000
+            },
+            {
+              "end_ms": 1775847600000,
+              "interval_ms": 3600000,
+              "observed_steps": 43,
+              "start_ms": 1775692800000
+            },
+            {
+              "end_ms": 1783382400000,
+              "interval_ms": 28800000,
+              "observed_steps": 261,
+              "start_ms": 1775865600000
+            },
+            {
+              "end_ms": 1783584000000,
+              "interval_ms": 3600000,
+              "observed_steps": 56,
+              "start_ms": 1783382400000
+            },
+            {
+              "end_ms": 1790611200000,
+              "interval_ms": 28800000,
+              "observed_steps": 244,
+              "start_ms": 1783584000000
+            }
+          ],
+          "transitions": [
+            {
+              "after_interval_ms": 28800000,
+              "before_interval_ms": 3600000,
+              "end_ms": 1772150400000,
+              "start_ms": 1772128800000
+            },
+            {
+              "after_interval_ms": 28800000,
+              "before_interval_ms": 3600000,
+              "end_ms": 1775865600000,
+              "start_ms": 1775847600000
+            }
+          ]
+        },
+        "BLZUSDT": {
+          "history_first_ms": 1654531200000,
+          "history_last_ms": 1735027200000,
+          "interval_known": true,
+          "intervals_ms": [
+            14400000,
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1692201600000,
+              "interval_ms": 28800000,
+              "observed_steps": 1308,
+              "start_ms": 1654531200000
+            },
+            {
+              "end_ms": 1694678400000,
+              "interval_ms": 14400000,
+              "observed_steps": 172,
+              "start_ms": 1692201600000
+            },
+            {
+              "end_ms": 1735027200000,
+              "interval_ms": 28800000,
+              "observed_steps": 1401,
+              "start_ms": 1694678400000
+            }
+          ],
+          "transitions": []
+        },
+        "BNBUSDT": {
+          "history_first_ms": 1624953600000,
+          "history_last_ms": 1790611200000,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1790611200000,
+              "interval_ms": 28800000,
+              "observed_steps": 5752,
+              "start_ms": 1624953600000
+            }
+          ],
+          "transitions": []
+        },
+        "BTCUSDT": {
+          "history_first_ms": 1609459200000,
+          "history_last_ms": 1790611200000,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1790611200000,
+              "interval_ms": 28800000,
+              "observed_steps": 6290,
+              "start_ms": 1609459200000
+            }
+          ],
+          "transitions": []
+        },
+        "CHZUSDT": {
+          "history_first_ms": 1634025600000,
+          "history_last_ms": 1790611200000,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1790611200000,
+              "interval_ms": 28800000,
+              "observed_steps": 5437,
+              "start_ms": 1634025600000
+            }
+          ],
+          "transitions": []
+        },
+        "COMPUSDT": {
+          "history_first_ms": 1630425600000,
+          "history_last_ms": 1790611200000,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1790611200000,
+              "interval_ms": 28800000,
+              "observed_steps": 5562,
+              "start_ms": 1630425600000
+            }
+          ],
+          "transitions": []
+        },
+        "DOGEUSDT": {
+          "history_first_ms": 1622649600000,
+          "history_last_ms": 1790611200000,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1790611200000,
+              "interval_ms": 28800000,
+              "observed_steps": 5832,
+              "start_ms": 1622649600000
+            }
+          ],
+          "transitions": []
+        },
+        "DOTUSDT": {
+          "history_first_ms": 1616054400000,
+          "history_last_ms": 1790611200000,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1790611200000,
+              "interval_ms": 28800000,
+              "observed_steps": 6061,
+              "start_ms": 1616054400000
+            }
+          ],
+          "transitions": []
+        },
+        "DYDXUSDT": {
+          "history_first_ms": 1633939200000,
+          "history_last_ms": 1790611200000,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1790611200000,
+              "interval_ms": 28800000,
+              "observed_steps": 5440,
+              "start_ms": 1633939200000
+            }
+          ],
+          "transitions": []
+        },
+        "ENAUSDT": {
+          "history_first_ms": 1712044800000,
+          "history_last_ms": 1790625600000,
+          "interval_known": true,
+          "intervals_ms": [
+            14400000,
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1736928000000,
+              "interval_ms": 28800000,
+              "observed_steps": 864,
+              "start_ms": 1712044800000
+            },
+            {
+              "end_ms": 1790625600000,
+              "interval_ms": 14400000,
+              "observed_steps": 3729,
+              "start_ms": 1736928000000
+            }
+          ],
+          "transitions": []
+        },
+        "EOSUSDT": {
+          "history_first_ms": 1624953600000,
+          "history_last_ms": 1747814400000,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1747814400000,
+              "interval_ms": 28800000,
+              "observed_steps": 4266,
+              "start_ms": 1624953600000
+            }
+          ],
+          "transitions": []
+        },
+        "ETCUSDT": {
+          "history_first_ms": 1624953600000,
+          "history_last_ms": 1790611200000,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1790611200000,
+              "interval_ms": 28800000,
+              "observed_steps": 5752,
+              "start_ms": 1624953600000
+            }
+          ],
+          "transitions": []
+        },
+        "ETHUSDT": {
+          "history_first_ms": 1609459200000,
+          "history_last_ms": 1790611200000,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1790611200000,
+              "interval_ms": 28800000,
+              "observed_steps": 6290,
+              "start_ms": 1609459200000
+            }
+          ],
+          "transitions": []
+        },
+        "FARTCOINUSDT": {
+          "history_first_ms": 1734681600000,
+          "history_last_ms": 1790625600000,
+          "interval_known": true,
+          "intervals_ms": [
+            14400000,
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1736928000000,
+              "interval_ms": 28800000,
+              "observed_steps": 78,
+              "start_ms": 1734681600000
+            },
+            {
+              "end_ms": 1790625600000,
+              "interval_ms": 14400000,
+              "observed_steps": 3729,
+              "start_ms": 1736928000000
+            }
+          ],
+          "transitions": []
+        },
+        "FETUSDT": {
+          "history_first_ms": 1675900800000,
+          "history_last_ms": 1717747200000,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1717747200000,
+              "interval_ms": 28800000,
+              "observed_steps": 1453,
+              "start_ms": 1675900800000
+            }
+          ],
+          "transitions": []
+        },
+        "FILUSDT": {
+          "history_first_ms": 1624953600000,
+          "history_last_ms": 1790611200000,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1790611200000,
+              "interval_ms": 28800000,
+              "observed_steps": 5752,
+              "start_ms": 1624953600000
+            }
+          ],
+          "transitions": []
+        },
+        "FTMUSDT": {
+          "history_first_ms": 1632384000000,
+          "history_last_ms": 1736496000000,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1736496000000,
+              "interval_ms": 28800000,
+              "observed_steps": 3615,
+              "start_ms": 1632384000000
+            }
+          ],
+          "transitions": []
+        },
+        "GALAUSDT": {
+          "history_first_ms": 1636473600000,
+          "history_last_ms": 1790611200000,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1790611200000,
+              "interval_ms": 28800000,
+              "observed_steps": 5352,
+              "start_ms": 1636473600000
+            }
+          ],
+          "transitions": []
+        },
+        "GMTUSDT": {
+          "history_first_ms": 1647705600000,
+          "history_last_ms": 1790611200000,
+          "interval_known": true,
+          "intervals_ms": [
+            3600000,
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1766966400000,
+              "interval_ms": 28800000,
+              "observed_steps": 4141,
+              "start_ms": 1647705600000
+            },
+            {
+              "end_ms": 1772128800000,
+              "interval_ms": 3600000,
+              "observed_steps": 1434,
+              "start_ms": 1766966400000
+            },
+            {
+              "end_ms": 1779552000000,
+              "interval_ms": 28800000,
+              "observed_steps": 257,
+              "start_ms": 1772150400000
+            },
+            {
+              "end_ms": 1779739200000,
+              "interval_ms": 3600000,
+              "observed_steps": 52,
+              "start_ms": 1779552000000
+            },
+            {
+              "end_ms": 1790611200000,
+              "interval_ms": 28800000,
+              "observed_steps": 377,
+              "start_ms": 1779753600000
+            }
+          ],
+          "transitions": [
+            {
+              "after_interval_ms": 28800000,
+              "before_interval_ms": 3600000,
+              "end_ms": 1772150400000,
+              "start_ms": 1772128800000
+            },
+            {
+              "after_interval_ms": 28800000,
+              "before_interval_ms": 3600000,
+              "end_ms": 1779753600000,
+              "start_ms": 1779739200000
+            }
+          ]
+        },
+        "HBARUSDT": {
+          "history_first_ms": 1635148800000,
+          "history_last_ms": 1790611200000,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1790611200000,
+              "interval_ms": 28800000,
+              "observed_steps": 5398,
+              "start_ms": 1635148800000
+            }
+          ],
+          "transitions": []
+        },
+        "HUSDT": {
+          "history_first_ms": 1750838400000,
+          "history_last_ms": 1790625600000,
+          "interval_known": true,
+          "intervals_ms": [
+            3600000,
+            14400000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1751443200000,
+              "interval_ms": 14400000,
+              "observed_steps": 42,
+              "start_ms": 1750838400000
+            },
+            {
+              "end_ms": 1772416800000,
+              "interval_ms": 3600000,
+              "observed_steps": 5824,
+              "start_ms": 1751450400000
+            },
+            {
+              "end_ms": 1780963200000,
+              "interval_ms": 14400000,
+              "observed_steps": 593,
+              "start_ms": 1772424000000
+            },
+            {
+              "end_ms": 1782648000000,
+              "interval_ms": 3600000,
+              "observed_steps": 468,
+              "start_ms": 1780963200000
+            },
+            {
+              "end_ms": 1790625600000,
+              "interval_ms": 14400000,
+              "observed_steps": 554,
+              "start_ms": 1782648000000
+            }
+          ],
+          "transitions": [
+            {
+              "after_interval_ms": 3600000,
+              "before_interval_ms": 14400000,
+              "end_ms": 1751450400000,
+              "start_ms": 1751443200000
+            },
+            {
+              "after_interval_ms": 14400000,
+              "before_interval_ms": 3600000,
+              "end_ms": 1772424000000,
+              "start_ms": 1772416800000
+            }
+          ]
+        },
+        "HYPEUSDT": {
+          "history_first_ms": 1733385600000,
+          "history_last_ms": 1790611200000,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1790611200000,
+              "interval_ms": 28800000,
+              "observed_steps": 1987,
+              "start_ms": 1733385600000
+            }
+          ],
+          "transitions": []
+        },
+        "ICPUSDT": {
+          "history_first_ms": 1631721600000,
+          "history_last_ms": 1790611200000,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1790611200000,
+              "interval_ms": 28800000,
+              "observed_steps": 5517,
+              "start_ms": 1631721600000
+            }
+          ],
+          "transitions": []
+        },
+        "INJUSDT": {
+          "history_first_ms": 1660694400000,
+          "history_last_ms": 1790611200000,
+          "interval_known": true,
+          "intervals_ms": [
+            3600000,
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1771516800000,
+              "interval_ms": 28800000,
+              "observed_steps": 3848,
+              "start_ms": 1660694400000
+            },
+            {
+              "end_ms": 1772128800000,
+              "interval_ms": 3600000,
+              "observed_steps": 170,
+              "start_ms": 1771516800000
+            },
+            {
+              "end_ms": 1790611200000,
+              "interval_ms": 28800000,
+              "observed_steps": 641,
+              "start_ms": 1772150400000
+            }
+          ],
+          "transitions": [
+            {
+              "after_interval_ms": 28800000,
+              "before_interval_ms": 3600000,
+              "end_ms": 1772150400000,
+              "start_ms": 1772128800000
+            }
+          ]
+        },
+        "KNCUSDT": {
+          "history_first_ms": 1641830400000,
+          "history_last_ms": 1790611200000,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1790611200000,
+              "interval_ms": 28800000,
+              "observed_steps": 5166,
+              "start_ms": 1641830400000
+            }
+          ],
+          "transitions": []
+        },
+        "LABUSDT": {
+          "history_first_ms": 1761552000000,
+          "history_last_ms": 1790625600000,
+          "interval_known": true,
+          "intervals_ms": [
+            3600000,
+            14400000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1780286400000,
+              "interval_ms": 14400000,
+              "observed_steps": 1301,
+              "start_ms": 1761552000000
+            },
+            {
+              "end_ms": 1781211600000,
+              "interval_ms": 3600000,
+              "observed_steps": 257,
+              "start_ms": 1780286400000
+            },
+            {
+              "end_ms": 1782316800000,
+              "interval_ms": 14400000,
+              "observed_steps": 76,
+              "start_ms": 1781222400000
+            },
+            {
+              "end_ms": 1782957600000,
+              "interval_ms": 3600000,
+              "observed_steps": 178,
+              "start_ms": 1782316800000
+            },
+            {
+              "end_ms": 1783051200000,
+              "interval_ms": 14400000,
+              "observed_steps": 6,
+              "start_ms": 1782964800000
+            },
+            {
+              "end_ms": 1783245600000,
+              "interval_ms": 3600000,
+              "observed_steps": 54,
+              "start_ms": 1783051200000
+            },
+            {
+              "end_ms": 1783382400000,
+              "interval_ms": 14400000,
+              "observed_steps": 9,
+              "start_ms": 1783252800000
+            },
+            {
+              "end_ms": 1783746000000,
+              "interval_ms": 3600000,
+              "observed_steps": 101,
+              "start_ms": 1783382400000
+            },
+            {
+              "end_ms": 1790625600000,
+              "interval_ms": 14400000,
+              "observed_steps": 477,
+              "start_ms": 1783756800000
+            }
+          ],
+          "transitions": [
+            {
+              "after_interval_ms": 14400000,
+              "before_interval_ms": 3600000,
+              "end_ms": 1781222400000,
+              "start_ms": 1781211600000
+            },
+            {
+              "after_interval_ms": 14400000,
+              "before_interval_ms": 3600000,
+              "end_ms": 1782964800000,
+              "start_ms": 1782957600000
+            },
+            {
+              "after_interval_ms": 14400000,
+              "before_interval_ms": 3600000,
+              "end_ms": 1783252800000,
+              "start_ms": 1783245600000
+            },
+            {
+              "after_interval_ms": 14400000,
+              "before_interval_ms": 3600000,
+              "end_ms": 1783756800000,
+              "start_ms": 1783746000000
+            }
+          ]
+        },
+        "LDOUSDT": {
+          "history_first_ms": 1658390400000,
+          "history_last_ms": 1790611200000,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1790611200000,
+              "interval_ms": 28800000,
+              "observed_steps": 4591,
+              "start_ms": 1658390400000
+            }
+          ],
+          "transitions": []
+        },
+        "LINAUSDT": {
+          "history_first_ms": 1650470400000,
+          "history_last_ms": 1743033600000,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1743033600000,
+              "interval_ms": 28800000,
+              "observed_steps": 3214,
+              "start_ms": 1650470400000
+            }
+          ],
+          "transitions": []
+        },
+        "LINKUSDT": {
+          "history_first_ms": 1609459200000,
+          "history_last_ms": 1790611200000,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1790611200000,
+              "interval_ms": 28800000,
+              "observed_steps": 6290,
+              "start_ms": 1609459200000
+            }
+          ],
+          "transitions": []
+        },
+        "LPTUSDT": {
+          "history_first_ms": 1639411200000,
+          "history_last_ms": 1790625600000,
+          "interval_known": true,
+          "intervals_ms": [
+            3600000,
+            14400000,
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1691424000000,
+              "interval_ms": 28800000,
+              "observed_steps": 1806,
+              "start_ms": 1639411200000
+            },
+            {
+              "end_ms": 1691740800000,
+              "interval_ms": 14400000,
+              "observed_steps": 22,
+              "start_ms": 1691424000000
+            },
+            {
+              "end_ms": 1736928000000,
+              "interval_ms": 28800000,
+              "observed_steps": 1569,
+              "start_ms": 1691740800000
+            },
+            {
+              "end_ms": 1748592000000,
+              "interval_ms": 14400000,
+              "observed_steps": 810,
+              "start_ms": 1736928000000
+            },
+            {
+              "end_ms": 1772416800000,
+              "interval_ms": 3600000,
+              "observed_steps": 6618,
+              "start_ms": 1748592000000
+            },
+            {
+              "end_ms": 1790625600000,
+              "interval_ms": 14400000,
+              "observed_steps": 1264,
+              "start_ms": 1772424000000
+            }
+          ],
+          "transitions": [
+            {
+              "after_interval_ms": 14400000,
+              "before_interval_ms": 3600000,
+              "end_ms": 1772424000000,
+              "start_ms": 1772416800000
+            }
+          ]
+        },
+        "LTCUSDT": {
+          "history_first_ms": 1609459200000,
+          "history_last_ms": 1790611200000,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1790611200000,
+              "interval_ms": 28800000,
+              "observed_steps": 6290,
+              "start_ms": 1609459200000
+            }
+          ],
+          "transitions": []
+        },
+        "LUNA2USDT": {
+          "history_first_ms": 1654012800000,
+          "history_last_ms": 1790611200000,
+          "interval_known": true,
+          "intervals_ms": [
+            3600000,
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1764950400000,
+              "interval_ms": 28800000,
+              "observed_steps": 3852,
+              "start_ms": 1654012800000
+            },
+            {
+              "end_ms": 1772128800000,
+              "interval_ms": 3600000,
+              "observed_steps": 1994,
+              "start_ms": 1764950400000
+            },
+            {
+              "end_ms": 1790611200000,
+              "interval_ms": 28800000,
+              "observed_steps": 641,
+              "start_ms": 1772150400000
+            }
+          ],
+          "transitions": [
+            {
+              "after_interval_ms": 28800000,
+              "before_interval_ms": 3600000,
+              "end_ms": 1772150400000,
+              "start_ms": 1772128800000
+            }
+          ]
+        },
+        "LUNAUSDT": {
+          "history_first_ms": 1633939200000,
+          "history_last_ms": 1654041600000,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1654041600000,
+              "interval_ms": 28800000,
+              "observed_steps": 698,
+              "start_ms": 1633939200000
+            }
+          ],
+          "transitions": []
+        },
+        "MASKUSDT": {
+          "history_first_ms": 1638518400000,
+          "history_last_ms": 1790625600000,
+          "interval_known": true,
+          "intervals_ms": [
+            3600000,
+            14400000,
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1749254400000,
+              "interval_ms": 28800000,
+              "observed_steps": 3845,
+              "start_ms": 1638518400000
+            },
+            {
+              "end_ms": 1772416800000,
+              "interval_ms": 3600000,
+              "observed_steps": 6431,
+              "start_ms": 1749265200000
+            },
+            {
+              "end_ms": 1790625600000,
+              "interval_ms": 14400000,
+              "observed_steps": 1264,
+              "start_ms": 1772424000000
+            }
+          ],
+          "transitions": [
+            {
+              "after_interval_ms": 3600000,
+              "before_interval_ms": 28800000,
+              "end_ms": 1749265200000,
+              "start_ms": 1749254400000
+            },
+            {
+              "after_interval_ms": 14400000,
+              "before_interval_ms": 3600000,
+              "end_ms": 1772424000000,
+              "start_ms": 1772416800000
+            }
+          ]
+        },
+        "MATICUSDT": {
+          "history_first_ms": 1624953600000,
+          "history_last_ms": 1725609600000,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1725609600000,
+              "interval_ms": 28800000,
+              "observed_steps": 3495,
+              "start_ms": 1624953600000
+            }
+          ],
+          "transitions": []
+        },
+        "MNTUSDT": {
+          "history_first_ms": 1696204800000,
+          "history_last_ms": 1790611200000,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1790611200000,
+              "interval_ms": 28800000,
+              "observed_steps": 3278,
+              "start_ms": 1696204800000
+            }
+          ],
+          "transitions": []
+        },
+        "MOODENGUSDT": {
+          "history_first_ms": 1727740800000,
+          "history_last_ms": 1790625600000,
+          "interval_known": true,
+          "intervals_ms": [
+            3600000,
+            14400000,
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1736928000000,
+              "interval_ms": 28800000,
+              "observed_steps": 319,
+              "start_ms": 1727740800000
+            },
+            {
+              "end_ms": 1765065600000,
+              "interval_ms": 14400000,
+              "observed_steps": 1954,
+              "start_ms": 1736928000000
+            },
+            {
+              "end_ms": 1772128800000,
+              "interval_ms": 3600000,
+              "observed_steps": 1962,
+              "start_ms": 1765065600000
+            },
+            {
+              "end_ms": 1790625600000,
+              "interval_ms": 14400000,
+              "observed_steps": 1284,
+              "start_ms": 1772136000000
+            }
+          ],
+          "transitions": [
+            {
+              "after_interval_ms": 14400000,
+              "before_interval_ms": 3600000,
+              "end_ms": 1772136000000,
+              "start_ms": 1772128800000
+            }
+          ]
+        },
+        "NEARUSDT": {
+          "history_first_ms": 1633939200000,
+          "history_last_ms": 1790611200000,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1790611200000,
+              "interval_ms": 28800000,
+              "observed_steps": 5440,
+              "start_ms": 1633939200000
+            }
+          ],
+          "transitions": []
+        },
+        "ONDOUSDT": {
+          "history_first_ms": 1705996800000,
+          "history_last_ms": 1790625600000,
+          "interval_known": true,
+          "intervals_ms": [
+            14400000,
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1736928000000,
+              "interval_ms": 28800000,
+              "observed_steps": 1074,
+              "start_ms": 1705996800000
+            },
+            {
+              "end_ms": 1790625600000,
+              "interval_ms": 14400000,
+              "observed_steps": 3729,
+              "start_ms": 1736928000000
+            }
+          ],
+          "transitions": []
+        },
+        "OPUSDT": {
+          "history_first_ms": 1654099200000,
+          "history_last_ms": 1790611200000,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1790611200000,
+              "interval_ms": 28800000,
+              "observed_steps": 4740,
+              "start_ms": 1654099200000
+            }
+          ],
+          "transitions": []
+        },
+        "ORDIUSDT": {
+          "history_first_ms": 1684713600000,
+          "history_last_ms": 1790625600000,
+          "interval_known": true,
+          "intervals_ms": [
+            14400000,
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1736928000000,
+              "interval_ms": 28800000,
+              "observed_steps": 1813,
+              "start_ms": 1684713600000
+            },
+            {
+              "end_ms": 1790625600000,
+              "interval_ms": 14400000,
+              "observed_steps": 3729,
+              "start_ms": 1736928000000
+            }
+          ],
+          "transitions": []
+        },
+        "PENGUUSDT": {
+          "history_first_ms": 1734436800000,
+          "history_last_ms": 1790625600000,
+          "interval_known": true,
+          "intervals_ms": [
+            14400000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1790625600000,
+              "interval_ms": 14400000,
+              "observed_steps": 3902,
+              "start_ms": 1734436800000
+            }
+          ],
+          "transitions": []
+        },
+        "PEOPLEUSDT": {
+          "history_first_ms": 1640793600000,
+          "history_last_ms": 1790611200000,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1790611200000,
+              "interval_ms": 28800000,
+              "observed_steps": 5202,
+              "start_ms": 1640793600000
+            }
+          ],
+          "transitions": []
+        },
+        "PIPPINUSDT": {
+          "history_first_ms": 1737100800000,
+          "history_last_ms": 1790625600000,
+          "interval_known": true,
+          "intervals_ms": [
+            3600000,
+            14400000,
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1744358400000,
+              "interval_ms": 28800000,
+              "observed_steps": 252,
+              "start_ms": 1737100800000
+            },
+            {
+              "end_ms": 1763913600000,
+              "interval_ms": 14400000,
+              "observed_steps": 1358,
+              "start_ms": 1744358400000
+            },
+            {
+              "end_ms": 1772121600000,
+              "interval_ms": 3600000,
+              "observed_steps": 2280,
+              "start_ms": 1763913600000
+            },
+            {
+              "end_ms": 1773691200000,
+              "interval_ms": 14400000,
+              "observed_steps": 109,
+              "start_ms": 1772121600000
+            },
+            {
+              "end_ms": 1773939600000,
+              "interval_ms": 3600000,
+              "observed_steps": 69,
+              "start_ms": 1773691200000
+            },
+            {
+              "end_ms": 1775232000000,
+              "interval_ms": 14400000,
+              "observed_steps": 89,
+              "start_ms": 1773950400000
+            },
+            {
+              "end_ms": 1775304000000,
+              "interval_ms": 3600000,
+              "observed_steps": 20,
+              "start_ms": 1775232000000
+            },
+            {
+              "end_ms": 1790625600000,
+              "interval_ms": 14400000,
+              "observed_steps": 1064,
+              "start_ms": 1775304000000
+            }
+          ],
+          "transitions": [
+            {
+              "after_interval_ms": 14400000,
+              "before_interval_ms": 3600000,
+              "end_ms": 1773950400000,
+              "start_ms": 1773939600000
+            }
+          ]
+        },
+        "POPCATUSDT": {
+          "history_first_ms": 1711612800000,
+          "history_last_ms": 1790625600000,
+          "interval_known": true,
+          "intervals_ms": [
+            14400000,
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1736928000000,
+              "interval_ms": 28800000,
+              "observed_steps": 879,
+              "start_ms": 1711612800000
+            },
+            {
+              "end_ms": 1790625600000,
+              "interval_ms": 14400000,
+              "observed_steps": 3729,
+              "start_ms": 1736928000000
+            }
+          ],
+          "transitions": []
+        },
+        "PUMPFUNUSDT": {
+          "history_first_ms": 1752120000000,
+          "history_last_ms": 1790625600000,
+          "interval_known": true,
+          "intervals_ms": [
+            14400000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1790625600000,
+              "interval_ms": 14400000,
+              "observed_steps": 2674,
+              "start_ms": 1752120000000
+            }
+          ],
+          "transitions": []
+        },
+        "RAREUSDT": {
+          "history_first_ms": 1701072000000,
+          "history_last_ms": 1790625600000,
+          "interval_known": true,
+          "intervals_ms": [
+            14400000,
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1723824000000,
+              "interval_ms": 28800000,
+              "observed_steps": 790,
+              "start_ms": 1701072000000
+            },
+            {
+              "end_ms": 1790625600000,
+              "interval_ms": 14400000,
+              "observed_steps": 4639,
+              "start_ms": 1723824000000
+            }
+          ],
+          "transitions": []
+        },
+        "RAVEUSDT": {
+          "history_first_ms": 1765771200000,
+          "history_last_ms": 1790625600000,
+          "interval_known": true,
+          "intervals_ms": [
+            3600000,
+            14400000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1776024000000,
+              "interval_ms": 14400000,
+              "observed_steps": 712,
+              "start_ms": 1765771200000
+            },
+            {
+              "end_ms": 1778493600000,
+              "interval_ms": 3600000,
+              "observed_steps": 686,
+              "start_ms": 1776024000000
+            },
+            {
+              "end_ms": 1790625600000,
+              "interval_ms": 14400000,
+              "observed_steps": 842,
+              "start_ms": 1778500800000
+            }
+          ],
+          "transitions": [
+            {
+              "after_interval_ms": 14400000,
+              "before_interval_ms": 3600000,
+              "end_ms": 1778500800000,
+              "start_ms": 1778493600000
+            }
+          ]
+        },
+        "REEFUSDT": {
+          "history_first_ms": 1644940800000,
+          "history_last_ms": 1737532800000,
+          "interval_known": true,
+          "intervals_ms": [
+            14400000,
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1736928000000,
+              "interval_ms": 28800000,
+              "observed_steps": 3194,
+              "start_ms": 1644940800000
+            },
+            {
+              "end_ms": 1737532800000,
+              "interval_ms": 14400000,
+              "observed_steps": 42,
+              "start_ms": 1736928000000
+            }
+          ],
+          "transitions": []
+        },
+        "RIVERUSDT": {
+          "history_first_ms": 1761134400000,
+          "history_last_ms": 1790625600000,
+          "interval_known": true,
+          "intervals_ms": [
+            3600000,
+            14400000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1762459200000,
+              "interval_ms": 14400000,
+              "observed_steps": 92,
+              "start_ms": 1761134400000
+            },
+            {
+              "end_ms": 1772136000000,
+              "interval_ms": 3600000,
+              "observed_steps": 2688,
+              "start_ms": 1762459200000
+            },
+            {
+              "end_ms": 1774468800000,
+              "interval_ms": 14400000,
+              "observed_steps": 162,
+              "start_ms": 1772136000000
+            },
+            {
+              "end_ms": 1774627200000,
+              "interval_ms": 3600000,
+              "observed_steps": 44,
+              "start_ms": 1774468800000
+            },
+            {
+              "end_ms": 1790625600000,
+              "interval_ms": 14400000,
+              "observed_steps": 1111,
+              "start_ms": 1774627200000
+            }
+          ],
+          "transitions": []
+        },
+        "RNDRUSDT": {
+          "history_first_ms": 1638374400000,
+          "history_last_ms": 1721635200000,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1721635200000,
+              "interval_ms": 28800000,
+              "observed_steps": 2891,
+              "start_ms": 1638374400000
+            }
+          ],
+          "transitions": []
+        },
+        "RUNEUSDT": {
+          "history_first_ms": 1638201600000,
+          "history_last_ms": 1790611200000,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1790611200000,
+              "interval_ms": 28800000,
+              "observed_steps": 5292,
+              "start_ms": 1638201600000
+            }
+          ],
+          "transitions": []
+        },
+        "SANDUSDT": {
+          "history_first_ms": 1635782400000,
+          "history_last_ms": 1790611200000,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1790611200000,
+              "interval_ms": 28800000,
+              "observed_steps": 5376,
+              "start_ms": 1635782400000
+            }
+          ],
+          "transitions": []
+        },
+        "SEIUSDT": {
+          "history_first_ms": 1692144000000,
+          "history_last_ms": 1790611200000,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1790611200000,
+              "interval_ms": 28800000,
+              "observed_steps": 3419,
+              "start_ms": 1692144000000
+            }
+          ],
+          "transitions": []
+        },
+        "SHIB1000USDT": {
+          "history_first_ms": 1634716800000,
+          "history_last_ms": 1790611200000,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1790611200000,
+              "interval_ms": 28800000,
+              "observed_steps": 5413,
+              "start_ms": 1634716800000
+            }
+          ],
+          "transitions": []
+        },
+        "SOLUSDT": {
+          "history_first_ms": 1624953600000,
+          "history_last_ms": 1790611200000,
+          "interval_known": true,
+          "intervals_ms": [
+            7200000,
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1668067200000,
+              "interval_ms": 28800000,
+              "observed_steps": 1497,
+              "start_ms": 1624953600000
+            },
+            {
+              "end_ms": 1671523200000,
+              "interval_ms": 7200000,
+              "observed_steps": 480,
+              "start_ms": 1668067200000
+            },
+            {
+              "end_ms": 1790611200000,
+              "interval_ms": 28800000,
+              "observed_steps": 4135,
+              "start_ms": 1671523200000
+            }
+          ],
+          "transitions": []
+        },
+        "STXUSDT": {
+          "history_first_ms": 1638518400000,
+          "history_last_ms": 1790611200000,
+          "interval_known": true,
+          "intervals_ms": [
+            3600000,
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1643184000000,
+              "interval_ms": 28800000,
+              "observed_steps": 162,
+              "start_ms": 1638518400000
+            },
+            {
+              "end_ms": 1677225600000,
+              "interval_ms": 3600000,
+              "observed_steps": 9456,
+              "start_ms": 1643184000000
+            },
+            {
+              "end_ms": 1790611200000,
+              "interval_ms": 28800000,
+              "observed_steps": 3937,
+              "start_ms": 1677225600000
+            }
+          ],
+          "transitions": []
+        },
+        "SUIUSDT": {
+          "history_first_ms": 1683100800000,
+          "history_last_ms": 1790611200000,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1790611200000,
+              "interval_ms": 28800000,
+              "observed_steps": 3733,
+              "start_ms": 1683100800000
+            }
+          ],
+          "transitions": []
+        },
+        "SUSHIUSDT": {
+          "history_first_ms": 1620921600000,
+          "history_last_ms": 1790611200000,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1790611200000,
+              "interval_ms": 28800000,
+              "observed_steps": 5892,
+              "start_ms": 1620921600000
+            }
+          ],
+          "transitions": []
+        },
+        "SXPUSDT": {
+          "history_first_ms": 1638979200000,
+          "history_last_ms": 1775174400000,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1775174400000,
+              "interval_ms": 28800000,
+              "observed_steps": 4729,
+              "start_ms": 1638979200000
+            }
+          ],
+          "transitions": []
+        },
+        "TAOUSDT": {
+          "history_first_ms": 1706601600000,
+          "history_last_ms": 1790625600000,
+          "interval_known": true,
+          "intervals_ms": [
+            14400000,
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1736928000000,
+              "interval_ms": 28800000,
+              "observed_steps": 1053,
+              "start_ms": 1706601600000
+            },
+            {
+              "end_ms": 1790625600000,
+              "interval_ms": 14400000,
+              "observed_steps": 3729,
+              "start_ms": 1736928000000
+            }
+          ],
+          "transitions": []
+        },
+        "TIAUSDT": {
+          "history_first_ms": 1698768000000,
+          "history_last_ms": 1790625600000,
+          "interval_known": true,
+          "intervals_ms": [
+            14400000,
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1736928000000,
+              "interval_ms": 28800000,
+              "observed_steps": 1325,
+              "start_ms": 1698768000000
+            },
+            {
+              "end_ms": 1790625600000,
+              "interval_ms": 14400000,
+              "observed_steps": 3729,
+              "start_ms": 1736928000000
+            }
+          ],
+          "transitions": []
+        },
+        "TOMOUSDT": {
+          "history_first_ms": 1651161600000,
+          "history_last_ms": 1699948800000,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1699948800000,
+              "interval_ms": 28800000,
+              "observed_steps": 1694,
+              "start_ms": 1651161600000
+            }
+          ],
+          "transitions": []
+        },
+        "TONUSDT": {
+          "history_first_ms": 1693440000000,
+          "history_last_ms": 1781510400000,
+          "interval_known": true,
+          "intervals_ms": [
+            14400000,
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1736928000000,
+              "interval_ms": 28800000,
+              "observed_steps": 1510,
+              "start_ms": 1693440000000
+            },
+            {
+              "end_ms": 1781510400000,
+              "interval_ms": 14400000,
+              "observed_steps": 3096,
+              "start_ms": 1736928000000
+            }
+          ],
+          "transitions": []
+        },
+        "TRBUSDT": {
+          "history_first_ms": 1654876800000,
+          "history_last_ms": 1790625600000,
+          "interval_known": true,
+          "intervals_ms": [
+            7200000,
+            14400000,
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1694707200000,
+              "interval_ms": 28800000,
+              "observed_steps": 1383,
+              "start_ms": 1654876800000
+            },
+            {
+              "end_ms": 1695657600000,
+              "interval_ms": 14400000,
+              "observed_steps": 66,
+              "start_ms": 1694707200000
+            },
+            {
+              "end_ms": 1695888000000,
+              "interval_ms": 28800000,
+              "observed_steps": 8,
+              "start_ms": 1695657600000
+            },
+            {
+              "end_ms": 1696147200000,
+              "interval_ms": 14400000,
+              "observed_steps": 18,
+              "start_ms": 1695888000000
+            },
+            {
+              "end_ms": 1704038400000,
+              "interval_ms": 28800000,
+              "observed_steps": 274,
+              "start_ms": 1696147200000
+            },
+            {
+              "end_ms": 1704067200000,
+              "interval_ms": 14400000,
+              "observed_steps": 2,
+              "start_ms": 1704038400000
+            },
+            {
+              "end_ms": 1704268800000,
+              "interval_ms": 7200000,
+              "observed_steps": 28,
+              "start_ms": 1704067200000
+            },
+            {
+              "end_ms": 1790625600000,
+              "interval_ms": 14400000,
+              "observed_steps": 5997,
+              "start_ms": 1704268800000
+            }
+          ],
+          "transitions": []
+        },
+        "TRUMPUSDT": {
+          "history_first_ms": 1737187200000,
+          "history_last_ms": 1790625600000,
+          "interval_known": true,
+          "intervals_ms": [
+            14400000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1790625600000,
+              "interval_ms": 14400000,
+              "observed_steps": 3711,
+              "start_ms": 1737187200000
+            }
+          ],
+          "transitions": []
+        },
+        "TRXUSDT": {
+          "history_first_ms": 1630425600000,
+          "history_last_ms": 1790611200000,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1790611200000,
+              "interval_ms": 28800000,
+              "observed_steps": 5562,
+              "start_ms": 1630425600000
+            }
+          ],
+          "transitions": []
+        },
+        "UNFIUSDT": {
+          "history_first_ms": 1653926400000,
+          "history_last_ms": 1730707200000,
+          "interval_known": true,
+          "intervals_ms": [
+            14400000,
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1694188800000,
+              "interval_ms": 28800000,
+              "observed_steps": 1398,
+              "start_ms": 1653926400000
+            },
+            {
+              "end_ms": 1694678400000,
+              "interval_ms": 14400000,
+              "observed_steps": 34,
+              "start_ms": 1694188800000
+            },
+            {
+              "end_ms": 1730707200000,
+              "interval_ms": 28800000,
+              "observed_steps": 1251,
+              "start_ms": 1694678400000
+            }
+          ],
+          "transitions": []
+        },
+        "VIRTUALUSDT": {
+          "history_first_ms": 1730448000000,
+          "history_last_ms": 1790625600000,
+          "interval_known": true,
+          "intervals_ms": [
+            14400000,
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1736928000000,
+              "interval_ms": 28800000,
+              "observed_steps": 225,
+              "start_ms": 1730448000000
+            },
+            {
+              "end_ms": 1790625600000,
+              "interval_ms": 14400000,
+              "observed_steps": 3729,
+              "start_ms": 1736928000000
+            }
+          ],
+          "transitions": []
+        },
+        "WAVESUSDT": {
+          "history_first_ms": 1641398400000,
+          "history_last_ms": 1790611200000,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1790611200000,
+              "interval_ms": 28800000,
+              "observed_steps": 5181,
+              "start_ms": 1641398400000
+            }
+          ],
+          "transitions": []
+        },
+        "WIFUSDT": {
+          "history_first_ms": 1704960000000,
+          "history_last_ms": 1790625600000,
+          "interval_known": true,
+          "intervals_ms": [
+            14400000,
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1736928000000,
+              "interval_ms": 28800000,
+              "observed_steps": 1110,
+              "start_ms": 1704960000000
+            },
+            {
+              "end_ms": 1790625600000,
+              "interval_ms": 14400000,
+              "observed_steps": 3729,
+              "start_ms": 1736928000000
+            }
+          ],
+          "transitions": []
+        },
+        "WLDUSDT": {
+          "history_first_ms": 1690185600000,
+          "history_last_ms": 1790611200000,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1790611200000,
+              "interval_ms": 28800000,
+              "observed_steps": 3487,
+              "start_ms": 1690185600000
+            }
+          ],
+          "transitions": []
+        },
+        "XRPUSDT": {
+          "history_first_ms": 1620921600000,
+          "history_last_ms": 1790611200000,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1790611200000,
+              "interval_ms": 28800000,
+              "observed_steps": 5892,
+              "start_ms": 1620921600000
+            }
+          ],
+          "transitions": []
+        },
+        "XTZUSDT": {
+          "history_first_ms": 1609459200000,
+          "history_last_ms": 1790625600000,
+          "interval_known": true,
+          "intervals_ms": [
+            3600000,
+            14400000,
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1752998400000,
+              "interval_ms": 28800000,
+              "observed_steps": 4984,
+              "start_ms": 1609459200000
+            },
+            {
+              "end_ms": 1772416800000,
+              "interval_ms": 3600000,
+              "observed_steps": 5391,
+              "start_ms": 1753009200000
+            },
+            {
+              "end_ms": 1790625600000,
+              "interval_ms": 14400000,
+              "observed_steps": 1264,
+              "start_ms": 1772424000000
+            }
+          ],
+          "transitions": [
+            {
+              "after_interval_ms": 3600000,
+              "before_interval_ms": 28800000,
+              "end_ms": 1753009200000,
+              "start_ms": 1752998400000
+            },
+            {
+              "after_interval_ms": 14400000,
+              "before_interval_ms": 3600000,
+              "end_ms": 1772424000000,
+              "start_ms": 1772416800000
+            }
+          ]
+        },
+        "YGGUSDT": {
+          "history_first_ms": 1637683200000,
+          "history_last_ms": 1790625600000,
+          "interval_known": true,
+          "intervals_ms": [
+            7200000,
+            14400000,
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1691424000000,
+              "interval_ms": 28800000,
+              "observed_steps": 1866,
+              "start_ms": 1637683200000
+            },
+            {
+              "end_ms": 1691568000000,
+              "interval_ms": 7200000,
+              "observed_steps": 20,
+              "start_ms": 1691424000000
+            },
+            {
+              "end_ms": 1736928000000,
+              "interval_ms": 28800000,
+              "observed_steps": 1575,
+              "start_ms": 1691568000000
+            },
+            {
+              "end_ms": 1790625600000,
+              "interval_ms": 14400000,
+              "observed_steps": 3729,
+              "start_ms": 1736928000000
+            }
+          ],
+          "transitions": []
+        },
+        "ZECUSDT": {
+          "history_first_ms": 1637740800000,
+          "history_last_ms": 1790611200000,
+          "interval_known": true,
+          "intervals_ms": [
+            28800000
+          ],
+          "regimes": [
+            {
+              "end_ms": 1790611200000,
+              "interval_ms": 28800000,
+              "observed_steps": 5308,
+              "start_ms": 1637740800000
+            }
+          ],
+          "transitions": []
+        }
+      },
+      "funding_unknown_symbols": [],
+      "funding_usd": 36.77071752399653,
+      "gross_profit_usd": 1197.3264958199732,
+      "initial_capital_usd": 10000.0,
+      "max_abs_net_exposure": 0.36054943752110374,
+      "max_drawdown_frac": -0.042285984715262015,
+      "max_gross_exposure": 0.36054943752110374,
+      "max_net_exposure": 0.36054943752110374,
+      "max_post_rebalance_gross_exposure": 0.3802677182586161,
+      "max_post_rebalance_net_exposure": 0.3802677182586161,
+      "max_post_rebalance_symbol_exposure": 0.0592505544842308,
+      "minimum_order_skips": 0,
+      "open_positions": 14,
+      "quantity_mode": "exact",
+      "r_distribution": {
+        "best_five": [
+          {
+            "average_entry_price": 9.621923999999998,
+            "direction": "long",
+            "entry_time_ms": 1780272000000,
+            "exit_reason": "stop",
+            "exit_time_ms": 1780444800000,
+            "fees_usd": 0.16744766306640657,
+            "funding_usd": 51.020188547574705,
+            "gross_pnl_usd": 37.73552999477442,
+            "initial_risk_usd": 48.894841624107144,
+            "lifecycle_id": 49,
+            "net_pnl_usd": 88.49278033806434,
+            "remaining_quantity": 0.0,
+            "return_r": 1.8098592284719417,
+            "slippage_usd": 0.09549054121838704,
+            "symbol": "LABUSDT"
+          },
+          {
+            "average_entry_price": 47.7225426,
+            "direction": "long",
+            "entry_time_ms": 1779148800000,
+            "exit_reason": "stop",
+            "exit_time_ms": 1780704000000,
+            "fees_usd": 0.36872988916125626,
+            "funding_usd": -0.15673195134389867,
+            "gross_pnl_usd": 87.47155558062403,
+            "initial_risk_usd": 48.52189117675975,
+            "lifecycle_id": 47,
+            "net_pnl_usd": 86.75204616069593,
+            "remaining_quantity": 0.0,
+            "return_r": 1.7878949904212935,
+            "slippage_usd": 0.19404757942293593,
+            "symbol": "HYPEUSDT"
+          },
+          {
+            "average_entry_price": 381.651412059103,
+            "direction": "long",
+            "entry_time_ms": 1773705600000,
+            "exit_reason": "stop",
+            "exit_time_ms": 1778976000000,
+            "fees_usd": 0.36586253688904335,
+            "funding_usd": -0.8766905507458673,
+            "gross_pnl_usd": 76.24147754803839,
+            "initial_risk_usd": 49.08821085147716,
+            "lifecycle_id": 30,
+            "net_pnl_usd": 74.80090022429438,
+            "remaining_quantity": 0.0,
+            "return_r": 1.523805796275899,
+            "slippage_usd": 0.1980242361090992,
+            "symbol": "ZECUSDT"
+          },
+          {
+            "average_entry_price": 1.161978387856817,
+            "direction": "long",
+            "entry_time_ms": 1787184000000,
+            "exit_reason": "stop",
+            "exit_time_ms": 1789516800000,
+            "fees_usd": 0.331914349979737,
+            "funding_usd": -0.8504405605513976,
+            "gross_pnl_usd": 46.79281518811969,
+            "initial_risk_usd": 33.06539434783708,
+            "lifecycle_id": 63,
+            "net_pnl_usd": 45.424631649003544,
+            "remaining_quantity": 0.0,
+            "return_r": 1.3737816392313775,
+            "slippage_usd": 0.18582862858500648,
+            "symbol": "XRPUSDT"
+          },
+          {
+            "average_entry_price": 403.760736,
+            "direction": "long",
+            "entry_time_ms": 1761955200000,
+            "exit_reason": "stop",
+            "exit_time_ms": 1762905600000,
+            "fees_usd": 0.200332142975721,
+            "funding_usd": 7.370102162921561,
+            "gross_pnl_usd": 45.028258823619396,
+            "initial_risk_usd": 50.06720177384269,
+            "lifecycle_id": 4,
+            "net_pnl_usd": 52.087420738009286,
+            "remaining_quantity": 0.0,
+            "return_r": 1.0403501472539263,
+            "slippage_usd": 0.11060810555595654,
+            "symbol": "ZECUSDT"
+          }
+        ],
+        "count": 66,
+        "quantiles": {
+          "0": -1.0219168750068608,
+          "0.25": -0.7174180718202553,
+          "0.5": -0.48468751838991175,
+          "0.75": -0.20249111128759928,
+          "1": 1.8098592284719417
+        },
+        "worst_five": [
+          {
+            "average_entry_price": 4682.696352,
+            "direction": "long",
+            "entry_time_ms": 1759795200000,
+            "exit_reason": "stop",
+            "exit_time_ms": 1760140800000,
+            "fees_usd": 0.1494519634162495,
+            "funding_usd": -0.12567024209524166,
+            "gross_pnl_usd": -16.77809896877454,
+            "initial_risk_usd": 16.77809896877454,
+            "lifecycle_id": 3,
+            "net_pnl_usd": -17.14582246672591,
+            "remaining_quantity": 0.0,
+            "return_r": -1.0219168750068608,
+            "slippage_usd": 0.09260129243987708,
+            "symbol": "ETHUSDT"
+          },
+          {
+            "average_entry_price": 0.22914582,
+            "direction": "long",
+            "entry_time_ms": 1787356800000,
+            "exit_reason": "stop",
+            "exit_time_ms": 1788134400000,
+            "fees_usd": 0.23641273673526908,
+            "funding_usd": -0.23877241776721872,
+            "gross_pnl_usd": -34.065164291023,
+            "initial_risk_usd": 34.06516429102302,
+            "lifecycle_id": 68,
+            "net_pnl_usd": -34.685702536160534,
+            "remaining_quantity": 0.0,
+            "return_r": -1.0182162117239824,
+            "slippage_usd": 0.1453530906350475,
+            "symbol": "ADAUSDT"
+          },
+          {
+            "average_entry_price": 673.354644,
+            "direction": "long",
+            "entry_time_ms": 1779321600000,
+            "exit_reason": "stop",
+            "exit_time_ms": 1780012800000,
+            "fees_usd": 0.22098635869677796,
+            "funding_usd": -0.3123528757186764,
+            "gross_pnl_usd": -48.72193405956133,
+            "initial_risk_usd": 48.7219340595613,
+            "lifecycle_id": 48,
+            "net_pnl_usd": -49.38860781465957,
+            "remaining_quantity": 0.0,
+            "return_r": -1.0136832366770023,
+            "slippage_usd": 0.13333452068279267,
+            "symbol": "ZECUSDT"
+          },
+          {
+            "average_entry_price": 13.2256446,
+            "direction": "long",
+            "entry_time_ms": 1788739200000,
+            "exit_reason": "stop",
+            "exit_time_ms": 1789171200000,
+            "fees_usd": 0.3824621177733073,
+            "funding_usd": -0.07903440611802573,
+            "gross_pnl_usd": -51.53344060374757,
+            "initial_risk_usd": 51.53344060374758,
+            "lifecycle_id": 72,
+            "net_pnl_usd": -52.23062229501692,
+            "remaining_quantity": 0.0,
+            "return_r": -1.0135287239334578,
+            "slippage_usd": 0.23568516737801362,
+            "symbol": "LINKUSDT"
+          },
+          {
+            "average_entry_price": 1.965393,
+            "direction": "long",
+            "entry_time_ms": 1787356800000,
+            "exit_reason": "stop",
+            "exit_time_ms": 1787443200000,
+            "fees_usd": 0.11365072554255386,
+            "funding_usd": -0.02198247480942435,
+            "gross_pnl_usd": -17.03258214551151,
+            "initial_risk_usd": 17.032582145511512,
+            "lifecycle_id": 69,
+            "net_pnl_usd": -17.237992410824805,
+            "remaining_quantity": 0.0,
+            "return_r": -1.0120598429268357,
+            "slippage_usd": 0.06977706496131827,
+            "symbol": "NEARUSDT"
+          }
+        ]
+      },
+      "reduction_minimum_adjustments": 0,
+      "sharpe": 0.704564503397421,
+      "sharpe_standard_error": 1.12030475112678,
+      "slippage_pct_gross_profit": 0.5933849542722188,
+      "slippage_usd": 7.104755279710507,
+      "sortino": 1.1572329394433742,
+      "total_return_frac": 0.04566110583711369,
+      "warnings": [
+        "Some Closed instruments have no minNotionalValue; only quantity minima apply."
+      ],
+      "win_rate_frac": 0.16666666666666666
+    },
+    "metrics_sha256": "144bdfdadd3527afd61b7c88c6c2b8f7257cfa91389489d15edb22bf3f1e8f98",
+    "resolved_config": {
+      "costs": {
+        "delist_slippage_bps": 200.0,
+        "maker_fee_bps": 2.0,
+        "rebalance_fill": "taker",
+        "slippage_bps": 2.0,
+        "stop_slippage_bps": 5.0,
+        "taker_fee_bps": 5.5
+      },
+      "execution": {
+        "quantity_mode": "exact"
+      },
+      "limits": {
+        "enabled": true,
+        "exit_on_universe_removal": false,
+        "max_gross_exposure": 2.0,
+        "max_net_exposure": 1.5,
+        "max_symbol_exposure": 0.5
+      },
+      "run": {
+        "end": "2026-09-28",
+        "initial_capital_usd": 10000.0,
+        "interval": "1d",
+        "name": "V1x",
+        "period": "holdout",
+        "start": "2025-10-01",
+        "strategy": "trend_basket",
+        "symbols": null,
+        "universe": "core15"
+      },
+      "strategy_params": {
+        "atr_days": 20,
+        "direction": "long_only",
+        "exit_ratio": 0.5,
+        "lookbacks_days": [
+          20,
+          55,
+          100
+        ],
+        "rebalance_band_frac": 0.25,
+        "risk_per_symbol_frac": 0.005,
+        "stop_atr_mult": 3.0
+      }
+    }
+  },
+  "checks": {
+    "drawdown": {
+      "operator": ">=",
+      "passed": true,
+      "threshold": -0.25,
+      "value": -0.042285984715262015
+    },
+    "positive_sharpe": {
+      "operator": ">",
+      "passed": true,
+      "threshold": 0,
+      "value": 0.704564503397421
+    },
+    "volatility_matched_btc": {
+      "btc_volatility_valid": true,
+      "operator": ">",
+      "passed": true,
+      "threshold": -0.042139605291888586,
+      "value": 0.04566110583711369,
+      "volatility_ratio": 0.14581658945908052
+    }
+  },
+  "created_at_ms": 1790649310187,
+  "end": "2026-09-28",
+  "git": {
+    "commit": "f56856127822c79cc2faefd06efc78cf14bfe6bb",
+    "dirty": false
+  },
+  "next_step": "T006 Demo with low risk",
+  "passed": true,
+  "period": "holdout",
+  "rule": "ADR-016",
+  "selected_id": "V1x",
+  "selection_sha256": "49d023541e4085e02d80ed890b0a14615b19305da70e0f6132dc758293115458",
+  "start": "2025-10-01"
+}
