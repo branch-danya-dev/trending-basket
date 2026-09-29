@@ -256,7 +256,7 @@ class SimExecutor:
         if (
             quantity == 0
             or Decimal(str(quantity)) < rules.min_order_qty
-            or quantity * fill_price < float(rules.min_notional_value or 0)
+            or Decimal(str(quantity)) * Decimal(str(fill_price)) < (rules.min_notional_value or 0)
         ):
             self.event(time_ms, "minimum_order_skip", symbol, notional_usd=notional_delta)
             return

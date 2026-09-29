@@ -331,3 +331,12 @@ def test_four_hour_execution_works_without_daily_warmup():
     assert len(result.equity) == 7
     assert result.equity[-1]["equity_usd"] == 1100
     assert len(result.fills) == 1
+
+
+def test_exact_minimum_notional_uses_decimal_boundary():
+    rule = InstrumentRules(Decimal(".1"), Decimal(".1"), Decimal(".07"), 2 * H4)
+    book = SimExecutor(10, {"X": rule}, ZERO)
+    # Binary float .1 * .7 is .06999999999999999; the exact .07 minimum is met.
+    book.rebalance("X", TargetPosition(0.07), 0.7, 0.7, 0)
+    assert book.positions["X"].quantity == 0.1
+    assert not book.events
