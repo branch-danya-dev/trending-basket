@@ -1,0 +1,336 @@
+{
+  "task": "T006a",
+  "mode": "demo",
+  "code_commit": "ab68cb17a81c57c61bfbb654a6e69e769a5c5a40",
+  "audited_at_utc": "2026-09-29T04:54:46.860000+00:00",
+  "audit_private_mutations": 0,
+  "capital_epoch_start_utc": "2026-09-29T04:47:35.435000+00:00",
+  "first_clean_cycle_utc": "2026-09-29T04:49:24.175000+00:00",
+  "earliest_14_day_endpoint_utc": "2026-10-13T04:49:24.175000+00:00",
+  "continuous_loop_started": false,
+  "next_daily_trailing_update_verified": false,
+  "allocated_capital_usd": 1000,
+  "account": {
+    "account_type": "UNIFIED",
+    "margin_mode": "REGULAR_MARGIN",
+    "account_equity_usd": 185776.45483777,
+    "allocated_capital_usd": 1000.0,
+    "realized_pnl_usd": 0.0,
+    "fees_usd": 0.02336835,
+    "funding_usd": 0.0,
+    "unrealized_pnl_usd": 0.2639,
+    "equity_usd": 1000.24053165,
+    "account_mm_rate": 0.0,
+    "stressed_mm_rate": 3.020820877889413e-06,
+    "stop_stress_loss_usd": 4.79590168,
+    "effective_margin_usd": 99949.11640404,
+    "clock_offset_ms": 251,
+    "key_permissions_checked": true
+  },
+  "decision": {
+    "decision_ms": 1790640000000,
+    "equity_usd": 1000.0,
+    "late": true,
+    "status": "completed",
+    "time_ms": 1790657364175,
+    "plan": [
+      {
+        "current_price": 0.004147,
+        "decision_price": 0.004208,
+        "delta": "0",
+        "reason": "close",
+        "reduce_only": false,
+        "stop": null,
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "current_price": 0.2418,
+        "decision_price": 0.2471,
+        "delta": "0",
+        "reason": "close",
+        "reduce_only": false,
+        "stop": null,
+        "symbol": "ADAUSDT"
+      },
+      {
+        "current_price": 0.09089,
+        "decision_price": 0.09144,
+        "delta": "0",
+        "reason": "close",
+        "reduce_only": false,
+        "stop": null,
+        "symbol": "BEATUSDT"
+      },
+      {
+        "current_price": 83045.3,
+        "decision_price": 83458.6,
+        "delta": "0",
+        "reason": "close",
+        "reduce_only": false,
+        "stop": null,
+        "symbol": "BTCUSDT"
+      },
+      {
+        "current_price": 0.0927,
+        "decision_price": 0.09389,
+        "delta": "0",
+        "reason": "close",
+        "reduce_only": false,
+        "stop": null,
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "current_price": 0.24994,
+        "decision_price": 0.25656,
+        "delta": "0",
+        "reason": "close",
+        "reduce_only": false,
+        "stop": null,
+        "symbol": "ENAUSDT"
+      },
+      {
+        "current_price": 2660.99,
+        "decision_price": 2687.71,
+        "delta": "0",
+        "reason": "close",
+        "reduce_only": false,
+        "stop": null,
+        "symbol": "ETHUSDT"
+      },
+      {
+        "current_price": 87.02,
+        "decision_price": 87.45,
+        "delta": "0",
+        "reason": "close",
+        "reduce_only": false,
+        "stop": null,
+        "symbol": "HYPEUSDT"
+      },
+      {
+        "current_price": 14.654,
+        "decision_price": 15.442,
+        "delta": "2.9",
+        "reason": "increase",
+        "reduce_only": false,
+        "stop": "13.104",
+        "symbol": "LINKUSDT"
+      },
+      {
+        "current_price": 4.605,
+        "decision_price": 4.818,
+        "delta": "0",
+        "reason": "close",
+        "reduce_only": false,
+        "stop": null,
+        "symbol": "NEARUSDT"
+      },
+      {
+        "current_price": 0.004834,
+        "decision_price": 0.004923,
+        "delta": "0",
+        "reason": "close",
+        "reduce_only": false,
+        "stop": null,
+        "symbol": "PUMPFUNUSDT"
+      },
+      {
+        "current_price": 117.29,
+        "decision_price": 118.84,
+        "delta": "0",
+        "reason": "close",
+        "reduce_only": false,
+        "stop": null,
+        "symbol": "SOLUSDT"
+      },
+      {
+        "current_price": 0.4727,
+        "decision_price": 0.4911,
+        "delta": "0",
+        "reason": "close",
+        "reduce_only": false,
+        "stop": null,
+        "symbol": "WLDUSDT"
+      },
+      {
+        "current_price": 1.4806,
+        "decision_price": 1.4962,
+        "delta": "0",
+        "reason": "close",
+        "reduce_only": false,
+        "stop": null,
+        "symbol": "XRPUSDT"
+      },
+      {
+        "current_price": 1363.65,
+        "decision_price": 1482.26,
+        "delta": "0",
+        "reason": "close",
+        "reduce_only": false,
+        "stop": null,
+        "symbol": "ZECUSDT"
+      }
+    ]
+  },
+  "fills": [
+    {
+      "symbol": "LINKUSDT",
+      "side": "Buy",
+      "quantity": "2.9",
+      "execution_price": "14.651",
+      "fee_usd": 0.02336835,
+      "fee_currency": "USDT",
+      "exchange_time_ms": 1790657343817,
+      "decision_price": 15.442,
+      "reason": "signal"
+    }
+  ],
+  "positions": [
+    {
+      "symbol": "LINKUSDT",
+      "side": "Buy",
+      "size": "2.9",
+      "avgPrice": "14.651",
+      "markPrice": "14.744",
+      "stopLoss": "13.104",
+      "liqPrice": "",
+      "unrealisedPnl": "0.2697",
+      "positionMM": "0.30205495",
+      "positionIdx": 0,
+      "leverage": "3"
+    }
+  ],
+  "open_orders": [
+    {
+      "symbol": "LINKUSDT",
+      "side": "Sell",
+      "qty": "2.9",
+      "orderStatus": "Untriggered",
+      "stopOrderType": "StopLoss",
+      "triggerBy": "LastPrice",
+      "triggerPrice": "13.104",
+      "reduceOnly": true,
+      "closeOnTrigger": true
+    }
+  ],
+  "liquidation_distance_lower_bounds": {
+    "LINKUSDT": "14.650"
+  },
+  "risk_events": [
+    {
+      "time_ms": 1790657256167,
+      "kind": "account_margin_verified",
+      "account_mm_rate": 0.0,
+      "stressed_mm_rate": 0.0,
+      "stop_stress_loss_usd": 0.0,
+      "effective_margin_usd": 99947.27030964
+    },
+    {
+      "time_ms": 1790657326966,
+      "kind": "account_margin_verified",
+      "account_mm_rate": 0.0,
+      "stressed_mm_rate": 0.0,
+      "stop_stress_loss_usd": 0.0,
+      "effective_margin_usd": 99947.27030964
+    },
+    {
+      "time_ms": 1790657338394,
+      "kind": "account_margin_verified",
+      "account_mm_rate": 0.0,
+      "stressed_mm_rate": 0.0,
+      "stop_stress_loss_usd": 0.0,
+      "effective_margin_usd": 99947.27030964
+    },
+    {
+      "time_ms": 1790657347951,
+      "kind": "stop_confirmed",
+      "symbol": "LINKUSDT",
+      "quantity": "2.9",
+      "stop_price": "13.104"
+    },
+    {
+      "time_ms": 1790657349649,
+      "kind": "stop_confirmed",
+      "symbol": "LINKUSDT",
+      "quantity": "2.9",
+      "stop_price": "13.104"
+    },
+    {
+      "time_ms": 1790657351427,
+      "kind": "account_margin_verified",
+      "account_mm_rate": 0.0,
+      "stressed_mm_rate": 3.0027478681567715e-06,
+      "stop_stress_loss_usd": 4.52620168,
+      "effective_margin_usd": 99945.99753947
+    },
+    {
+      "time_ms": 1790657351438,
+      "kind": "liquidation_verified",
+      "symbol": "LINKUSDT",
+      "entry_price": "14.651",
+      "min_price": "0.001",
+      "max_price": "19999.998",
+      "distance": "14.650",
+      "required": "2.3205",
+      "source": "instrument_bound"
+    },
+    {
+      "time_ms": 1790657389612,
+      "kind": "account_margin_verified",
+      "account_mm_rate": 0.0,
+      "stressed_mm_rate": 3.0023967526372067e-06,
+      "stop_stress_loss_usd": 4.52040168,
+      "effective_margin_usd": 99947.14115506
+    },
+    {
+      "time_ms": 1790657391305,
+      "kind": "stop_confirmed",
+      "symbol": "LINKUSDT",
+      "quantity": "2.9",
+      "stop_price": "13.104"
+    },
+    {
+      "time_ms": 1790657392746,
+      "kind": "account_margin_verified",
+      "account_mm_rate": 0.0,
+      "stressed_mm_rate": 3.0022176212727528e-06,
+      "stop_stress_loss_usd": 4.52040168,
+      "effective_margin_usd": 99948.4378159
+    },
+    {
+      "time_ms": 1790657392757,
+      "kind": "liquidation_verified",
+      "symbol": "LINKUSDT",
+      "entry_price": "14.651",
+      "min_price": "0.001",
+      "max_price": "19999.998",
+      "distance": "14.650",
+      "required": "2.3205",
+      "source": "instrument_bound"
+    }
+  ],
+  "shadow_positions": {
+    "LINKUSDT": {
+      "average_entry_price": 15.4450884,
+      "average_reference_price": 15.442,
+      "direction": "long",
+      "entry_time_ms": 1790640000000,
+      "fees_usd": 0.022935956274,
+      "funding_usd": 0.0,
+      "gross_pnl_usd": 0.0,
+      "initial_risk_usd": 6.314238605774822,
+      "lifecycle_id": 1,
+      "quantity": 2.7,
+      "slippage_usd": 0.008338679999998178,
+      "stop_price": 13.103393108972288,
+      "symbol": "LINKUSDT"
+    }
+  },
+  "same_day_restart_no_duplicate": true,
+  "order_count_all_epochs": 3,
+  "new_epoch_fill_count": 1,
+  "halt": null,
+  "pending_intents": 0,
+  "notification_failures_since_epoch": 0,
+  "limitation": "The daily trailing-stop update and the 14-day operational test are pending. Funding has not yet settled for the new position.",
+  "snapshot_note": "Account, position and order queries are sequential; market prices and unrealized PnL may differ slightly between responses."
+}
